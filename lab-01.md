@@ -2,7 +2,7 @@ Lab 1: Intro to Bioinformatics Databases
 ===============================
 
 
-## 1. Lab intro
+## 1. Lab intro 
 
 ## 2. Answer questions about Human Hemoglobin - alpha1 subunit
 
