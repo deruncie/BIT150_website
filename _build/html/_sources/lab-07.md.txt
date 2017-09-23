@@ -1,0 +1,8 @@
+Lab 7: Gene Prediction and Annotation
+=====================================
+
+
+
+----
+
+Next: :doc:`lab-08`

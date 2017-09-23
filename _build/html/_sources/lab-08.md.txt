@@ -1,0 +1,8 @@
+Lab 8: Comparative Genomics
+===========================
+
+
+
+----
+
+Next: :doc:`project-1`

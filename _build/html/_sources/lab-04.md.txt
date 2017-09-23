@@ -1,0 +1,8 @@
+Lab 4: RStudio, Ensemble, Scripting
+===================================
+
+
+
+----
+
+Next: :doc:`lab-05`

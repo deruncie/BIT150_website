@@ -1,0 +1,7 @@
+Lab 1: Bioinformatics Databases
+===============================
+
+
+----
+
+Next: :doc:`lab-02`
