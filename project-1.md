@@ -23,17 +23,8 @@ Here are some trait - gene pairs as examples:
 
 You're goal in **Projects 1 and 2** is to build a model for why mutations in this gene are associated with your trait. 
 
-For **Project 1**, as a class I want you to explore as many different databases as possible to build a catalog of types of bioinformatics information available for different classes of genes. I want each of you to choose one databases and prepare a Wiki page documenting the database. Use Markdown to compose your page. You can use the [HackMD](https://hackmd.io/) tool. Provide answers and links or images to address as many of the following questions as possible. We will collect these into a class Wiki site at the end.
+For **Project 1**, as a class I want you to explore as many different databases as possible to build a catalog of types of bioinformatics information available for different classes of genes. I want each of you to choose one database and prepare a Wiki page documenting the database. Use Markdown to compose your page. You can use the [HackMD](https://hackmd.io/) tool. Provide answers and links or images to address as many of the following questions as possible. We will collect these into a class Wiki site at the end.
 
-Here are some rules: 
-
-- Every student must choose a different database. There are 1000s of databases available. Usefull lists
-can be found [here](https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database) and [here](https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases). When you choose a database, enter it in the google doc [here](https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing). 
-Before you choose your database, ensure that someone else hasn't chosen that one first!
-- The only limitation on the database is that it contains information on your groups gene or disease. Find a database
-that looks interesting!
-
-In your Wiki, answer as many of the following questions as you can.
 
 - What type of data does the database hold? What types of biological questions could use this database to address? 
 - Where does the data come from? Who collects it, currates it, and publishes it?
@@ -44,6 +35,14 @@ In your Wiki, answer as many of the following questions as you can.
 - How many entries are there for your gene / mutation / disease?
 - Describe one entry. Provide a direct link to this entry. What did you learn about your gene?
 - Describe some types of biological questions that you could use this database to address.
+
+Here are some rules: 
+
+- Every student must choose a different database. There are 1000s of databases available. Usefull lists
+can be found [here](https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database) and [here](https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases). When you choose a database, enter it in the google doc [here](https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing). 
+Before you choose your database, ensure that someone else hasn't chosen that one first!
+- The only limitation on the database is that it contains information on your groups gene or disease. Find a database
+that looks interesting!
 
 For **Project 2**, you can refer back to this class resource to identify types of data that you can integrate to build a model for your gene.
 
