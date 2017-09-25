@@ -25,7 +25,7 @@ On HackMD, you can collaborate on documents by sharing the URL. You can also dow
 
 ## 3. Exploration of [NCBI](https://www.ncbi.nlm.nih.gov/)
 
-## 4. Begin [Project 1](project-1.md)
+## 4. Begin [Project 1](project-1.html)
 Lists of databases:
 
 - [Nucleic Acids Research](https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database)
@@ -43,4 +43,4 @@ Key ideas: introduce first
 	- can automate tasks
 	- can write scripts for automation and documentation
 
-### If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson [here](command-line.md).
+### If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson [here](command-line.html).
