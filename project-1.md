@@ -46,6 +46,8 @@ that looks interesting!
 
 For **Project 2**, you can refer back to this class resource to identify types of data that you can integrate to build a model for your gene.
 
+**Note: If you find a databases that you want to explore that indexes something other than genes, ask**
+
 ----
 
 Next: :doc:`project-2`
