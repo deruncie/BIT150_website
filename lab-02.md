@@ -24,20 +24,20 @@ BLAST tutorial
 -
 
 
-## [SLURM](https://slurm.schedmd.com/)
+### [SLURM](https://slurm.schedmd.com/)
 
 
-## Batch Jobs
+### Batch Jobs
   * sbatch
 
-## Interactive
+### Interactive
   * srun
 
-## modules
+### modules
 
 
 
-# Running BLAST from the Bash Terminal
+## Running BLAST from the Bash Terminal
 
 First, create a directory for storing all of the files used in today's lab exercise:
 
@@ -149,7 +149,7 @@ This will compare the first 83 sequences.  You can look at the output file with:
       * what does this mean?
   * Why did it take longer to BLAST `mm-second.fa` than `mm-first.fa`?
 
-## Items for discussion:
+### Items for discussion:
 
 * `blastp` options and -help.
 * command line options, more generally - why so many?
@@ -157,4 +157,4 @@ This will compare the first 83 sequences.  You can look at the output file with:
 * when you shut down, you lose all your data
 * what computer(s) is this all happening on?
 
-# Visualizing BLAST output in RStudio
+## Visualizing BLAST output in RStudio

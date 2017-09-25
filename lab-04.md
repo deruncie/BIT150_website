@@ -1,11 +1,11 @@
 Lab 4: R, dplyr and ggplot2
 ===================================
 
-# Visualization
+## Visualization
 
-# Dplyr Package
+## Dplyr Package
 
-# Tibbles
+## Tibbles
 
 
 ----

@@ -1,11 +1,11 @@
 Lab 9 - Genome Annotation and Comparisons
 =========================================
 
-# Prokka
+## Prokka
 
-# Output File Types
+## Output File Types
 
-# Downstream Analysis
+## Downstream Analysis
 
 ----
 

@@ -1,7 +1,7 @@
 Lab 8: Microbial Genome Assembly
 ================================
 
-# Downloading Sequence Data
+## Downloading Sequence Data
 
 
 First, let's create a set of nested directories to work in for today's lab. We will put all
@@ -42,7 +42,7 @@ typos or errors in raw data. Let's fix that before we go on any further:
 
 We'll talk about what these files are below.
 
-## Copying data into a working directory
+### Copying data into a working directory
 
 
 Recall that above we created two separate directories below the `lab_06` directory: `data` and `analysis`.
@@ -68,11 +68,11 @@ These are FASTQ files -- let's take a look at them:
   * Links:
     * [FASTQ Format](http://en.wikipedia.org/wiki/FASTQ_format)
 
-# Barcode Trimming and Read Quality Assessment/Control
+## Barcode Trimming and Read Quality Assessment/Control
 
 Although raw sequence read files deposited in the SRA database are heavily screened, it is still a good idea to verify that the reads being assembled are free of Illumina adapter sequences, indexing barcode sequences and low quality base calls. We will use two programs to conduct a Quality Assessment and impose Quality Control __(QA/QC)__.
 
-## FastQC
+### FastQC
 
 We're going to use [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to
 summarize the data. **FastQC** is already installed on our HPC as a module -
@@ -108,7 +108,7 @@ There are several caveats about FastQC - the main one is that it only
 calculates certain statistics (like duplicated sequences) for subsets
 of the data (e.g. duplicate sequences are only analyzed for the first
 
-## Trimmomatic
+### Trimmomatic
 
 Now we're going to do some sequence trimming.  We'll be using
 [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic), which
@@ -152,7 +152,7 @@ assembly.
 * Links:
   * `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__
 
-## FastQC Again
+### FastQC Again
 
 Run FastQC again on the trimmed files::
 
@@ -174,7 +174,7 @@ Let's take a look at the output files::
 * Is the quality trimmed data "better" than before?
 * Does it matter that you still have adapters!?
 
-# Genome Assembly
+## Genome Assembly
 
 There are two main strategies for genome assembly using DNA sequencing reads, __*de novo* assembly__ and __reference based mapping__. Among the algorithm types used to carry out __*de novo* assembly__, the two most common strategies are *De Bruijn Graph Assembly* and *Overlap Layout Consensus*. For more information on the differences between these two, here are some papers:
 
@@ -182,7 +182,7 @@ There are two main strategies for genome assembly using DNA sequencing reads, __
 * [Zerbino et al., 2008](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2336801/)
 * [Miller et al., 2010](http://www.sciencedirect.com/science/article/pii/S0888754310000492)
 
-## MEGAhit
+### MEGAhit
 
 To assemble the *E. coli* genome reads we have been working with, we will use **MEGAhit**, which is an ultra-fast short read assembly program that take a *De Bruijn Graph* approach.
 
@@ -196,7 +196,7 @@ module load megahit
 megahit -1 SRR292770.R1.trim.fq -2 SRR292770.R2.trim.fq -o megahit_2482 -t 4
 ```
 
-# Assembly Quality
+## Assembly Quality
 
 After a *de novo* assembly has been generated, a question that may come to mind is...
 
@@ -210,7 +210,7 @@ The __L50__ value is then defined as the the minimum number of contigs whose len
 
 To assess these metrics along with many others, we will use the program below:
 
-## QUAST: QUality ASsessment Tool for Genome Assemblies
+### QUAST: QUality ASsessment Tool for Genome Assemblies
 * Click [here](http://quast.sourceforge.net/) for more information on QUAST.
 * The paper can be found [here](https://academic.oup.com/bioinformatics/article/29/8/1072/228832/QUAST-quality-assessment-tool-for-genome).
 * [QUAST source code](https://github.com/ablab/quast)
@@ -264,11 +264,11 @@ L75                         117
 * Why do we have so many contigs?
 * What would be needed to produce an assembly with a total number of contigs under, say 10?
 
-# Putting it all together: sbatch scripts
+## Putting it all together: sbatch scripts
 
 Running through this entire process step by step is great for learning how everything works, but what if you need to assemble many different genomes in a short amount of time? A more efficient way to conduct this entire computational analysis is to write a shell script that can be interpreted by SLURM. Let's take a look at the example script below:
 
-## sbatch script
+### sbatch script
 
     #!/bin/bash -l
 
