@@ -76,7 +76,8 @@ Attendance at both lectures and labs is required, and participation in discussio
 There is no required text. Specific readings will be assigned based on available sources.
 
 #### Grading Procedures:
- 
+
+<!--table-->
 |                            |     |
 |----------------------------|-----|
 | Attendance / participation | 10% |
@@ -85,7 +86,7 @@ There is no required text. Specific readings will be assigned based on available
 | Project 1                  | 20% |
 | Project 2                  | 20% |
 | Project 3                  | 20% |
- 
+<!--endtable-->
 
 Homeworks will be assigned periodically after lab periods and will be due the following week. Quizzes will be assigned on Canvas based on readings and will be due before lecture. Projects will involve both a written report and presentation. Attendance and participation involves active involvement in group discussions and projects.
 
@@ -121,6 +122,7 @@ keep confidential discussions that the community has of a personal (or professio
 
 ## Tentative Course Schedule
 
+<!--table-->
 | | |
 |---------|------------------------------|
 | Week 1  | Databases, Unix              |
@@ -133,5 +135,5 @@ keep confidential discussions that the community has of a personal (or professio
 | Week 8  | Genome assembly              |
 | Week 9  | Genome Annotation            |
 | Week 10 | Functional data              |
-
+<!--endtable-->
 

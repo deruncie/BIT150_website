@@ -10,6 +10,7 @@ A useful place to start for Human traits is the [Online Mendelian Inheritance in
 
 Here are some trait - gene pairs as examples:
 
+<!--table-->
 | Trait              | Gene  |
 |--------------------|-------|
 | Cystic Fibrosis    | CFTR  |
@@ -20,10 +21,11 @@ Here are some trait - gene pairs as examples:
 | Sprinter gene      | ACTN3 |
 | Shade-response     | PHYB  |
 | Flower defects     | AP1   |
+<!--endtable-->
 
 You're goal in **Projects 1 and 2** is to build a model for why mutations in this gene are associated with your trait. 
 
-For **Project 1**, as a class I want you to explore as many different databases as possible to build a catalog of types of bioinformatics information available for different classes of genes. I want each of you to choose one database and prepare a Wiki page documenting the database. Use Markdown to compose your page. You can use the [HackMD](https://hackmd.io/) tool. Provide answers and links or images to address as many of the following questions as possible. We will collect these into a class Wiki site at the end.
+For **Project 1**, as a class I want you to explore as many different databases as possible to build a catalog of types of bioinformatics information available for different classes of genes. I want each of you to choose one database and prepare a Wiki page documenting the database. Use Markdown to compose your page. You can use the [HackMD](https://hackmd.io/) tool. Provide answers and links or images to address as many of the following questions as possible. Organize the information in a readable way. We will collect these into a class Wiki site at the end.
 
 
 - What type of data does the database hold? What types of biological questions could use this database to address? 
