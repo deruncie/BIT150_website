@@ -33,7 +33,10 @@ Lists of databases:
 - [OmicsTools](https://omictools.com/)
 
 ## 5. Intro to the Unix Shell
+
 [Tutorial](https://deruncie.github.io/shell-novice/)
+
+[Unix commands](unix_commands.md)
 
 Key ideas: introduce first
 

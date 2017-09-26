@@ -77,16 +77,14 @@ There is no required text. Specific readings will be assigned based on available
 
 #### Grading Procedures:
 
-<!--table-->
-|                            |     |
+|                       |  |
 |----------------------------|-----|
 | Attendance / participation | 10% |
 | Homework / Quizzes         | 10% |
 | Lab Reports                | 20% |
-| Project 1                  | 20% |
-| Project 2                  | 20% |
-| Project 3                  | 20% |
-<!--endtable-->
+| Project 1                  | 10% |
+| Project 2                  | 25% |
+| Project 3                  | 25% |
 
 Homeworks will be assigned periodically after lab periods and will be due the following week. Quizzes will be assigned on Canvas based on readings and will be due before lecture. Projects will involve both a written report and presentation. Attendance and participation involves active involvement in group discussions and projects.
 
@@ -116,14 +114,14 @@ We understand that our members represent a rich variety of backgrounds and persp
 - appreciate the opportunity that we have to learn from each other in this community
 - value each other’s opinions and communicate in a respectful manner
 keep confidential discussions that the community has of a personal (or professional) nature
-- use this opportunity together to discuss ways in which we can create an inclusive environment in this course and across the Cornell community
+- use this opportunity together to discuss ways in which we can create an inclusive environment in this course and across the Davis community
 
 
 
 ## Tentative Course Schedule
 
-<!--table-->
-| | |
+
+|                       |  |
 |---------|------------------------------|
 | Week 1  | Databases, Unix              |
 | Week 2  | Databases, HPC, BLAST        |
@@ -135,5 +133,3 @@ keep confidential discussions that the community has of a personal (or professio
 | Week 8  | Genome assembly              |
 | Week 9  | Genome Annotation            |
 | Week 10 | Functional data              |
-<!--endtable-->
-
