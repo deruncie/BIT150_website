@@ -15,7 +15,7 @@ Fall Quarter 2017
 
 **Instructor:** Daniel Runcie Robbins 278, deruncie@ucdavis.edu
 
-**Office Hours:** [scheduled + by appointment? Virtual Office Hours?]
+**Office Hours:** Mondays 3-4pm in Robbins 278, Tuesdays 4-5pm PES 1137
 
  
 
