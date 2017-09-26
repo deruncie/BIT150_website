@@ -1,23 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-
- <title>BIT150</title>
- <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
- <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-09-26T12:59:50-07:00</updated>
- <id>http://localhost:4000</id>
- <author>
-   <name>Dan Runcie and Shawn Higdon</name>
-   <email></email>
- </author>
-
- 
- <entry>
-   <title>Project 1 - Mining bioinformatics databases</title>
-   <link href="http://localhost:4000/2017/09/28/project-1/"/>
-   <updated>2017-09-28T00:00:00-07:00</updated>
-   <id>http://localhost:4000/BIT150_website/2017/09/28/project-1</id>
-   <content type="html">&lt;p&gt;The goal of this project is to explore online public databases and discover information on a gene that may be relevant to its role in diseases or other traits.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-09-26T12:59:50-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Project 1 - Mining bioinformatics databases</title><link href="http://localhost:4000/BIT150_website/2017/09/28/project-1/" rel="alternate" type="text/html" title="Project 1 - Mining bioinformatics databases" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/project-1</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/project-1/">&lt;p&gt;The goal of this project is to explore online public databases and discover information on a gene that may be relevant to its role in diseases or other traits.&lt;/p&gt;
 
 &lt;p&gt;First choose a trait. Human diseases work well because there have been study so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
 
@@ -71,16 +52,7 @@ that looks interesting!&lt;/li&gt;
 
 &lt;hr /&gt;
 
-&lt;p&gt;Next: :doc:&lt;code class=&quot;highlighter-rouge&quot;&gt;project-2&lt;/code&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Lab 1 - Intro to Bioinformatics Databases</title>
-   <link href="http://localhost:4000/2017/09/28/lab-01/"/>
-   <updated>2017-09-28T00:00:00-07:00</updated>
-   <id>http://localhost:4000/BIT150_website/2017/09/28/lab-01</id>
-   <content type="html">&lt;h2 id=&quot;1-lab-intro&quot;&gt;1. Lab intro&lt;/h2&gt;
+&lt;p&gt;Next: :doc:&lt;code class=&quot;highlighter-rouge&quot;&gt;project-2&lt;/code&gt;&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">The goal of this project is to explore online public databases and discover information on a gene that may be relevant to its role in diseases or other traits.</summary></entry><entry><title type="html">Lab 1 - Intro to Bioinformatics Databases</title><link href="http://localhost:4000/BIT150_website/2017/09/28/lab-01/" rel="alternate" type="text/html" title="Lab 1 - Intro to Bioinformatics Databases" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/lab-01</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/lab-01/">&lt;h2 id=&quot;1-lab-intro&quot;&gt;1. Lab intro&lt;/h2&gt;
 
 &lt;h2 id=&quot;2-answer-questions-about-human-hemoglobin---alpha1-subunit&quot;&gt;2. Answer questions about Human Hemoglobin - alpha1 subunit&lt;/h2&gt;
 
@@ -132,16 +104,7 @@ that looks interesting!&lt;/li&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;command-line.html&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Introduction to the Unix Shell</title>
-   <link href="http://localhost:4000/2017/09/28/command-line/"/>
-   <updated>2017-09-28T00:00:00-07:00</updated>
-   <id>http://localhost:4000/BIT150_website/2017/09/28/command-line</id>
-   <content type="html">&lt;blockquote&gt;
+&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;command-line.html&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">1. Lab intro</summary></entry><entry><title type="html">Introduction to the Unix Shell</title><link href="http://localhost:4000/BIT150_website/2017/09/28/command-line/" rel="alternate" type="text/html" title="Introduction to the Unix Shell" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/command-line</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/command-line/">&lt;blockquote&gt;
   &lt;p&gt;Lessons modified from: &lt;a href=&quot;https://hackmd.io/MwIwZgLAJgrA7HAtANmADgKaIgTisRAQ0JAMIGNC4AGE8uCZHIA=&quot;&gt;Data Carpentry Intro to Shell&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -872,16 +835,7 @@ the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;
   &lt;li&gt;man bash&lt;/li&gt;
   &lt;li&gt;Google - if you don’t know how to do something, try Googling it. Other people have probably had the same question.&lt;/li&gt;
   &lt;li&gt;Learn by doing. There’s no real other way to learn this than by trying it out.  Write your next paper in nano (really emacs or vi), open pdfs from the command line, automate something you don’t really need to automate.&lt;/li&gt;
-&lt;/ul&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Welcome BIT150 class of 2017!</title>
-   <link href="http://localhost:4000/2017/09/26/welcome/"/>
-   <updated>2017-09-26T00:00:00-07:00</updated>
-   <id>http://localhost:4000/BIT150_website/2017/09/26/welcome</id>
-   <content type="html">&lt;p&gt;Welcome to BIT150.&lt;/p&gt;
+&lt;/ul&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Lessons modified from: Data Carpentry Intro to Shell</summary></entry><entry><title type="html">Welcome BIT150 class of 2017!</title><link href="http://localhost:4000/BIT150_website/2017/09/26/welcome/" rel="alternate" type="text/html" title="Welcome BIT150 class of 2017!" /><published>2017-09-26T00:00:00-07:00</published><updated>2017-09-26T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/26/welcome</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/26/welcome/">&lt;p&gt;Welcome to BIT150.&lt;/p&gt;
 
 &lt;p&gt;The first lecture will be on Thursday 9/28 at 10:00 in Hoagland 113.&lt;/p&gt;
 
@@ -889,9 +843,4 @@ the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;
 
 &lt;p&gt;We look forward to meeting you on Thursday!&lt;/p&gt;
 
-&lt;p&gt;Dan and Shawn&lt;/p&gt;
-</content>
- </entry>
- 
-
-</feed>
+&lt;p&gt;Dan and Shawn&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Welcome to BIT150.</summary></entry></feed>

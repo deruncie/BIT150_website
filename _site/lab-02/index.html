@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Lab 2 - HPC and Command Line BLAST &middot; BIT150
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/BIT150_website/public/css/poole.css">
+  <link rel="stylesheet" href="/BIT150_website/public/css/syntax.css">
+  <link rel="stylesheet" href="/BIT150_website/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="logo" sizes="144x144" href="/BIT150_website/public/logo.png">
+  <link rel="shortcut icon" href="/BIT150_website/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body class="theme-base-0g">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <h1>
+      <a href="/BIT150_website/">
+        BIT150
+      </a>
+    </h1>
+    <p class="lead">The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/BIT150_website/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/about/">About</a>
+        
+      
+    
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/course_syllabus/">BIT 150 Syllabus - Fall 2017</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/discussions/">Discussions</a>
+        
+      
+    
+      
+    
+      
+        
+          <a class="sidebar-nav-item active" href="/BIT150_website/lab-02/">Lab 2 - HPC and Command Line BLAST</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-03/">Lab 3: R, Bioconductor</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-04/">Lab 4: R, dplyr and ggplot2</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-05/">Lab 5: Cytoscape - Co-expression Networks</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-06/">Lab 6: Genome Browsers and Tracks</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-07/">Lab 7: Analyzing Population Genetics Data</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-08/">Lab 8: Microbial Genome Assembly</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/lab-09/">Lab 9 - Genome Annotation and Comparisons</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/labs/">Labs</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/project-2/">Project 2: Genotype to Phenotype</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/project-3/">Project 3: Bacterial Outbreak</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/projects/">Projects</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/schedule/">Schedule</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/BIT150_website/supplement/">Supplemental Material</a>
+        
+      
+    
+
+<!--
+    <a class="sidebar-nav-item" href="/archive/v1.0.0.zip">Download</a>
+    <a class="sidebar-nav-item" href="">GitHub project</a>
+-->
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017, DE Runcie & SM Higdon. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/BIT150_website/" title="Home">BIT150</a>
+            <small>Applied Bioinformatics</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">Lab 2 - HPC and Command Line BLAST</h1>
+  <h1 id="lab-2---hpc-and-command-line-blast">Lab 2 - HPC and Command Line BLAST</h1>
+
+<p>Goals:</p>
+
+<p>Introduce HPC. Short lecture on using a cluster</p>
+
+<ul>
+  <li>Head node vs compute nodes</li>
+  <li>Submitting jobs</li>
+  <li>Storage</li>
+  <li>Moving files on and off</li>
+  <li>modules</li>
+</ul>
+
+<p>BLAST tutorial</p>
+
+<ul>
+  <li>start with getting aa sequence from your protein and blasting against (mouse? human? zebrafish?)</li>
+  <li>Discuss automation</li>
+  <li>follow ANGUS. blast mouse against zebrafish
+    <ul>
+      <li>ideally replace with corn against arabidopsis, or human against mouse</li>
+      <li>submit 1-core jobs</li>
+    </ul>
+  </li>
+  <li>Discuss output
+    <ul>
+      <li>
+        <h2 id="human-readable-vs-table">human readable vs table</h2>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="slurm"><a href="https://slurm.schedmd.com/">SLURM</a></h3>
+
+<h3 id="batch-jobs">Batch Jobs</h3>
+<ul>
+  <li>sbatch</li>
+</ul>
+
+<h3 id="interactive">Interactive</h3>
+<ul>
+  <li>srun</li>
+</ul>
+
+<h3 id="modules">modules</h3>
+
+<h2 id="running-blast-from-the-bash-terminal">Running BLAST from the Bash Terminal</h2>
+
+<p>First, create a directory for storing all of the files used in today’s lab exercise:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mkdir lab-02
+cd lab-02
+</code></pre>
+</div>
+
+<p>Next, we need to add the <strong>BLAST</strong> program to our environment variable PATH (<strong>$PATH</strong>) by loading the module:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>module load blast
+</code></pre>
+</div>
+
+<p>Now, let’s grab the mouse and zebrafish RefSeq
+protein data sets from NCBI, and put them in our work directory. We’ll
+use <code class="highlighter-rouge">curl</code> to download the files:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.1.protein.faa.gz
+curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.2.protein.faa.gz
+curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.3.protein.faa.gz
+
+curl -O ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz
+</code></pre>
+</div>
+
+<blockquote>
+  <p><strong>Thought Questions:</strong></p>
+  <ul>
+    <li>What does the -O option specify for the curl command?
+      <ul>
+        <li>How can you find out?</li>
+      </ul>
+    </li>
+  </ul>
+</blockquote>
+
+<p>Let’s look at the files in the current directory:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ls -l
+</code></pre>
+</div>
+
+<p>You should see output similar to:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>smhigdon@farm:~/BIT150/lab-02$ ls -l
+total 29116
+-rw-rw-r-- 1 smhigdon smhigdon  3433688 Sep 14 23:54 mouse.1.protein.faa.gz
+-rw-rw-r-- 1 smhigdon smhigdon  5451738 Sep 14 23:54 mouse.2.protein.faa.gz
+-rw-rw-r-- 1 smhigdon smhigdon  6898191 Sep 14 23:54 mouse.3.protein.faa.gz
+-rw-rw-r-- 1 smhigdon smhigdon 14021957 Sep 14 23:54 zebrafish.1.protein.faa.gz
+</code></pre>
+</div>
+
+<p>All four of the files are FASTA protein files (that’s what the .faa
+suggests) that are compressed with <code class="highlighter-rouge">gzip</code> (that’s what the .gz means).</p>
+
+<p>Let’s uncompress them:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>gunzip *.faa.gz
+</code></pre>
+</div>
+
+<p>and let’s look at the first few sequences in the file:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head mouse.1.protein.faa
+</code></pre>
+</div>
+
+<p>These are protein sequences in <strong>FASTA</strong> format. FASTA format is something
+many of you have probably seen in one form or another – it’s pretty
+ubiquitous. FASTA files are text files that contain records; each record
+starts with a line beginning with a <code class="highlighter-rouge">&gt;</code>, and then contains one or more
+lines of sequence text. The line beginning with a <code class="highlighter-rouge">&gt;</code> is called the <strong>header</strong>.</p>
+
+<p>Let’s take the first two sequences we just saw using the head command and save them to a file. We can achieve this by using output redirection with <code class="highlighter-rouge">&gt;</code>, which says:</p>
+<blockquote>
+  <p>“take all output from the previous command and store it in the following file.”</p>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head -11 mouse.1.protein.faa &gt; mm-first.fa
+</code></pre>
+</div>
+
+<p>So now, for example, you can do <code class="highlighter-rouge">cat mm-first.fa</code> to see the contents of
+that file (or <code class="highlighter-rouge">less mm-first.fa</code>).</p>
+
+<p>Now let’s <strong>BLAST</strong> these two sequences against the entire zebrafish
+protein data set. First, we need to tell BLAST that the zebrafish
+sequences are:</p>
+<ul>
+  <li>(a) a database, and</li>
+  <li>
+    <p>(b) a protein database.
+That’s done by calling <code class="highlighter-rouge">makeblastdb</code>:</p>
+
+    <p>makeblastdb -in zebrafish.1.protein.faa -dbtype prot</p>
+  </li>
+</ul>
+
+<p>Next, we call <strong>BLAST</strong> to do the search:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>blastp -query mm-first.fa -db zebrafish.1.protein.faa
+</code></pre>
+</div>
+
+<p>This should run pretty quickly, but you’re going to get a lot of output!!
+To save it to a file instead of watching it go past on the screen,
+ask BLAST to save the output to a file that we’ll name <code class="highlighter-rouge">mm-first.x.zebrafish.txt</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>blastp -query mm-first.fa -db zebrafish.1.protein.faa -out mm-first.x.zebrafish.txt
+</code></pre>
+</div>
+
+<p>Now you can <code class="highlighter-rouge">page</code> through this file at your leisure by typing:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>less mm-first.x.zebrafish.txt
+</code></pre>
+</div>
+
+<p>(Type spacebar to move down, and ‘q’ to get out of paging mode.)</p>
+
+<hr />
+
+<p>Let’s do some more sequences (this one will take a little longer to run):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head -500 mouse.1.protein.faa &gt; mm-second.fa
+blastp -query mm-second.fa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
+</code></pre>
+</div>
+
+<p>This will compare the first 83 sequences.  You can look at the output file with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>less mm-second.x.zebrafish.txt
+</code></pre>
+</div>
+
+<p>(again, type ‘q’ to get out of paging mode.)</p>
+
+<blockquote>
+  <p><strong>Thought Questions</strong>:</p>
+  <ul>
+    <li>You can execute multiple commands at a time;</li>
+    <li>You might see a warning -
+    <code class="highlighter-rouge">Selenocysteine (U) at position 310 replaced by X</code>
+      <ul>
+        <li>what does this mean?</li>
+      </ul>
+    </li>
+    <li>Why did it take longer to BLAST <code class="highlighter-rouge">mm-second.fa</code> than <code class="highlighter-rouge">mm-first.fa</code>?</li>
+  </ul>
+</blockquote>
+
+<h3 id="items-for-discussion">Items for discussion:</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">blastp</code> options and -help.</li>
+  <li>command line options, more generally - why so many?</li>
+  <li>automation rocks!</li>
+  <li>when you shut down, you lose all your data</li>
+  <li>what computer(s) is this all happening on?</li>
+</ul>
+
+<h2 id="visualizing-blast-output-in-rstudio">Visualizing BLAST output in RStudio</h2>
+
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

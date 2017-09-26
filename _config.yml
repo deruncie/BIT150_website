@@ -12,8 +12,8 @@ permalink:           pretty
 title:               BIT150
 tagline:             'Applied Bioinformatics'
 description:         'The UC Davis - CAES course for the development of fundamental skills in Bioinformatics'
-url:                 http://shigdon.github.io/BIT150_web/
-baseurl:             '/BIT150_web'
+url:                 http://deruncie.github.io/BIT150_website/
+baseurl:             '/BIT150_website'
 
 # About/contact
 author:
@@ -32,6 +32,4 @@ version:             1.0.0
 # exclude: [ '*template*' ]
 
 #github:
-# repo:              https://github.com/shigdon/BIT150_web
-
-theme: jekyll-theme-cayman
+# repo:              https://github.com/deruncie/BIT150_website
