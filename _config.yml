@@ -33,3 +33,4 @@ version:             1.0.0
 
 #github:
 # repo:              https://github.com/deruncie/BIT150_website
+theme: jekyll-theme-cayman
