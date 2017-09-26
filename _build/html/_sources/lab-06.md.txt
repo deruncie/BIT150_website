@@ -1,8 +1,0 @@
-Lab 6: Genome Assembly
-======================
-
-
-
-----
-
-Next: :doc:`lab-07`

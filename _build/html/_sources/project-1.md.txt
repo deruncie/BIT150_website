@@ -1,8 +1,0 @@
-Project 1: Database Integration
-===============================
-
-
-
-----
-
-Next: :doc:`project-2`

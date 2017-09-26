@@ -1,0 +1,35 @@
+# Dependencies
+markdown:            kramdown
+highlighter:         rouge
+plugins:
+  - jekyll-paginate
+
+# Permalinks
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+
+# Setup
+title:               BIT150
+tagline:             'Applied Bioinformatics'
+description:         'The UC Davis - CAES course for the development of fundamental skills in Bioinformatics'
+url:                 http://shigdon.github.io/BIT150_web/
+baseurl:             '/BIT150_web'
+
+# About/contact
+author:
+  name:              'Dan Runcie and Shawn Higdon'
+  url:               http://runcielab.ucdavis.edu/
+
+paginate:            5
+paginate_path: "page:num"
+future:              true
+show_drafts:         false
+
+# Custom vars
+version:             1.0.0
+
+# Exclude from conversion
+# exclude: [ '*template*' ]
+
+#github:
+# repo:              https://github.com/shigdon/BIT150_web
