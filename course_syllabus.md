@@ -15,11 +15,13 @@ Fall Quarter 2017
 
 **Instructor:** Daniel Runcie Robbins 278, deruncie@ucdavis.edu
 
-**Office Hours:** Mondays 3-4pm in Robbins 278, Tuesdays 4-5pm PES 1137
+**Office Hours:** Mondays 3-4pm in Robbins 278
 
  
 
-**TA:** Shawn Higdon deruncie@ucdavis.edu
+**TA:** Shawn Higdon smhigdon@ucdavis.edu
+
+**Office Hours:** Tuesdays 4-5pm PES 1137
 
  
 
