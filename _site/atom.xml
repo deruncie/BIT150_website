@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-09-28T06:38:03-07:00</updated>
+ <updated>2017-09-28T07:00:08-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -1089,7 +1089,7 @@ that looks interesting!&lt;/li&gt;
 
 &lt;h2 id=&quot;3-exploration-of-ncbi&quot;&gt;3. Exploration of &lt;a href=&quot;https://www.ncbi.nlm.nih.gov/&quot;&gt;NCBI&lt;/a&gt;&lt;/h2&gt;
 
-&lt;h2 id=&quot;4-begin-project-1&quot;&gt;4. Begin &lt;a href=&quot;project-1.html&quot;&gt;Project 1&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;4-begin-project-1&quot;&gt;4. Begin &lt;a href=&quot;/BIT150_website/2017/09/28/project-1/&quot;&gt;Project 1&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Lists of databases:&lt;/p&gt;
 
 &lt;ul&gt;

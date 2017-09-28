@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-09-28T06:38:03-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - HPC and Command Line BLAST</title><link href="http://localhost:4000/BIT150_website/2017/10/05/lab-02/" rel="alternate" type="text/html" title="Lab 2 - HPC and Command Line BLAST" /><published>2017-10-05T00:00:00-07:00</published><updated>2017-10-05T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/05/lab-02/">&lt;p&gt;Goals:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-09-28T07:00:08-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - HPC and Command Line BLAST</title><link href="http://localhost:4000/BIT150_website/2017/10/05/lab-02/" rel="alternate" type="text/html" title="Lab 2 - HPC and Command Line BLAST" /><published>2017-10-05T00:00:00-07:00</published><updated>2017-10-05T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/05/lab-02/">&lt;p&gt;Goals:&lt;/p&gt;
 
 &lt;p&gt;Introduce HPC. Short lecture on using a cluster&lt;/p&gt;
 
@@ -1043,7 +1043,7 @@ that looks interesting!&lt;/li&gt;
 
 &lt;h2 id=&quot;3-exploration-of-ncbi&quot;&gt;3. Exploration of &lt;a href=&quot;https://www.ncbi.nlm.nih.gov/&quot;&gt;NCBI&lt;/a&gt;&lt;/h2&gt;
 
-&lt;h2 id=&quot;4-begin-project-1&quot;&gt;4. Begin &lt;a href=&quot;project-1.html&quot;&gt;Project 1&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&quot;4-begin-project-1&quot;&gt;4. Begin &lt;a href=&quot;/BIT150_website/2017/09/28/project-1/&quot;&gt;Project 1&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Lists of databases:&lt;/p&gt;
 
 &lt;ul&gt;
