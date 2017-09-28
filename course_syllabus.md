@@ -15,7 +15,7 @@ Fall Quarter 2017
 
 **Instructor:** Daniel Runcie Robbins 278, deruncie@ucdavis.edu
 
-**Office Hours:** Mondays 3-4pm in Robbins 278
+**Office Hours:** Mondays 3-4pm in Robbins 278, or by appointment
 
  
 
@@ -95,7 +95,7 @@ Homeworks will be assigned periodically after lab periods and will be due the fo
 ## Academic Integrity
 Each student in this course is expected to abide by the UC Davis Code of Academic Conduct.  Any work submitted by a student in this course for academic credit will be the student's own work. [Optional: For this course, collaboration is allowed in the following instances: list instances.]
 
-You are encouraged to study together and to discuss information and concepts covered in lecture and the sections with other students. You can give "consulting" help to or receive "consulting" help from such students. However, this permissible cooperation should never involve one student having possession of a copy of all or part of work done by someone else, in the form of an e-mail, an e-mail attachment file, a diskette, or a hard copy.
+You are encouraged to study together and to discuss information and concepts covered in lecture and the sections with other students. You can give "consulting" help to or receive "consulting" help from such students. However, this permissible cooperation should never involve one student simply copying the work of another.
 
 Should copying occur, both the student who copied work from another student and the student who gave material to be copied will both automatically receive a zero for the assignment. Penalty for violation of this Code can also be extended to include failure of the course and University disciplinary action.
 

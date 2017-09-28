@@ -4,13 +4,232 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-09-27T09:34:53-07:00</updated>
+ <updated>2017-09-27T16:10:35-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Lab 2 - HPC and Command Line BLAST</title>
+   <link href="http://localhost:4000/2017/10/05/lab-02/"/>
+   <updated>2017-10-05T00:00:00-07:00</updated>
+   <id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id>
+   <content type="html">&lt;p&gt;Goals:&lt;/p&gt;
+
+&lt;p&gt;Introduce HPC. Short lecture on using a cluster&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Head node vs compute nodes&lt;/li&gt;
+  &lt;li&gt;Submitting jobs&lt;/li&gt;
+  &lt;li&gt;Storage&lt;/li&gt;
+  &lt;li&gt;Moving files on and off&lt;/li&gt;
+  &lt;li&gt;modules&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;BLAST tutorial&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;start with getting aa sequence from your protein and blasting against (mouse? human? zebrafish?)&lt;/li&gt;
+  &lt;li&gt;Discuss automation&lt;/li&gt;
+  &lt;li&gt;follow ANGUS. blast mouse against zebrafish
+    &lt;ul&gt;
+      &lt;li&gt;ideally replace with corn against arabidopsis, or human against mouse&lt;/li&gt;
+      &lt;li&gt;submit 1-core jobs&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Discuss output
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;h2 id=&quot;human-readable-vs-table&quot;&gt;human readable vs table&lt;/h2&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;slurm&quot;&gt;&lt;a href=&quot;https://slurm.schedmd.com/&quot;&gt;SLURM&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h3 id=&quot;batch-jobs&quot;&gt;Batch Jobs&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;sbatch&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;interactive&quot;&gt;Interactive&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;srun&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;modules&quot;&gt;modules&lt;/h3&gt;
+
+&lt;h2 id=&quot;running-blast-from-the-bash-terminal&quot;&gt;Running BLAST from the Bash Terminal&lt;/h2&gt;
+
+&lt;p&gt;First, create a directory for storing all of the files used in today’s lab exercise:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir lab-02
+cd lab-02
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next, we need to add the &lt;strong&gt;BLAST&lt;/strong&gt; program to our environment variable PATH (&lt;strong&gt;$PATH&lt;/strong&gt;) by loading the module:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load blast
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, let’s grab the mouse and zebrafish RefSeq
+protein data sets from NCBI, and put them in our work directory. We’ll
+use &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt; to download the files:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.1.protein.faa.gz
+curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.2.protein.faa.gz
+curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.3.protein.faa.gz
+
+curl -O ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Thought Questions:&lt;/strong&gt;&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;What does the -O option specify for the curl command?
+      &lt;ul&gt;
+        &lt;li&gt;How can you find out?&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Let’s look at the files in the current directory:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -l
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You should see output similar to:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;smhigdon@farm:~/BIT150/lab-02$ ls -l
+total 29116
+-rw-rw-r-- 1 smhigdon smhigdon  3433688 Sep 14 23:54 mouse.1.protein.faa.gz
+-rw-rw-r-- 1 smhigdon smhigdon  5451738 Sep 14 23:54 mouse.2.protein.faa.gz
+-rw-rw-r-- 1 smhigdon smhigdon  6898191 Sep 14 23:54 mouse.3.protein.faa.gz
+-rw-rw-r-- 1 smhigdon smhigdon 14021957 Sep 14 23:54 zebrafish.1.protein.faa.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;All four of the files are FASTA protein files (that’s what the .faa
+suggests) that are compressed with &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt; (that’s what the .gz means).&lt;/p&gt;
+
+&lt;p&gt;Let’s uncompress them:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gunzip *.faa.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and let’s look at the first few sequences in the file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head mouse.1.protein.faa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;These are protein sequences in &lt;strong&gt;FASTA&lt;/strong&gt; format. FASTA format is something
+many of you have probably seen in one form or another – it’s pretty
+ubiquitous. FASTA files are text files that contain records; each record
+starts with a line beginning with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;, and then contains one or more
+lines of sequence text. The line beginning with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; is called the &lt;strong&gt;header&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s take the first two sequences we just saw using the head command and save them to a file. We can achieve this by using output redirection with &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;, which says:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;“take all output from the previous command and store it in the following file.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head -11 mouse.1.protein.faa &amp;gt; mm-first.fa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;So now, for example, you can do &lt;code class=&quot;highlighter-rouge&quot;&gt;cat mm-first.fa&lt;/code&gt; to see the contents of
+that file (or &lt;code class=&quot;highlighter-rouge&quot;&gt;less mm-first.fa&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;Now let’s &lt;strong&gt;BLAST&lt;/strong&gt; these two sequences against the entire zebrafish
+protein data set. First, we need to tell BLAST that the zebrafish
+sequences are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;(a) a database, and&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;(b) a protein database.
+That’s done by calling &lt;code class=&quot;highlighter-rouge&quot;&gt;makeblastdb&lt;/code&gt;:&lt;/p&gt;
+
+    &lt;p&gt;makeblastdb -in zebrafish.1.protein.faa -dbtype prot&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Next, we call &lt;strong&gt;BLAST&lt;/strong&gt; to do the search:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -query mm-first.fa -db zebrafish.1.protein.faa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This should run pretty quickly, but you’re going to get a lot of output!!
+To save it to a file instead of watching it go past on the screen,
+ask BLAST to save the output to a file that we’ll name &lt;code class=&quot;highlighter-rouge&quot;&gt;mm-first.x.zebrafish.txt&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -query mm-first.fa -db zebrafish.1.protein.faa -out mm-first.x.zebrafish.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now you can &lt;code class=&quot;highlighter-rouge&quot;&gt;page&lt;/code&gt; through this file at your leisure by typing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less mm-first.x.zebrafish.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(Type spacebar to move down, and ‘q’ to get out of paging mode.)&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Let’s do some more sequences (this one will take a little longer to run):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head -500 mouse.1.protein.faa &amp;gt; mm-second.fa
+blastp -query mm-second.fa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This will compare the first 83 sequences.  You can look at the output file with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less mm-second.x.zebrafish.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(again, type ‘q’ to get out of paging mode.)&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Thought Questions&lt;/strong&gt;:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;You can execute multiple commands at a time;&lt;/li&gt;
+    &lt;li&gt;You might see a warning -
+    &lt;code class=&quot;highlighter-rouge&quot;&gt;Selenocysteine (U) at position 310 replaced by X&lt;/code&gt;
+      &lt;ul&gt;
+        &lt;li&gt;what does this mean?&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;Why did it take longer to BLAST &lt;code class=&quot;highlighter-rouge&quot;&gt;mm-second.fa&lt;/code&gt; than &lt;code class=&quot;highlighter-rouge&quot;&gt;mm-first.fa&lt;/code&gt;?&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;items-for-discussion&quot;&gt;Items for discussion:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt; options and -help.&lt;/li&gt;
+  &lt;li&gt;command line options, more generally - why so many?&lt;/li&gt;
+  &lt;li&gt;automation rocks!&lt;/li&gt;
+  &lt;li&gt;when you shut down, you lose all your data&lt;/li&gt;
+  &lt;li&gt;what computer(s) is this all happening on?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;visualizing-blast-output-in-rstudio&quot;&gt;Visualizing BLAST output in RStudio&lt;/h2&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Introduction to the Unix Shell</title>
@@ -857,22 +1076,345 @@ that looks interesting!&lt;/li&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://deruncie.github.io/shell-novice/&quot;&gt;Tutorial&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;unix_commands.md&quot;&gt;Unix commands&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Key ideas: introduce first&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Why command line?
-    &lt;ul&gt;
-      &lt;li&gt;many programs only run in Unix&lt;/li&gt;
-      &lt;li&gt;can interact with remote computers&lt;/li&gt;
-      &lt;li&gt;can automate tasks&lt;/li&gt;
-      &lt;li&gt;can write scripts for automation and documentation&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;/BIT150_website/2017/09/27/unix_commands/&quot;&gt;Unix commands cheatsheat&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;command-line.html&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>cheat-sheet of all the commands we saw in Lab 1</title>
+   <link href="http://localhost:4000/2017/09/27/unix_commands/"/>
+   <updated>2017-09-27T00:00:00-07:00</updated>
+   <id>http://localhost:4000/BIT150_website/2017/09/27/unix_commands</id>
+   <content type="html">&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;whoami&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints your username&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;print working directory&lt;/strong&gt; prints the path to the current directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd new_dir&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;change directory&lt;/strong&gt; changes to directory &lt;code class=&quot;highlighter-rouge&quot;&gt;new_dir&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;lists contents of current directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls -F&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;lists contents of current directory and annotates folders (&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;) and programs (&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;)&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man ls&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; is a program for viewing manuals (here of the &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; program). Use &lt;code class=&quot;highlighter-rouge&quot;&gt;space&lt;/code&gt; to page, arrow keys to move, and &lt;code class=&quot;highlighter-rouge&quot;&gt;q&lt;/code&gt; to quit. In the SYNOPSIS, arguments in square brackets are optional.&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd /&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;go to the &lt;strong&gt;root&lt;/strong&gt; directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd ~&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;go to the &lt;strong&gt;home&lt;/strong&gt; directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd .&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;stay in the &lt;strong&gt;current&lt;/strong&gt; directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd ..&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;go &lt;strong&gt;up&lt;/strong&gt; one directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd ../../&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;go &lt;strong&gt;up&lt;/strong&gt; two directories at once&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd -&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;go back to the last directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;print the contents of &lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt; to the screen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; new_file.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;redirect&lt;/strong&gt; command. Instead of printing to the screen, save output in the file &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;gt; old_file.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;append&lt;/strong&gt; output to the end of &lt;code class=&quot;highlighter-rouge&quot;&gt;old_file.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir new_dir&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;creates the folder &lt;code class=&quot;highlighter-rouge&quot;&gt;new_dir&lt;/code&gt; in the current directory&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mv my_file my_folder/&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;moves&lt;/strong&gt; file &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; to folder &lt;code class=&quot;highlighter-rouge&quot;&gt;my_folder&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mv old_file new_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;renames&lt;/strong&gt; file &lt;code class=&quot;highlighter-rouge&quot;&gt;old_file&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mv old_file my_folder/new_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;moves&lt;/strong&gt; file &lt;code class=&quot;highlighter-rouge&quot;&gt;old_file&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;my_folder&lt;/code&gt; and renames it to &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mv files* my_folder/&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;moves all files beginning with &lt;code class=&quot;highlighter-rouge&quot;&gt;files&lt;/code&gt; to folder &lt;code class=&quot;highlighter-rouge&quot;&gt;my_folder&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls files*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;lists all files that begin with the characters &lt;code class=&quot;highlighter-rouge&quot;&gt;files&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;print the last 1000 commands to the screen&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bash my_script.sh&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;runs each line of the file &lt;code class=&quot;highlighter-rouge&quot;&gt;my_script.sh&lt;/code&gt; as if you had typed it into Bash directly&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;variable=some_text&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;assigns &lt;code class=&quot;highlighter-rouge&quot;&gt;variable&lt;/code&gt; the value &lt;code class=&quot;highlighter-rouge&quot;&gt;some_text&lt;/code&gt;. Note: no spaces around &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$variable&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;access the value held by &lt;code class=&quot;highlighter-rouge&quot;&gt;variable&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo $variable&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints the value held by &lt;code class=&quot;highlighter-rouge&quot;&gt;variable&lt;/code&gt; to the screen&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo ${variable}.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints the value held by the variable followed by the text &lt;code class=&quot;highlighter-rouge&quot;&gt;.txt&lt;/code&gt; to the screen&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;# echo ${variable}.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;does nothing! &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; is a comment character, which tells Bash to ignore everything else on the line&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rm my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;deletes file &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; &lt;strong&gt;immediately&lt;/strong&gt;.&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rm -i my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;asks before deleting&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rm -f my_folder&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;deletes &lt;code class=&quot;highlighter-rouge&quot;&gt;my_folder&lt;/code&gt; &lt;strong&gt;and all its contents&lt;/strong&gt; immediately&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rm -if my_folder&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;asks before deleting each file in &lt;code class=&quot;highlighter-rouge&quot;&gt;my_folder&lt;/code&gt;, and then deletes &lt;code class=&quot;highlighter-rouge&quot;&gt;my_folder&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat My File.txt&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;tries to print the file &lt;code class=&quot;highlighter-rouge&quot;&gt;My&lt;/code&gt; to the screen (gives error: file not found). Then tries to print the file &lt;code class=&quot;highlighter-rouge&quot;&gt;File.txt&lt;/code&gt; to the screen (another error)&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat &quot;My File.txt&quot;&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;successfully prints the file &lt;code class=&quot;highlighter-rouge&quot;&gt;My File.txt&lt;/code&gt; to the screen. &lt;strong&gt;Avoid spaces in file names!&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints the first 10 lines of &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; to the screen&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head -n 3 my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints the first 3 lines of &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; to the screen&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tail -n 3 my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints the last 3 lines of &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; to the screen&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;wc my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;prints the #lines, #words, and #characters of file &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; to the screen. Options &lt;code class=&quot;highlighter-rouge&quot;&gt;-c&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;-w&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt; select fewer stats&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sort my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;sorts&lt;/strong&gt; the lines of &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; &lt;strong&gt;alphabetically&lt;/strong&gt; by the first &lt;strong&gt;word&lt;/strong&gt; in each line&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sort -n my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;sorts&lt;/strong&gt; the lines of &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; &lt;strong&gt;numerically&lt;/strong&gt;, interpreting the first word as a number&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;uniq my_file&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;compares each line of &lt;code class=&quot;highlighter-rouge&quot;&gt;my_file&lt;/code&gt; with the preceeding one, and prints it to the screen if it is different&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cmd1 | cmd2&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;run command &lt;code class=&quot;highlighter-rouge&quot;&gt;cmd1&lt;/code&gt; and then take the output and get it to command &lt;code class=&quot;highlighter-rouge&quot;&gt;cmd2&lt;/code&gt; to run immediately, avoiding any intermediate files&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;for-loop-syntax&quot;&gt;For loop syntax&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for f in list
+ do
+  echo $f
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;list&lt;/code&gt; is any list of values, separated by a &lt;code class=&quot;highlighter-rouge&quot;&gt;space&lt;/code&gt;. You can type: &lt;code class=&quot;highlighter-rouge&quot;&gt;file1 file2 file3&lt;/code&gt;. Or you can use a wild card &lt;code class=&quot;highlighter-rouge&quot;&gt;file*&lt;/code&gt;, or a sequence of numbers: &lt;code class=&quot;highlighter-rouge&quot;&gt;1 2 3 4 5&lt;/code&gt;, or faster: &lt;code class=&quot;highlighter-rouge&quot;&gt;$(seq 1 5)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The for loop will:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;take each value in turn, and assign it to the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;f&lt;/code&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;ex. &lt;code class=&quot;highlighter-rouge&quot;&gt;f=value&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Run the lines betwen &lt;code class=&quot;highlighter-rouge&quot;&gt;do&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;done&lt;/code&gt;.
+    &lt;ul&gt;
+      &lt;li&gt;here, it runs &lt;code class=&quot;highlighter-rouge&quot;&gt;echo $f&lt;/code&gt;; ie, it echo’s the &lt;strong&gt;value&lt;/strong&gt; of &lt;code class=&quot;highlighter-rouge&quot;&gt;f&lt;/code&gt; to the screen&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Goes back to the beginning. If there is another value in the list, it starts again at (1). Otherwise, it exits.&lt;/li&gt;
+&lt;/ol&gt;
+
 </content>
  </entry>
  
