@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-09-28T07:00:08-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - HPC and Command Line BLAST</title><link href="http://localhost:4000/BIT150_website/2017/10/05/lab-02/" rel="alternate" type="text/html" title="Lab 2 - HPC and Command Line BLAST" /><published>2017-10-05T00:00:00-07:00</published><updated>2017-10-05T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/05/lab-02/">&lt;p&gt;Goals:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-09-28T09:01:35-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - HPC and Command Line BLAST</title><link href="http://localhost:4000/BIT150_website/2017/10/05/lab-02/" rel="alternate" type="text/html" title="Lab 2 - HPC and Command Line BLAST" /><published>2017-10-05T00:00:00-07:00</published><updated>2017-10-05T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/05/lab-02/">&lt;p&gt;Goals:&lt;/p&gt;
 
 &lt;p&gt;Introduce HPC. Short lecture on using a cluster&lt;/p&gt;
 
@@ -941,7 +941,7 @@ the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;
   &lt;li&gt;Learn by doing. There’s no real other way to learn this than by trying it out.  Write your next paper in nano (really emacs or vi), open pdfs from the command line, automate something you don’t really need to automate.&lt;/li&gt;
 &lt;/ul&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Lessons modified from: Data Carpentry Intro to Shell</summary></entry><entry><title type="html">Project 1 - Mining bioinformatics databases</title><link href="http://localhost:4000/BIT150_website/2017/09/28/project-1/" rel="alternate" type="text/html" title="Project 1 - Mining bioinformatics databases" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/project-1</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/project-1/">&lt;p&gt;The goal of this project is to explore online public databases and discover information on a gene that may be relevant to its role in diseases or other traits.&lt;/p&gt;
 
-&lt;p&gt;First choose a trait. Human diseases work well because there have been study so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
+&lt;p&gt;First choose a trait. Human diseases work well because there have been studied so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
 
 &lt;p&gt;Once you have chosen your trait, you need to find a gene that has been linked to that trait.
 A useful place to start for Human traits is the &lt;a href=&quot;https://www.omim.org&quot;&gt;Online Mendelian Inheritance in Man&lt;/a&gt; databases. &lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;, or just &lt;a href=&quot;https://www.google.com&quot;&gt;Google&lt;/a&gt; also work.&lt;/p&gt;
@@ -975,6 +975,10 @@ A useful place to start for Human traits is the &lt;a href=&quot;https://www.omi
     &lt;tr&gt;
       &lt;td&gt;Type-2 Diabetes&lt;/td&gt;
       &lt;td&gt;INS&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mad cow disease&lt;/td&gt;
+      &lt;td&gt;PRNP&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Sprinter gene&lt;/td&gt;

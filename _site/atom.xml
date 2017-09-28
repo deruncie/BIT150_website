@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-09-28T07:00:08-07:00</updated>
+ <updated>2017-09-28T09:01:35-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -978,7 +978,7 @@ the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;
    <id>http://localhost:4000/BIT150_website/2017/09/28/project-1</id>
    <content type="html">&lt;p&gt;The goal of this project is to explore online public databases and discover information on a gene that may be relevant to its role in diseases or other traits.&lt;/p&gt;
 
-&lt;p&gt;First choose a trait. Human diseases work well because there have been study so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
+&lt;p&gt;First choose a trait. Human diseases work well because there have been studied so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
 
 &lt;p&gt;Once you have chosen your trait, you need to find a gene that has been linked to that trait.
 A useful place to start for Human traits is the &lt;a href=&quot;https://www.omim.org&quot;&gt;Online Mendelian Inheritance in Man&lt;/a&gt; databases. &lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;, or just &lt;a href=&quot;https://www.google.com&quot;&gt;Google&lt;/a&gt; also work.&lt;/p&gt;
@@ -1012,6 +1012,10 @@ A useful place to start for Human traits is the &lt;a href=&quot;https://www.omi
     &lt;tr&gt;
       &lt;td&gt;Type-2 Diabetes&lt;/td&gt;
       &lt;td&gt;INS&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mad cow disease&lt;/td&gt;
+      &lt;td&gt;PRNP&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Sprinter gene&lt;/td&gt;
