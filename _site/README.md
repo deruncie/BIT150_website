@@ -1,6 +1,7 @@
 # BIT150 - Applied Bioinformatics
 ---------------------------------
 
+The live version of this repository is hosted at: <http://deruncie.github.io/BIT150_website>
 
 ## Contents
 

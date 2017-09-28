@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-09-27T22:56:50-07:00</updated>
+ <updated>2017-09-27T23:58:53-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -762,22 +762,52 @@ the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;
 &lt;p&gt;First choose a trait. Human diseases work well because there have been study so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
 
 &lt;p&gt;Once you have chosen your trait, you need to find a gene that has been linked to that trait.
-A useful place to start for Human traits is the &lt;a href=&quot;www.omim.org&quot;&gt;Online Mendelian Inheritance in Man&lt;/a&gt; databases. &lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;, or just &lt;a href=&quot;www.google.com&quot;&gt;Google&lt;/a&gt; also work.&lt;/p&gt;
+A useful place to start for Human traits is the &lt;a href=&quot;https://www.omim.org&quot;&gt;Online Mendelian Inheritance in Man&lt;/a&gt; databases. &lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;, or just &lt;a href=&quot;https://www.google.com&quot;&gt;Google&lt;/a&gt; also work.&lt;/p&gt;
 
 &lt;p&gt;Here are some trait - gene pairs as examples:&lt;/p&gt;
 
-&lt;!--table--&gt;
-&lt;p&gt;| Trait              | Gene  |
-|——————–|——-|
-| Cystic Fibrosis    | CFTR  |
-| Acondroplasia      | FGFR3 |
-| Breast Cancer      | BRCA1 |
-| Alzheimers disease | APOE  |
-| Type-2 Diabetes    | INS   |
-| Sprinter gene      | ACTN3 |
-| Shade-response     | PHYB  |
-| Flower defects     | AP1   |
-&lt;!--endtable--&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Trait&lt;/th&gt;
+      &lt;th&gt;Gene&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Cystic Fibrosis&lt;/td&gt;
+      &lt;td&gt;CFTR&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Acondroplasia&lt;/td&gt;
+      &lt;td&gt;FGFR3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Breast Cancer&lt;/td&gt;
+      &lt;td&gt;BRCA1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Alzheimers disease&lt;/td&gt;
+      &lt;td&gt;APOE&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Type-2 Diabetes&lt;/td&gt;
+      &lt;td&gt;INS&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Sprinter gene&lt;/td&gt;
+      &lt;td&gt;ACTN3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Shade-response&lt;/td&gt;
+      &lt;td&gt;PHYB&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Flower defects&lt;/td&gt;
+      &lt;td&gt;AP1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;p&gt;You’re goal in &lt;strong&gt;Projects 1 and 2&lt;/strong&gt; is to build a model for why mutations in this gene are associated with your trait.&lt;/p&gt;
 
@@ -799,7 +829,7 @@ A useful place to start for Human traits is the &lt;a href=&quot;www.omim.org&qu
 
 &lt;ul&gt;
   &lt;li&gt;Every student must choose a different database. There are 1000s of databases available. Usefull lists
-can be found &lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;here&lt;/a&gt;. When you choose a database, enter it in the google doc &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing&quot;&gt;here&lt;/a&gt;. 
+can be found &lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;here&lt;/a&gt;. When you choose a database, enter it in the google doc &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing&quot;&gt;here&lt;/a&gt;.
 Before you choose your database, ensure that someone else hasn’t chosen that one first!&lt;/li&gt;
   &lt;li&gt;The only limitation on the database is that it contains information on your groups gene or disease. Find a database
 that looks interesting!&lt;/li&gt;
@@ -808,10 +838,6 @@ that looks interesting!&lt;/li&gt;
 &lt;p&gt;For &lt;strong&gt;Project 2&lt;/strong&gt;, you can refer back to this class resource to identify types of data that you can integrate to build a model for your gene.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Note: If you find a databases that you want to explore that indexes something other than genes, ask&lt;/strong&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Next: :doc:&lt;code class=&quot;highlighter-rouge&quot;&gt;project-2&lt;/code&gt;&lt;/p&gt;
 </content>
  </entry>
  
