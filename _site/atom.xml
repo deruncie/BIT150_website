@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-09-27T09:34:53-07:00</updated>
+ <updated>2017-09-27T22:56:50-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -872,7 +872,7 @@ that looks interesting!&lt;/li&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;command-line.html&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;
+&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;/BIT150_website/2017/09/28/command-line/&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;
 </content>
  </entry>
  
