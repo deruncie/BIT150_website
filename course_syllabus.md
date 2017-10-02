@@ -1,6 +1,6 @@
 ---
 layout: page
-title: BIT 150 Syllabus - Fall 2017 
+title: BIT 150 Syllabus - Fall 2017
 ---
 
 **Applied Bioinformatics**
@@ -11,36 +11,36 @@ Fall Quarter 2017
 
 **Lectures:** T/Th 10:00-10:50, Labs: Th 3:10-5:00
 
- 
 
-**Instructor:** Daniel Runcie Robbins 278, deruncie@ucdavis.edu
+
+**Instructor:** Daniel Runcie Robbins 278, <deruncie@ucdavis.edu>
 
 **Office Hours:** Mondays 3-4pm in Robbins 278, or by appointment
 
- 
 
-**TA:** Shawn Higdon smhigdon@ucdavis.edu
+
+**TA:** Shawn Higdon, <smhigdon@ucdavis.edu>
 
 **Office Hours:** Tuesdays 4-5pm PES 1137
 
- 
+
 
 **Grading:**   A-F
 
- 
 
-## Rationale:  
+
+## Rationale:
 Bioinformatics is the use of computational tools to collect, annotate, and analyze biological data. Bioinformatics tools are critical for many areas of modern biological research, both for the processing of modern high-throughput data, and for linking new data to existing data and biological knowledge. This course provides an introduction to the field of Bioinformatics from the perspective of a Bioinformatics user - one who uses Bioinformatics tools to address biological questions.
 
- 
 
-## Course Aims and Outcomes:  
+
+## Course Aims and Outcomes:
 
 ### Aims
 
 This course aims to introduce students to the major types of bioinformatics tools - databases, computer programs, and workflows - used in bioinformatics research today. Students will gain familiarity with how data are collected, archived, retrieved, and analyzed, and how different types of data can be integrated to lead to new biological knowledge.
 
- 
+
 ### Specific Learning Outcomes:
 
 By the end of this course, students will:
@@ -58,7 +58,7 @@ By the end of this course, students will:
 
 
 
-### Format and Procedures:  
+### Format and Procedures:
 
 The class is split between two 50-minute lectures and one 2hr lab per week. Lectures will be structured around conceptual concepts of bioinformatics, and will include group discussions related to readings given beforehand. Labs will include practical demonstrations of computational concepts, and time for group work on projects.
 
@@ -69,12 +69,12 @@ The class is split between two 50-minute lectures and one 2hr lab per week. Lect
 - Choose projects that you find interesting
 - Help others when they are struggling. Each tool and program is different and sometimes it takes multiple sets of eyes to find the key link or error in a program
 
- 
 
-#### Class attendance and participation policy:  
+
+#### Class attendance and participation policy:
 Attendance at both lectures and labs is required, and participation in discussions and group projects will contribute to the final grade.
 
-#### Course readings:  
+#### Course readings:
 There is no required text. Specific readings will be assigned based on available sources.
 
 #### Grading Procedures:
@@ -90,7 +90,7 @@ There is no required text. Specific readings will be assigned based on available
 
 Homeworks will be assigned periodically after lab periods and will be due the following week. Quizzes will be assigned on Canvas based on readings and will be due before lecture. Projects will involve both a written report and presentation. Attendance and participation involves active involvement in group discussions and projects.
 
- 
+
 
 ## Academic Integrity
 Each student in this course is expected to abide by the UC Davis Code of Academic Conduct.  Any work submitted by a student in this course for academic credit will be the student's own work. [Optional: For this course, collaboration is allowed in the following instances: list instances.]
@@ -99,7 +99,7 @@ You are encouraged to study together and to discuss information and concepts cov
 
 Should copying occur, both the student who copied work from another student and the student who gave material to be copied will both automatically receive a zero for the assignment. Penalty for violation of this Code can also be extended to include failure of the course and University disciplinary action.
 
- 
+
 
 ## Accommodations for students with disabilities
 
