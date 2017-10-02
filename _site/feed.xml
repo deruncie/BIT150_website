@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-09-28T09:01:35-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - HPC and Command Line BLAST</title><link href="http://localhost:4000/BIT150_website/2017/10/05/lab-02/" rel="alternate" type="text/html" title="Lab 2 - HPC and Command Line BLAST" /><published>2017-10-05T00:00:00-07:00</published><updated>2017-10-05T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/05/lab-02/">&lt;p&gt;Goals:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-10-01T19:17:39-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - HPC and Command Line BLAST</title><link href="http://localhost:4000/BIT150_website/2017/10/05/lab-02/" rel="alternate" type="text/html" title="Lab 2 - HPC and Command Line BLAST" /><published>2017-10-05T00:00:00-07:00</published><updated>2017-10-05T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/05/lab-02/">&lt;p&gt;Goals:&lt;/p&gt;
 
 &lt;p&gt;Introduce HPC. Short lecture on using a cluster&lt;/p&gt;
 
@@ -208,7 +208,33 @@ blastp -query mm-second.fa -db zebrafish.1.protein.faa -out mm-second.x.zebrafis
   &lt;li&gt;what computer(s) is this all happening on?&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;visualizing-blast-output-in-rstudio&quot;&gt;Visualizing BLAST output in RStudio&lt;/h2&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Goals:</summary></entry><entry><title type="html">Introduction to the Unix Shell</title><link href="http://localhost:4000/BIT150_website/2017/09/28/command-line/" rel="alternate" type="text/html" title="Introduction to the Unix Shell" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/command-line</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/command-line/">&lt;blockquote&gt;
+&lt;h2 id=&quot;visualizing-blast-output-in-rstudio&quot;&gt;Visualizing BLAST output in RStudio&lt;/h2&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Goals:</summary></entry><entry><title type="html">Slack Workspace for BIT150</title><link href="http://localhost:4000/BIT150_website/2017/10/01/slack_site/" rel="alternate" type="text/html" title="Slack Workspace for BIT150" /><published>2017-10-01T00:00:00-07:00</published><updated>2017-10-01T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/01/slack_site</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/01/slack_site/">&lt;p&gt;&lt;a href=&quot;https://www.slack.com/features&quot; target=&quot;_blank&quot;&gt;Slack&lt;/a&gt; is one method of staying connected that has been widely adopted by different groups within the UC Davis community. Dan and I have created a Slack workspace specifically for our use this quarter in the BIT150 class.&lt;/p&gt;
+
+&lt;p&gt;Please follow &lt;a href=&quot;https://join.slack.com/t/bit150-2017/shared_invite/enQtMjQ5NzU1MzI1NTExLTJiYTU2YjkzYzdiOTgxMjlkOGQwNGE3NzVjNzUwZjIxYmI1NDEyMWVkODFmNjVhN2ZlZmJlM2I4MmQ0ZmU3Nzg&quot; target=&quot;_blank&quot;&gt;this link&lt;/a&gt; to join the BIT150-2017 slack channel.&lt;/p&gt;
+
+&lt;p&gt;Some benefits for us to use slack are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;sharing documents with one another&lt;/li&gt;
+  &lt;li&gt;group messaging&lt;/li&gt;
+  &lt;li&gt;direct messaging&lt;/li&gt;
+  &lt;li&gt;asking questions about course related content&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Using slack is not a requirement, but it is a great way for connecting with one another when we are not in class.&lt;/p&gt;
+
+&lt;p&gt;If you have any questions about slack, please feel free to e-mail us:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;mailto:deruncie@ucdavis.edu&quot;&gt;deruncie@ucdavis.edu&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;mailto:smhigdon@ucdavis.edu&quot;&gt;smhigdon@ucdavis.edu&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;OR&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Write the questions directly in the slack workspace once you join!&lt;/p&gt;
+
+&lt;p&gt;Dan and Shawn&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Slack is one method of staying connected that has been widely adopted by different groups within the UC Davis community. Dan and I have created a Slack workspace specifically for our use this quarter in the BIT150 class.</summary></entry><entry><title type="html">Introduction to the Unix Shell</title><link href="http://localhost:4000/BIT150_website/2017/09/28/command-line/" rel="alternate" type="text/html" title="Introduction to the Unix Shell" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/command-line</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/command-line/">&lt;blockquote&gt;
   &lt;p&gt;Lessons modified from: &lt;a href=&quot;https://hackmd.io/MwIwZgLAJgrA7HAtANmADgKaIgTisRAQ0JAMIGNC4AGE8uCZHIA=&quot;&gt;Data Carpentry Intro to Shell&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1025,13 +1051,13 @@ that looks interesting!&lt;/li&gt;
 
 &lt;p&gt;&lt;strong&gt;Note: If you find a databases that you want to explore that indexes something other than genes, ask&lt;/strong&gt;&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">The goal of this project is to explore online public databases and discover information on a gene that may be relevant to its role in diseases or other traits.</summary></entry><entry><title type="html">Lab 1 - Intro to Bioinformatics Databases</title><link href="http://localhost:4000/BIT150_website/2017/09/28/lab-01/" rel="alternate" type="text/html" title="Lab 1 - Intro to Bioinformatics Databases" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/lab-01</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/lab-01/">&lt;h2 id=&quot;1-lab-intro&quot;&gt;1. Lab intro&lt;/h2&gt;
 
-&lt;h2 id=&quot;2-answer-questions-about-human-hemoglobin---alpha1-subunit&quot;&gt;2. Answer questions about Human Hemoglobin - alpha1 subunit&lt;/h2&gt;
+&lt;h2 id=&quot;2-answer-questions-about-human-hemoglobin---subunit-beta&quot;&gt;2. Answer questions about Human Hemoglobin - subunit beta&lt;/h2&gt;
 
-&lt;h3 id=&quot;what-chromosome-is-hba-1-on&quot;&gt;What chromosome is HBA-1 on?&lt;/h3&gt;
+&lt;h3 id=&quot;what-chromosome-is-hbb-on&quot;&gt;What chromosome is HBB on?&lt;/h3&gt;
 &lt;h3 id=&quot;how-many-exons-does-this-gene-have&quot;&gt;How many exons does this gene have?&lt;/h3&gt;
 &lt;h3 id=&quot;briefly-describe-how-the-gene-works&quot;&gt;Briefly describe how the gene works?&lt;/h3&gt;
 &lt;h3 id=&quot;what-diseases-are-caused-by-mutations-in-the-gene&quot;&gt;What diseases are caused by mutations in the gene?&lt;/h3&gt;
-&lt;h3 id=&quot;find-a-paper-that-describes-an-aspect-of-hba-1s-function&quot;&gt;Find a paper that describes an aspect of HBA-1’s function&lt;/h3&gt;
+&lt;h3 id=&quot;find-a-paper-that-describes-an-aspect-of-hbbs-function&quot;&gt;Find a paper that describes an aspect of HBB’s function&lt;/h3&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Go to &lt;a href=&quot;https://hackmd.io/&quot;&gt;HackMD&lt;/a&gt;&lt;/li&gt;
