@@ -143,217 +143,616 @@
   <h1 class="post-title">Lab 2 - HPC and Command Line BLAST</h1>
   <span class="post-date">05 Oct 2017</span>
   <div class="lab">
-  <p>Goals:</p>
+  <h1 id="unix-tutorial">Unix tutorial</h1>
 
-<p>Introduce HPC. Short lecture on using a cluster</p>
+<p>In Lab 1, we covered commands to move around the Unix file system. These included:</p>
 
 <ul>
-  <li>Head node vs compute nodes</li>
-  <li>Submitting jobs</li>
-  <li>Storage</li>
-  <li>Moving files on and off</li>
-  <li>modules</li>
+  <li><code class="highlighter-rouge">pwd</code>: List the current working directory</li>
+  <li><code class="highlighter-rouge">cd</code>: Change to a new directory</li>
+  <li><code class="highlighter-rouge">ls</code>: list files, folders, and programs</li>
+  <li><code class="highlighter-rouge">man</code>: view the help page for a program</li>
 </ul>
 
-<p>BLAST tutorial</p>
+<p>We also covered the basic structure of a unix command:</p>
+
+<p><code class="highlighter-rouge">command -argument input_file &gt; output_file</code></p>
+
+<p>These commands are summarized in the file: <a href="/BIT150_website/2017/09/27/unix_commands/">Unix commands cheatsheat</a></p>
+
+<p>Today, we will continue this tutorial. We will focus on how to automate actions in Unix. This includes:</p>
 
 <ul>
-  <li>start with getting aa sequence from your protein and blasting against (mouse? human? zebrafish?)</li>
-  <li>Discuss automation</li>
-  <li>follow ANGUS. blast mouse against zebrafish
-    <ul>
-      <li>ideally replace with corn against arabidopsis, or human against mouse</li>
-      <li>submit 1-core jobs</li>
-    </ul>
-  </li>
-  <li>Discuss output
-    <ul>
-      <li>
-        <h2 id="human-readable-vs-table">human readable vs table</h2>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="slurm"><a href="https://slurm.schedmd.com/">SLURM</a></h3>
-
-<h3 id="batch-jobs">Batch Jobs</h3>
-<ul>
-  <li>sbatch</li>
-</ul>
-
-<h3 id="interactive">Interactive</h3>
-<ul>
-  <li>srun</li>
-</ul>
-
-<h3 id="modules">modules</h3>
-
-<h2 id="running-blast-from-the-bash-terminal">Running BLAST from the Bash Terminal</h2>
-
-<p>First, create a directory for storing all of the files used in today’s lab exercise:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>mkdir lab-02
-cd lab-02
-</code></pre>
-</div>
-
-<p>Next, we need to add the <strong>BLAST</strong> program to our environment variable PATH (<strong>$PATH</strong>) by loading the module:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>module load blast
-</code></pre>
-</div>
-
-<p>Now, let’s grab the mouse and zebrafish RefSeq
-protein data sets from NCBI, and put them in our work directory. We’ll
-use <code class="highlighter-rouge">curl</code> to download the files:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.1.protein.faa.gz
-curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.2.protein.faa.gz
-curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.3.protein.faa.gz
-
-curl -O ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz
-</code></pre>
-</div>
-
-<blockquote>
-  <p><strong>Thought Questions:</strong></p>
-  <ul>
-    <li>What does the -O option specify for the curl command?
-      <ul>
-        <li>How can you find out?</li>
-      </ul>
-    </li>
-  </ul>
-</blockquote>
-
-<p>Let’s look at the files in the current directory:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>ls -l
-</code></pre>
-</div>
-
-<p>You should see output similar to:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>smhigdon@farm:~/BIT150/lab-02$ ls -l
-total 29116
--rw-rw-r-- 1 smhigdon smhigdon  3433688 Sep 14 23:54 mouse.1.protein.faa.gz
--rw-rw-r-- 1 smhigdon smhigdon  5451738 Sep 14 23:54 mouse.2.protein.faa.gz
--rw-rw-r-- 1 smhigdon smhigdon  6898191 Sep 14 23:54 mouse.3.protein.faa.gz
--rw-rw-r-- 1 smhigdon smhigdon 14021957 Sep 14 23:54 zebrafish.1.protein.faa.gz
-</code></pre>
-</div>
-
-<p>All four of the files are FASTA protein files (that’s what the .faa
-suggests) that are compressed with <code class="highlighter-rouge">gzip</code> (that’s what the .gz means).</p>
-
-<p>Let’s uncompress them:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>gunzip *.faa.gz
-</code></pre>
-</div>
-
-<p>and let’s look at the first few sequences in the file:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>head mouse.1.protein.faa
-</code></pre>
-</div>
-
-<p>These are protein sequences in <strong>FASTA</strong> format. FASTA format is something
-many of you have probably seen in one form or another – it’s pretty
-ubiquitous. FASTA files are text files that contain records; each record
-starts with a line beginning with a <code class="highlighter-rouge">&gt;</code>, and then contains one or more
-lines of sequence text. The line beginning with a <code class="highlighter-rouge">&gt;</code> is called the <strong>header</strong>.</p>
-
-<p>Let’s take the first two sequences we just saw using the head command and save them to a file. We can achieve this by using output redirection with <code class="highlighter-rouge">&gt;</code>, which says:</p>
-<blockquote>
-  <p>“take all output from the previous command and store it in the following file.”</p>
-</blockquote>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>head -11 mouse.1.protein.faa &gt; mm-first.fa
-</code></pre>
-</div>
-
-<p>So now, for example, you can do <code class="highlighter-rouge">cat mm-first.fa</code> to see the contents of
-that file (or <code class="highlighter-rouge">less mm-first.fa</code>).</p>
-
-<p>Now let’s <strong>BLAST</strong> these two sequences against the entire zebrafish
-protein data set. First, we need to tell BLAST that the zebrafish
-sequences are:</p>
-<ul>
-  <li>(a) a database, and</li>
+  <li>wild cards</li>
+  <li>scripts</li>
+  <li>for loops</li>
   <li>
-    <p>(b) a protein database.
-That’s done by calling <code class="highlighter-rouge">makeblastdb</code>:</p>
+    <p>We will also cover some other useful commands including:</p>
+  </li>
+  <li><code class="highlighter-rouge">cat</code>, <code class="highlighter-rouge">echo</code>, <code class="highlighter-rouge">mv</code></li>
+  <li><code class="highlighter-rouge">head</code>, <code class="highlighter-rouge">tail</code>, <code class="highlighter-rouge">wc</code></li>
+</ul>
 
-    <p>makeblastdb -in zebrafish.1.protein.faa -dbtype prot</p>
+<h2 id="refresher-activity">Refresher activity</h2>
+
+<p>Open the data-shell directory in <code class="highlighter-rouge">Git BASH</code>. Type:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ls -F
+</code></pre>
+</div>
+
+<p>There is a folder called <code class="highlighter-rouge">Desktop</code>. Inside it is a folder called <code class="highlighter-rouge">hidden</code>. Somewhere inside that folder is a file called <code class="highlighter-rouge">youfoundit.txt</code>. Find the file. Once you’ve found it, enter the command:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cat youfoundit.txt
+</code></pre>
+</div>
+
+<p>The command <code class="highlighter-rouge">cat</code> takes as input a file name, and simply reads the file and prints its output to the screen.</p>
+
+<h2 id="automation-1">Automation-1</h2>
+
+<p>Now, we’ll return to processing Nelle’s data files using the <code class="highlighter-rouge">goostats</code> program.</p>
+
+<p>Return to the <code class="highlighter-rouge">data_shell</code> directory, and then go to the <code class="highlighter-rouge">north-pacific-gyre/2012-07-03</code> folder.</p>
+
+<p>Remember, the command to process a file looks like:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>programs/goostat NENE01729A.txt &gt; output_NENE01729A.txt
+</code></pre>
+</div>
+
+<p>Process the first three files: <code class="highlighter-rouge">NENE01729A.txt</code>, <code class="highlighter-rouge">NENE01729B.txt</code>, and <code class="highlighter-rouge">NENE02040A.txt</code>. Use the <code class="highlighter-rouge">up-arrow</code> to repeat the previous command, and then the arrow keys to modify it. You can open the folder in Windows File-Explorer to see the output files. Or type <code class="highlighter-rouge">ls -F</code>.</p>
+
+<h3 id="cleaning-up-our-mess">Cleaning up our mess</h3>
+
+<p>Note that with these output files, our data directory is getting messy. It would be nicer to have the raw data files in one folder and the output files in another folder.</p>
+
+<p>Let’s make an output folder, and move our output files there. On Windows, you could create a new directory. In BASH, type:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mkdir output
+</code></pre>
+</div>
+
+<p>On Windows, you could select each file and drag it to the folder. In BASH, type:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mv output_NENE01729A.txt output/
+</code></pre>
+</div>
+
+<p>You can also re-name files with the <code class="highlighter-rouge">mv</code> command:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mv output/output_NENE01729B.txt output/renamed_file.txt
+</code></pre>
+</div>
+
+<p><strong>Note</strong>: We didn’t have to move to the <code class="highlighter-rouge">output</code> directory to do this renaming. We just gave the relative path to the file.</p>
+
+<h4 id="wildcards">Wildcards</h4>
+
+<p>Remember, BASH is all about automation. We don’t have to type the <code class="highlighter-rouge">mv</code> command for each file separately. We can use a wild-card to select all the output files at once:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mv output* output/
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">*</code> character matches any set of character. Before running the <code class="highlighter-rouge">mv</code> command, BASH first expands <code class="highlighter-rouge">output*</code> to all files that start with <code class="highlighter-rouge">output</code>, and then contain 0 or more additional characters. It then passes them all to mv command.</p>
+
+<p><strong>Hint</strong> There’s no <code class="highlighter-rouge">UNDO</code> in BASH! It’s always a good idea to test out a BASH command like this before you run it. Before running a command, you can use the command <code class="highlighter-rouge">echo</code> to print out exactly what BASH is going to do:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>echo "mv output* output/"
+</code></pre>
+</div>
+
+<p>Be sure to put the command in quotes.</p>
+
+<p><code class="highlighter-rouge">echo</code> is similar to <code class="highlighter-rouge">cat</code>, except for commands instead of files. <code class="highlighter-rouge">cat</code> prints the contents of the file to the screen. <code class="highlighter-rouge">echo</code> prints the command itself to the screen.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>echo "Some text"
+echo "output*"
+</code></pre>
+</div>
+
+<p>You don’t always need the quotes, but it’s a good habid.</p>
+
+<p>Wildcards work with many commands. Try it with <code class="highlighter-rouge">ls</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ls -F NENE*
+</code></pre>
+</div>
+
+<h3 id="activity">Activity:</h3>
+<p>Find all files that have the character <code class="highlighter-rouge">A</code> in them. How many are there?</p>
+
+<p><strong>Before continuing, all output files should be in the output folder.</strong></p>
+
+<h2 id="automation-2">Automation-2</h2>
+
+<p>Wildcards are one way to automate. Scripts are another.</p>
+
+<p>Run <code class="highlighter-rouge">goostat</code> again, but this time write directly into the <code class="highlighter-rouge">output</code> folder.</p>
+
+<p>Remember the command? You can find it by typing <code class="highlighter-rouge">history</code>.</p>
+
+<ol>
+  <li>Open <code class="highlighter-rouge">Notepad++</code>. Copy the comand, paste it there</li>
+  <li>Paste it several times</li>
+  <li>Replace the file name with the others in the directory.</li>
+  <li>Copy it all, paste it in terminal.</li>
+  <li>Is this easier? No. <strong>But it’s documented!</strong></li>
+  <li>Alternatively, save it as <code class="highlighter-rouge">process_goostats.sh</code>. <strong>Be sure to change character encoding to Unix</strong>.</li>
+  <li>Run with <code class="highlighter-rouge">bash process_goostats.sh</code></li>
+</ol>
+
+<h3 id="for-loops">For-loops</h3>
+
+<p>But, we can tell Bash to automate the creation of each of these lines.</p>
+
+<p>Computers are great a repetitive tasks like this. They do it faster, with fewer mistakes.</p>
+
+<p>A <strong>for loop</strong> is a tool for repeating the same action several times with a different input each time.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>for file in *.txt
+do
+  programs/goostat $file &gt; output/output_$file
+done
+</code></pre>
+</div>
+
+<p>The loop has several parts:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">for file in *.txt</code>: This declares the loop and the input for each iteration.
+    <ol>
+      <li><code class="highlighter-rouge">*.txt</code> gives a list of files. We can view the list with <code class="highlighter-rouge">echo *.txt</code>. Lists in Bash are separate by spaces</li>
+      <li><code class="highlighter-rouge">file</code> is a <strong>variable</strong>. What the loop will do is it will take the name of the first file from the list, and assign it to the variable <code class="highlighter-rouge">file</code>. It will then run the lines between <code class="highlighter-rouge">do</code> and <code class="highlighter-rouge">done</code>. Once those lines are done, it will assign the next file name to the variable <code class="highlighter-rouge">file</code>.</li>
+      <li>Inside the <code class="highlighter-rouge">do/done</code> block, we can refer to the actual file name by typing <code class="highlighter-rouge">$file</code>, or better <code class="highlighter-rouge">${file}</code>. When bash sees <code class="highlighter-rouge">$file</code>, it replaces it with the file name stored in the variable.</li>
+      <li>Do: <code class="highlighter-rouge">file=NENE01729A.txt</code>, and then <code class="highlighter-rouge">echo $file</code>. Try <code class="highlighter-rouge">echo file</code>.</li>
+      <li>Now, do: <code class="highlighter-rouge">file=some_other_file.txt</code>, and then <code class="highlighter-rouge">echo $file</code>.</li>
+    </ol>
+  </li>
+</ol>
+
+<p>Before we run the script, let’s test it. Replace the line <code class="highlighter-rouge">program...</code> with <code class="highlighter-rouge">echo "program..."</code>. Then copy the lines and paste into the terminal.</p>
+
+<p><strong>This just wrote out exactly what we were trying to do by hand!</strong> We could copy these lines. We could copy these lines into a new script, and then run it with <code class="highlighter-rouge">bash process_all.sh</code>. But, instead, if we just remove the <code class="highlighter-rouge">echo</code>, and run the loop, it will send these lines directly to the Bash engine and execute them!</p>
+
+<p>Do this, then run the script with <code class="highlighter-rouge">bash process_goostats.sh</code></p>
+
+<h3 id="make-a-nicer-script">Make a nicer script.</h3>
+
+<p>Scripts are both a tool for automation, and also a tool for documentation. If you write your scripts well, they both save you time now, and also help when you come back later and want to do the same or similar actions again, or when you have to write up your methods.</p>
+
+<p>We can do several things to make this script nicer.</p>
+
+<ol>
+  <li>Add comments. You can write lines in your script that begin with the hash character <code class="highlighter-rouge">#</code>. Bash will ignore these lines:
+    <div class="highlighter-rouge"><pre class="highlight"><code># echo some text
+</code></pre>
+    </div>
+  </li>
+  <li>We can add a line that tells us what the computer is currently doing:
+    <div class="highlighter-rouge"><pre class="highlight"><code>echo "Currently processing file $file"
+</code></pre>
+    </div>
+  </li>
+</ol>
+
+<h3 id="activity-1">Activity:</h3>
+
+<p>Write a script to process all pairs of files using the program <code class="highlighter-rouge">goodiff</code>. Concatenate the output into one file that looks like:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>file1</td>
+      <td>file2</td>
+      <td>score</td>
+    </tr>
+    <tr>
+      <td>file1</td>
+      <td>file3</td>
+      <td>score</td>
+    </tr>
+    <tr>
+      <td>file2</td>
+      <td>file3</td>
+      <td>score</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Hints:</p>
+
+<p>Everything that shows up on the screen can be written instead to a file. Try and compare these lines:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># using echo
+echo "my text"
+echo "my text" &gt; my_file.txt
+
+# using cat
+cat my_file.txt
+cat my_file.txt &gt; new_file.txt
+cat new_file.txt
+cat my_file.txt &gt;&gt; new_file.txt
+cat new_file.txt
+</code></pre>
+</div>
+
+<p><strong>Note:</strong></p>
+
+<ul>
+  <li>A single “&gt;” says: “create a new file with this name and capture the output into this file”.</li>
+  <li>Two “»” says: “append the output to the end of the existing file (and create a new file if needed)”</li>
+</ul>
+
+<h2 id="things-to-remember">Things to remember:</h2>
+
+<ul>
+  <li>Bash identifies separate arguments to commands by spaces. This means that spaces in file names cause problems
+    <ul>
+      <li>This is why you should enclose commands in quotation marks <code class="highlighter-rouge">"</code>. Things in quotation marks are interpreted as being part of the same argument</li>
+    </ul>
   </li>
 </ul>
 
-<p>Next, we call <strong>BLAST</strong> to do the search:</p>
+<ol>
+  <li>In Notepad++, create a file called <code class="highlighter-rouge">My File.txt</code>. Put some text in it.</li>
+  <li>In Bash, type: <code class="highlighter-rouge">cat My File.txt</code>. You get an error</li>
+  <li>Try: <code class="highlighter-rouge">cat "My File.txt"</code>. It works!</li>
+  <li>Try: <code class="highlighter-rouge">file="My File.txt"</code>, and then <code class="highlighter-rouge">cat $file</code>. You get an error.</li>
+  <li>Try <code class="highlighter-rouge">cat "$file"</code>. It works!</li>
+</ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>blastp -query mm-first.fa -db zebrafish.1.protein.faa
-</code></pre>
-</div>
-
-<p>This should run pretty quickly, but you’re going to get a lot of output!!
-To save it to a file instead of watching it go past on the screen,
-ask BLAST to save the output to a file that we’ll name <code class="highlighter-rouge">mm-first.x.zebrafish.txt</code>:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>blastp -query mm-first.fa -db zebrafish.1.protein.faa -out mm-first.x.zebrafish.txt
-</code></pre>
-</div>
-
-<p>Now you can <code class="highlighter-rouge">page</code> through this file at your leisure by typing:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>less mm-first.x.zebrafish.txt
-</code></pre>
-</div>
-
-<p>(Type spacebar to move down, and ‘q’ to get out of paging mode.)</p>
-
-<hr />
-
-<p>Let’s do some more sequences (this one will take a little longer to run):</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>head -500 mouse.1.protein.faa &gt; mm-second.fa
-blastp -query mm-second.fa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
-</code></pre>
-</div>
-
-<p>This will compare the first 83 sequences.  You can look at the output file with:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>less mm-second.x.zebrafish.txt
-</code></pre>
-</div>
-
-<p>(again, type ‘q’ to get out of paging mode.)</p>
-
-<blockquote>
-  <p><strong>Thought Questions</strong>:</p>
-  <ul>
-    <li>You can execute multiple commands at a time;</li>
-    <li>You might see a warning -
-    <code class="highlighter-rouge">Selenocysteine (U) at position 310 replaced by X</code>
-      <ul>
-        <li>what does this mean?</li>
-      </ul>
-    </li>
-    <li>Why did it take longer to BLAST <code class="highlighter-rouge">mm-second.fa</code> than <code class="highlighter-rouge">mm-first.fa</code>?</li>
-  </ul>
-</blockquote>
-
-<h3 id="items-for-discussion">Items for discussion:</h3>
+<p>Other helpful commands:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">blastp</code> options and -help.</li>
-  <li>command line options, more generally - why so many?</li>
-  <li>automation rocks!</li>
-  <li>when you shut down, you lose all your data</li>
-  <li>what computer(s) is this all happening on?</li>
+  <li><code class="highlighter-rouge">wc file</code> Counts the number of lines, words, and characters in a file</li>
+  <li><code class="highlighter-rouge">head file</code> Prints the first 10 lines of a file. You can change the number with the <code class="highlighter-rouge">-n 3</code> option (replacing 3 with the number you want.</li>
+  <li><code class="highlighter-rouge">tail file</code> Prints the last 10 lines of a file.</li>
+  <li><code class="highlighter-rouge">less file</code> Gives an interactive view of the file. You can page-down using space or the arrow keys. To exit, type <code class="highlighter-rouge">q</code>. The <code class="highlighter-rouge">man</code> command uses <code class="highlighter-rouge">less</code> to show the help file for each command.</li>
 </ul>
 
-<h2 id="visualizing-blast-output-in-rstudio">Visualizing BLAST output in RStudio</h2>
+<h1 id="intro-to-high-performance-computing">Intro to High Performance Computing</h1>
+
+<h3 id="key-ideas">Key ideas:</h3>
+
+<ul>
+  <li>The Farm cluster is a <strong>shared resource</strong>. It is important to follow some rules so that you do not interfere with other users.</li>
+  <li>The Farm cluster has a head node and then a bunch of compute nodes
+    <ul>
+      <li>You log in from your computer to the head node, and then ask for time on a compute node.</li>
+      <li>You have to move files from your computer to the cluster. Once there, the whole file system is shared among all nodes. You don’t need to keep copying files</li>
+      <li>The cluster runs Linux (clone of Unix). You control it using Bash</li>
+      <li>There are lots of programs installed, and different versions of many programs. Use <code class="highlighter-rouge">modules</code> to select which programs you want to use. It takes care of the rest.</li>
+      <li>You can log in to Farm from anywhere as long as you have your username / password. This will be given to you (it’s not your Kerberos login).</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="log-in">Log in:</h3>
+<p>To log in, from a Unix terminal type:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssh username@farm.cse.ucdavis.edu
+</code></pre>
+</div>
+
+<p>Then enter your password. You will arrive at your personal <strong>home directory</strong>, which will be: <code class="highlighter-rouge">/home/username</code>. Only you can write / modify files in this directory.</p>
+
+<h3 id="directories">Directories:</h3>
+<p>There is a class directory called: <code class="highlighter-rouge">/group/BIT150</code>. You can access these files, but they are locked - you cannot change them. If you want to share files with the class, you can put them in: <code class="highlighter-rouge">/group/BIT150/Share</code>. Change to each of these directories (using <code class="highlighter-rouge">cd</code>), and view their contents (using <code class="highlighter-rouge">ls</code>).</p>
+
+<h3 id="moving-files-on-and-off">Moving files on and off:</h3>
+<p>Open the <code class="highlighter-rouge">FileZilla</code> program. This program sets up a secure connection to the Farm file server and lets you move files on and off of the cluster. It works a lot like <code class="highlighter-rouge">Windows File Explorer</code>.</p>
+
+<p>To use:</p>
+
+<ol>
+  <li>Select new site, enter: Host: <code class="highlighter-rouge">farm.cse.ucdavis.edu</code>, Port: <code class="highlighter-rouge">2022</code>, Protocol: <code class="highlighter-rouge">SFTP</code>, Logon Type: “Normal”, User: <code class="highlighter-rouge">username</code>, Password: <code class="highlighter-rouge">password</code>, Click <code class="highlighter-rouge">Connect</code>.</li>
+  <li>On the left is a file explorer for your computer. Navigate to the <code class="highlighter-rouge">Z:/Classes/BIT150/Lab_2</code>.</li>
+  <li>On the right is a file explorer for Farm’s file system. Create a directory called <code class="highlighter-rouge">Lab_2</code>. You can also do this in the terminal (<code class="highlighter-rouge">mkdir Lab_2</code>).</li>
+  <li>Find the file: <code class="highlighter-rouge">brac1.fasta</code>, and drag it onto Farm.</li>
+  <li>In the terminal, enter the command: <code class="highlighter-rouge">echo Some Text &gt; new_file.txt</code>. In <code class="highlighter-rouge">FileZilla</code>, refresh the Farm file explorer. The file <code class="highlighter-rouge">new_file.txt</code> should appear. Double-click, or drag it to your computer.</li>
+</ol>
+
+<h2 id="running-blast">Running BLAST</h2>
+
+<p>The BLAST programs are installed on Farm. They are fairly intensive programs, requiring a moderate amount of RAM, and sometimes a lot of time to run.</p>
+
+<p><strong>We do not want to run BLAST on the head node!</strong> This could bog-down this computer and prevent others on the cluster from doing their work!</p>
+
+<p>First, request an allocation on one of the compute nodes:</p>
+
+<h3 id="requesting-an-interactive-job">Requesting an interactive job</h3>
+<div class="highlighter-rouge"><pre class="highlight"><code>srun -p bit150 -t 20 --pty bash -l
+</code></pre>
+</div>
+<ul>
+  <li><code class="highlighter-rouge">srun</code> is a command that asks for an allocation</li>
+  <li><code class="highlighter-rouge">-p bit150</code> asks to use the <code class="highlighter-rouge">bit150</code> partition. This means use the resources assigned to our class</li>
+  <li><code class="highlighter-rouge">-t 20</code> asks for 20 minutes. After this time, your allocation will shut down</li>
+  <li><code class="highlighter-rouge">--pty bash -l</code> asks for the allocation to run <code class="highlighter-rouge">Bash</code> just as if you opened a new terminal</li>
+</ul>
+
+<p>Hit <code class="highlighter-rouge">Enter</code>, and then wait a minute. Eventually you will see some messages saying you are logged in to a job.</p>
+
+<p>To see info on your job, type:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>squeue -u username
+</code></pre>
+</div>
+
+<h3 id="the-blast-program">The blast program</h3>
+
+<p>Now that we have access to a powerful computer, we can use BLAST to search a database for our sequence.</p>
+
+<p>Our sequence is in the file <code class="highlighter-rouge">myoD.fasta</code>, the file we moved to Farm. View the file with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>head myoD.fasta
+</code></pre>
+</div>
+
+<h4 id="question-is-this-a-nucleotide-of-protein-sequence">Question: Is this a nucleotide of protein sequence?</h4>
+
+<p>First, we have to load the module with the blast program. The bio module includes many bioinformatics programs. Type:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>module load bio
+</code></pre>
+</div>
+
+<p>Now, we can run blast. A run looks like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>blastp -db /group/BIT150/blast_databases/refseq_H_sapiens_protein/refseq_human_protein -query myoD.fasta -out myoD_blast.txt
+</code></pre>
+</div>
+
+<ul>
+  <li><code class="highlighter-rouge">blastp</code> is the program for protein-protein blast.</li>
+  <li><code class="highlighter-rouge">db /group/BIT150/blast_databases/refseq_H_sapiens_protein/refseq_human_protein</code> specifies the blast database that we want to use. We select the <code class="highlighter-rouge">refseq_human_protein </code> database in the <code class="highlighter-rouge">/group/BIT150/blast_databases/refseq_H_sapiens_protein/</code> directory</li>
+  <li><code class="highlighter-rouge">query myoD.fasta</code> specifies the query sequence</li>
+  <li><code class="highlighter-rouge">out myoD_blast.txt </code> specifes we want the output stored in the file called <code class="highlighter-rouge">myoD_blast.txt </code></li>
+</ul>
+
+<p>Look at the file. It’s long. A good viewer is <code class="highlighter-rouge">less</code>. Or, you can download it to your computer using <code class="highlighter-rouge">FileZilla</code>, and view it in <code class="highlighter-rouge">Notepad++</code>.</p>
+
+<p>Let’s modify the command. We can change the output style into a concise table. Rather than re-typing, use the up-arrow to get find the command. <strong>Note:</strong> or, you could use <code class="highlighter-rouge">history</code>. Now, instead of moving the cursor with the arrow keys, copy it to a Notepad++ document, and edit it there.</p>
+
+<p>For clarity, it’s often nice to break up long commands into several lines. You can do this by putting a <code class="highlighter-rouge">\</code> character at the end of each line.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>blastp  \
+   -db /group/BIT150/blast_databases/refseq_H_sapiens_protein/refseq_human_protein \
+   -query myoD.fasta \
+   -out myoD_blast_table.txt \
+   -outfmt 6   
+</code></pre>
+</div>
+
+<p>I added the option <code class="highlighter-rouge">-outfmt 6</code>. This changes the format of the output to a table. See <code class="highlighter-rouge">blastp -help</code> for more formatting options.</p>
+
+<p>You can copy this whole set of code and paste into the terminal. Now, look at this output file using <code class="highlighter-rouge">less</code>.</p>
+
+<p>When you’re done, exit the compute node by typing:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>exit
+</code></pre>
+</div>
+
+<p><strong>Always remember to exit when you’re done - this frees up resources for others!</strong></p>
+
+<h4 id="notes">Notes:</h4>
+
+<ul>
+  <li>There are many more options for the <code class="highlighter-rouge">blastp</code> program. You can view them with <code class="highlighter-rouge">blastp -help</code>, or <a href="https://www.ncbi.nlm.nih.gov/books/NBK279675/">here</a></li>
+  <li>There are many databases that you could blast against. You can also create your own starting with a file of fasta sequences using the <code class="highlighter-rouge">makeblastdb</code> command. <a href="https://www.ncbi.nlm.nih.gov/books/NBK279688/">Link</a></li>
+  <li>You can extract sequences from a database with the <code class="highlighter-rouge">blastdbcmd</code> program <a href="https://www.ncbi.nlm.nih.gov/books/NBK279689/">Link</a></li>
+</ul>
+
+<h2 id="running-longer-jobs-with-sbatch">Running longer jobs with sbatch</h2>
+
+<p>The <code class="highlighter-rouge">srun</code> command is useful for testing commands and shorter programs. But it has limitations for longer or more intensive jobs.</p>
+
+<ul>
+  <li>Sometimes it takes a long time to get an allocation. With <code class="highlighter-rouge">srun</code> you have to wait.</li>
+  <li>With <code class="highlighter-rouge">srun</code>, you have to wait until your program is done and then remember to log out.</li>
+</ul>
+
+<p>The preferred way to run computation on a cluster like Farm is by submitting jobs that run <strong>non-interactively</strong> using the command <code class="highlighter-rouge">sbatch</code>.</p>
+
+<p>Launching a <code class="highlighter-rouge">sbatch</code> job looks like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sbatch -p bit150 -t 30 my_script.sh
+</code></pre>
+</div>
+
+<p>This will tell the cluster to find a time to allocate resources to my job for 30 minutes, and then run the script <code class="highlighter-rouge">my_script.sh</code></p>
+
+<p>The key to using <code class="highlighter-rouge">sbatch</code> is writing a good script. The body of the script is the set of commands you would type in to Bash if you were there to control it. But you start the script with some special commands to tell the cluster how to run your job.</p>
+
+<p>The simplest script looks like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+module load bio
+
+blastp  <span class="se">\</span>
+   -db /group/BIT150/blast_databases/refseq_H_sapiens_protein/refseq_human_protein <span class="se">\</span>
+   -query myoD.fasta <span class="se">\</span>
+   -out myoD_blast_table.txt <span class="se">\#</span> some comment <span class="se">\</span>
+   -outfmt 6    
+</code></pre>
+</div>
+
+<ul>
+  <li>The first line tells the cluster to run this script with the <code class="highlighter-rouge">bash</code> shell.</li>
+  <li>The second tells it to load the bio module</li>
+  <li>Then we give the command for running blast.</li>
+</ul>
+
+<p>We can then modify this script to do longer, more intensive jobs:</p>
+
+<p>The following script does a blast using a query file that includes 10 different sequences:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+module load bio
+
+blastp  <span class="se">\</span>
+   -db /group/BIT150/blast_databases/refseq_H_sapiens_protein/refseq_human_protein <span class="se">\</span>
+   -query /group/BIT150/Lab_2/mouse_protein_set1.fasta <span class="se">\</span>
+   -out mouse_protein_set1_blast_table.txt <span class="se">\</span>
+   -outfmt 6    
+</code></pre>
+</div>
+
+<h2 id="modular-scripts">Modular scripts</h2>
+<p>The above script is fine, but it is a bit hard to read, and is also hard to modify. Say you wanted to blast a different gene against a different database? How would you change the script?</p>
+
+<p>The way to write cleaner scripts is to use bash variables. We saw variables earlier when writing for loops. The concept here is the same. We can assign a <strong>value</strong> to a <strong>variable</strong> in the top of the script, and then use the variable later:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+module load bio
+
+<span class="c"># declare database and query files</span>
+<span class="nv">database</span><span class="o">=</span>/group/BIT150/blast_databases/refseq_H_sapiens_protein/refseq_human_protein
+<span class="nv">query</span><span class="o">=</span>/group/BIT150/Lab_2/mouse_protein_set1.fasta
+<span class="nv">output_file</span><span class="o">=</span>mouse_protein_set1_blast_table.txt
+
+blastp  <span class="se">\</span>
+   -db <span class="nv">$database</span> <span class="se">\</span>
+   -query <span class="nv">$query</span> <span class="se">\</span>
+   -out mouse_protein_set1_blast_table.txt <span class="se">\</span>
+   -outfmt 6
+</code></pre>
+</div>
+
+<p>Now the call to <code class="highlighter-rouge">blastp</code> is much clearer. It’s also often helpful to separate directories from file names, and base names from file extensions. A better script might look like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+module load bio
+
+<span class="c"># declare database directory</span>
+<span class="nv">database_dir</span><span class="o">=</span>/group/BIT150/blast_databases/
+
+<span class="c"># declare input file directory</span>
+<span class="nv">query_dir</span><span class="o">=</span>/group/BIT150/Lab_2
+
+<span class="c"># declare output file directory</span>
+<span class="nv">output_dir</span><span class="o">=</span>.
+
+<span class="c"># database</span>
+<span class="nv">database</span><span class="o">=</span>refseq_human_protein
+
+<span class="c"># query</span>
+<span class="nv">query</span><span class="o">=</span>mouse_protein_set1
+
+blastp  <span class="se">\</span>
+   -db <span class="nv">$database_dir</span>/<span class="nv">$database</span> <span class="se">\</span>
+   -query <span class="nv">$query_dir</span>/<span class="k">${</span><span class="nv">query</span><span class="k">}</span>.fasta <span class="se">\</span>
+   -out <span class="nv">$output_dir</span>/<span class="k">${</span><span class="nv">query</span><span class="k">}</span>_blast_table.txt <span class="se">\</span>
+   -outfmt 6
+</code></pre>
+</div>
+
+<h3 id="activities">Activities</h3>
+
+<ol>
+  <li>Modify the above script to blast the <code class="highlighter-rouge">mouse_protein_set1.fasta</code> file against these three databases:</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>refseq_human_protein
+refseq_mouse_protein
+refseq_zebrafish_protein
+refseq_plant_protein
+swissprot
+</code></pre>
+</div>
+
+<ol>
+  <li>Modifying the above script, write a <strong>for loop</strong> to blast each of the files in <code class="highlighter-rouge">/group/BIT150/Lab_2/individual_genes</code>, saving each in it’s own file in an output directory of your home directory?</li>
+</ol>
+
+<h2 id="notes-1">Notes</h2>
+
+<p>When submitting <code class="highlighter-rouge">sbatch</code> jobs, two important commands are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">squeue -p bit150</code>, or <code class="highlighter-rouge">squeue -u bit150-01</code>. These show you if your job is running</li>
+  <li><code class="highlighter-rouge">scancel -u bit150-01</code>. This cancels all your running jobs. You can also do: <code class="highlighter-rouge">scancel 15968444</code> to cancel a specific job numer</li>
+</ul>
+
+<h1 id="homework">Homework:</h1>
+<ol>
+  <li>Find the amino acid sequence of your gene</li>
+  <li>Choose three of the blast databases on Farm. Here is a list:
+    <blockquote>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Database</th>
+            <th>Type</th>
+            <th>program</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="highlighter-rouge">refseq_human_protein</code></td>
+            <td>Protein</td>
+            <td>blastp</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">refseq_mouse_protein</code></td>
+            <td>Protein</td>
+            <td>blastp</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">refseq_zebrafish_protein</code></td>
+            <td>Protein</td>
+            <td>blastp</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">refseq_plant_protein</code></td>
+            <td>Protein</td>
+            <td>blastp</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">swissprot</code></td>
+            <td>Protein</td>
+            <td>blastp</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">Cdd_NCBI</code></td>
+            <td>Domains</td>
+            <td>rpsblast</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">Pfam</code></td>
+            <td>Domains</td>
+            <td>rpsblast</td>
+          </tr>
+          <tr>
+            <td><code class="highlighter-rouge">Smart</code></td>
+            <td>Domains</td>
+            <td>rpsblast</td>
+          </tr>
+        </tbody>
+      </table>
+    </blockquote>
+  </li>
+  <li>
+    <p>Write a script to BLAST your sequence against these three databases. Note that the last three are databases of protein domains. These require the <code class="highlighter-rouge">rpsblast</code> program instead of <code class="highlighter-rouge">blastp</code></p>
+  </li>
+  <li>Now, go to NCBI’s blast server and run the same searches there. Compare the results.</li>
+  <li>Write a Markdown document describing what you learned about your gene. Include your script from step 3.</li>
+</ol>
+
 
 </div>
 
@@ -365,27 +764,27 @@ blastp -query mm-second.fa -db zebrafish.1.protein.faa -out mm-second.x.zebrafis
     
       <li>
         <h3>
+          <a href="/BIT150_website/2017/10/05/bash_profile/">
+            .bash_profile and the shell ENVIRONMENT
+            <small>05 Oct 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/BIT150_website/2017/10/02/unix-on-windows/">
+            Working on your PC
+            <small>02 Oct 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/BIT150_website/2017/10/01/slack_site/">
             Slack Workspace for BIT150
             <small>01 Oct 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/BIT150_website/2017/09/28/command-line/">
-            Introduction to the Unix Shell
-            <small>28 Sep 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/BIT150_website/2017/09/28/project-1/">
-            Project 1 - Mining bioinformatics databases
-            <small>28 Sep 2017</small>
           </a>
         </h3>
       </li>
