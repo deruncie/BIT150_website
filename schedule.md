@@ -10,10 +10,10 @@ Schedule is subject to change
 | Day | Time        |  Date   |  Topic     | Reading / Reference
 |:----|:-------------|:--------|:-----------|:----------
 | TR  | 10:00 - 10:50  | 28-Sep  | Introduction to BIT150  | [Schatz, 2015](http://genome.cshlp.org/content/25/10/1417.short){:target="_blank"}
-| TR  |  3:10 - 5:00    | 28-Sep  | Bioinformatics Databases | [Lab_01](/BIT150_web/2017/09/28/lab_01/){:target="_blank"}
+| TR  |  3:10 - 5:00    | 28-Sep  | Bioinformatics Databases | [Lab_01](/BIT150_website/2017/09/28/lab-01/){:target="_blank"}
 | T   | 10:00 - 10:50   | 3-Oct   | What makes a good database? | [Goodman et al., 2014](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003542){:target="_blank"}
 | TR  |  10:00 - 10:50  | 5-Oct   | BLAST |
-| TR  |  3:10 - 5:00    | 5-Oct   | HPC and BLAST | <!-- [Lab_02](){:target="_blank"} -->
+| TR  |  3:10 - 5:00    | 5-Oct   | HPC and BLAST | [Lab_02](/BIT150_website/2017/10/05/lab-02/){:target="_blank"}
 | T   | 10:00 - 10:50   | 10-Oct   | PSICQUIC |
 | TR  |  10:00 - 10:50  | 12-Oct   | Project 1 Presentations |
 | TR  |  3:10 - 5:00    | 12-Oct   | R, Bioconductor | <!-- [Lab_03](){:target="_blank"} -->

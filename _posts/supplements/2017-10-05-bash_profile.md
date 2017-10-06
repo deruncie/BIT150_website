@@ -8,7 +8,7 @@ hidden: true
 
 The `.bash_profile` is a plain text file that is sourced by the login shell when opening a new terminal window.
 Another file that can be sourced is the `.bashrc` file.
-For more information on the difference between these two, see [here](https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc). These files are hidden in the home (`~`) directory, which is achieved by placing a `.` at the beginning of the file name. To view all hidden files within a directory, type `ls -a`. This will reveal hidden files. If your home directory does not have a `.bash_profile` already, create one:
+For more information on the difference between these two, see [here](https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc){:target="_blank"}. These files are hidden in the home (`~`) directory, which is achieved by placing a `.` at the beginning of the file name. To view all hidden files within a directory, type `ls -a`. This will reveal hidden files. If your home directory does not have a `.bash_profile` already, create one:
 
 ```
 $ touch ~/.bash_profile
@@ -49,7 +49,7 @@ Adding one of the lines above to your `.bash_profile` will tell **bash** to look
 
 ## Comment Lines
 
-As discussed in [Lab2]({{site.baseurl}}/2017/10/05/lab-02/), adding comments to files that are interpreted by the shell is extremely important. This allows you to communicate to your future self, as well as others who may view the file you create. Comments may be added in the line above lines of code that are intended to be read by the shell, as well as on the same line that the code is being written on:
+As discussed in [Lab2]({{site.baseurl}}/2017/10/05/lab-02/){:target="_blank"}, adding comments to files that are interpreted by the shell is extremely important. This allows you to communicate to your future self, as well as others who may view the file you create. Comments may be added in the line above lines of code that are intended to be read by the shell, as well as on the same line that the code is being written on:
 
 ```
 # Aliases

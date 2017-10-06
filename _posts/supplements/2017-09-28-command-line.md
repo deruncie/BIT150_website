@@ -690,12 +690,17 @@ find . -type f -print | xargs grep Volume
 
 `find` generates a list of all the files we are interested in, then we pipe them to `xargs`.  `xargs` takes the items given to it and passes them as arguments to `grep`.  `xargs` generally only creates a single instance of `grep` (or whatever program it is running).
 
-## Where can I learn more about the shell?
+## Where/How can I learn more about the shell?
 
-- Software Carpentry tutorial - [The Unix shell](http://software-carpentry.org/v4/shell/index.html)
-- The shell handout - [Command Reference](http://files.fosswire.com/2007/08/fwunixref.pdf)
+- [Command-Line Boot camp](http://rik.smith-unna.com/command_line_bootcamp/?id=takvnrdbvjd)
+- [Command Reference](http://files.fosswire.com/2007/08/fwunixref.pdf)
 - [explainshell.com](http://explainshell.com)
 - http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO.html
 - man bash
-- Google - if you don't know how to do something, try Googling it. Other people have probably had the same question.
-- Learn by doing. There's no real other way to learn this than by trying it out.  Write your next paper in nano (really emacs or vi), open pdfs from the command line, automate something you don't really need to automate.
+- Google - if you don't know how to do something, try a Google Search. Other people have probably had the same question.
+- Learn by doing. There's no real other way to learn this than by trying it out.
+- Familiarize yourself with terminal-based text editors:
+  - [nano](https://www.howtogeek.com/howto/42980/the-beginners-guide-to-nano-the-linux-command-line-text-editor/){:target="_blank"}
+  - [emacs](https://www.digitalocean.com/community/tutorials/how-to-use-the-emacs-editor-in-linux){:target="_blank"}
+  - [vim](https://computers.tutsplus.com/tutorials/vim-for-beginners--cms-21118){:target="_blank"}
+- Open pdfs from the command line, automate something you don't really need to automate.
