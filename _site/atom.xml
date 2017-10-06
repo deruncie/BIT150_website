@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-10-01T19:17:39-07:00</updated>
+ <updated>2017-10-05T17:31:59-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -13,221 +13,695 @@
 
  
  <entry>
-   <title>Lab 2 - HPC and Command Line BLAST</title>
+   <title>Lab 3 - HPC and Command Line BLAST</title>
+   <link href="http://localhost:4000/2017/10/12/lab-03/"/>
+   <updated>2017-10-12T00:00:00-07:00</updated>
+   <id>http://localhost:4000/BIT150_website/2017/10/12/lab-03</id>
+   <content type="html">&lt;h1 id=&quot;outline&quot;&gt;Outline:&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Intro to using a computer cluster&lt;/li&gt;
+  &lt;li&gt;Running BLAST from the command line&lt;/li&gt;
+  &lt;li&gt;Running more complex BLAST jobs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;intro-to-high-performance-computing&quot;&gt;Intro to High Performance Computing&lt;/h1&gt;
+
+&lt;h3 id=&quot;key-ideas&quot;&gt;Key ideas:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Farm cluster is a &lt;strong&gt;shared resource&lt;/strong&gt;. It is important to follow some rules so that you do not interfere with other users.&lt;/li&gt;
+  &lt;li&gt;The Farm cluster has a head node and then a bunch of compute nodes
+    &lt;ul&gt;
+      &lt;li&gt;You log in from your computer to the head node, and then ask for time on a compute node.&lt;/li&gt;
+      &lt;li&gt;You have to move files from your computer to the cluster. Once there, the whole file system is shared among all nodes. You don’t need to keep copying files&lt;/li&gt;
+      &lt;li&gt;The cluster runs Linux (clone of Unix). You control it using Bash&lt;/li&gt;
+      &lt;li&gt;There are lots of programs installed, and different versions of many programs. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt; to select which programs you want to use. It takes care of the rest.&lt;/li&gt;
+      &lt;li&gt;You can log in to Farm from anywhere as long as you have your username / password. This will be given to you (it’s not your Kerberos login).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;log-in&quot;&gt;Log in:&lt;/h3&gt;
+&lt;p&gt;To log in, from a Unix terminal type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh username@farm.cse.ucdavis.edu
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then enter your password. You will arrive at your personal &lt;strong&gt;home directory&lt;/strong&gt;, which will be: &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/username&lt;/code&gt;. Only you can write / modify files in this directory.&lt;/p&gt;
+
+&lt;h3 id=&quot;directories&quot;&gt;Directories:&lt;/h3&gt;
+&lt;p&gt;There is a class directory called: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150&lt;/code&gt;. You can access these files, but they are locked - you cannot change them. If you want to share files with the class, you can put them in: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Share&lt;/code&gt;. Change to each of these directories (using &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt;), and view their contents (using &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;moving-files-on-and-off&quot;&gt;Moving files on and off:&lt;/h3&gt;
+&lt;p&gt;Open the &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt; program. This program sets up a secure connection to the Farm file server and lets you move files on and off of the cluster. It works a lot like &lt;code class=&quot;highlighter-rouge&quot;&gt;Windows File Explorer&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To use:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Select new site, enter: Host: &lt;code class=&quot;highlighter-rouge&quot;&gt;farm.cse.ucdavis.edu&lt;/code&gt;, Port: &lt;code class=&quot;highlighter-rouge&quot;&gt;2022&lt;/code&gt;, Protocol: &lt;code class=&quot;highlighter-rouge&quot;&gt;SFTP&lt;/code&gt;, Logon Type: “Normal”, User: &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt;, Password: &lt;code class=&quot;highlighter-rouge&quot;&gt;password&lt;/code&gt;, Click &lt;code class=&quot;highlighter-rouge&quot;&gt;Connect&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;On the left is a file explorer for your computer. Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Z:/Classes/BIT150/Lab_3&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;On the right is a file explorer for Farm’s file system. Create a directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_3&lt;/code&gt;. You can also do this in the terminal (&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir Lab_2&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;Find the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;brac1.fasta&lt;/code&gt;, and drag it onto Farm.&lt;/li&gt;
+  &lt;li&gt;In the terminal, enter the command: &lt;code class=&quot;highlighter-rouge&quot;&gt;echo Some Text &amp;gt; new_file.txt&lt;/code&gt;. In &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt;, refresh the Farm file explorer. The file &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file.txt&lt;/code&gt; should appear. Double-click, or drag it to your computer.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;running-blast&quot;&gt;Running BLAST&lt;/h2&gt;
+
+&lt;p&gt;The BLAST programs are installed on Farm. They are fairly intensive programs, requiring a moderate amount of RAM, and sometimes a lot of time to run.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;We do not want to run BLAST on the head node!&lt;/strong&gt; This could bog-down this computer and prevent others on the cluster from doing their work!&lt;/p&gt;
+
+&lt;p&gt;First, request an allocation on one of the compute nodes:&lt;/p&gt;
+
+&lt;h3 id=&quot;requesting-an-interactive-job&quot;&gt;Requesting an interactive job&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;srun -p bit150 -t 20 --pty bash -l
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;srun&lt;/code&gt; is a command that asks for an allocation&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-p bit150&lt;/code&gt; asks to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;bit150&lt;/code&gt; partition. This means use the resources assigned to our class&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-t 20&lt;/code&gt; asks for 20 minutes. After this time, your allocation will shut down&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--pty bash -l&lt;/code&gt; asks for the allocation to run &lt;code class=&quot;highlighter-rouge&quot;&gt;Bash&lt;/code&gt; just as if you opened a new terminal&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Hit &lt;code class=&quot;highlighter-rouge&quot;&gt;Enter&lt;/code&gt;, and then wait a minute. Eventually you will see some messages saying you are logged in to a job.&lt;/p&gt;
+
+&lt;p&gt;To see info on your job, type:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;squeue -u username
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;the-blast-program&quot;&gt;The blast program&lt;/h3&gt;
+
+&lt;p&gt;Now that we have access to a powerful computer, we can use BLAST to search a database for our sequence.&lt;/p&gt;
+
+&lt;p&gt;Our sequence is in the file &lt;code class=&quot;highlighter-rouge&quot;&gt;myoD.fasta&lt;/code&gt;, the file we moved to Farm. View the file with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head myoD.fasta
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;question-is-this-a-nucleotide-of-protein-sequence&quot;&gt;Question: Is this a nucleotide of protein sequence?&lt;/h4&gt;
+
+&lt;h3 id=&quot;the-fasta-format&quot;&gt;The FASTA format&lt;/h3&gt;
+
+&lt;p&gt;The FASTA	format is a common format for storing sequence files. Each sequence has a header (&lt;strong&gt;the metadata&lt;/strong&gt;), and then the sequence. The header is the first line, and begins with the &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; character. The rest of the line contains various annotations (a very compressed version of the GenBank format). Longer sequences are split over multiple lines. But the line breaks are irrelevant. Programs like BLAST know to keep reading the sequence until the end of the file.&lt;/p&gt;
+
+&lt;p&gt;Multiple sequences can be held in the same file. They are separated by header lines.&lt;/p&gt;
+
+&lt;p&gt;First, we have to load the module with the blast program. The bio module includes many bioinformatics programs. Type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load bio
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, we can run blast. A run looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -db /group/BIT150/blast_databases/refseq_human_protein -query myoD.fasta -out myoD_blast.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt; is the program for protein-protein blast.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;db /group/BIT150/blast_databases/refseq_human_protein&lt;/code&gt; specifies the blast database that we want to use. We select the &lt;code class=&quot;highlighter-rouge&quot;&gt;refseq_human_protein &lt;/code&gt; database in the &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/blast_databases/&lt;/code&gt; directory&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;query myoD.fasta&lt;/code&gt; specifies the query sequence&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;out myoD_blast.txt &lt;/code&gt; specifes we want the output stored in the file called &lt;code class=&quot;highlighter-rouge&quot;&gt;myoD_blast.txt &lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Look at the file. It’s long. A good viewer is &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;. Or, you can download it to your computer using &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt;, and view it in &lt;code class=&quot;highlighter-rouge&quot;&gt;Notepad++&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s modify the command. We can change the output style into a concise table. Rather than re-typing, use the up-arrow to get find the command. &lt;strong&gt;Note:&lt;/strong&gt; or, you could use &lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt;. Now, instead of moving the cursor with the arrow keys, copy it to a Notepad++ document, and edit it there.&lt;/p&gt;
+
+&lt;p&gt;For clarity, it’s often nice to break up long commands into several lines. You can do this by putting a &lt;code class=&quot;highlighter-rouge&quot;&gt;\&lt;/code&gt; character at the end of each line.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp  \
+   -db /group/BIT150/blast_databases/refseq_human_protein \
+   -query myoD.fasta \
+   -out myoD_blast_table.txt \
+   -outfmt 6   
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I added the option &lt;code class=&quot;highlighter-rouge&quot;&gt;-outfmt 6&lt;/code&gt;. This changes the format of the output to a table. See &lt;code class=&quot;highlighter-rouge&quot;&gt;blastp -help&lt;/code&gt; for more formatting options.&lt;/p&gt;
+
+&lt;p&gt;You can copy this whole set of code and paste into the terminal. Now, look at this output file using &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;When you’re done, exit the compute node by typing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Always remember to exit when you’re done - this frees up resources for others!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;notes&quot;&gt;Notes:&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;There are many more options for the &lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt; program. You can view them with &lt;code class=&quot;highlighter-rouge&quot;&gt;blastp -help&lt;/code&gt;, or &lt;a href=&quot;https://www.ncbi.nlm.nih.gov/books/NBK279675/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;There are many databases that you could blast against. You can also create your own starting with a file of fasta sequences using the &lt;code class=&quot;highlighter-rouge&quot;&gt;makeblastdb&lt;/code&gt; command. &lt;a href=&quot;https://www.ncbi.nlm.nih.gov/books/NBK279688/&quot;&gt;Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;You can extract sequences from a database with the &lt;code class=&quot;highlighter-rouge&quot;&gt;blastdbcmd&lt;/code&gt; program &lt;a href=&quot;https://www.ncbi.nlm.nih.gov/books/NBK279689/&quot;&gt;Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;running-longer-jobs-with-sbatch&quot;&gt;Running longer jobs with sbatch&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;srun&lt;/code&gt; command is useful for testing commands and shorter programs. But it has limitations for longer or more intensive jobs.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Sometimes it takes a long time to get an allocation. With &lt;code class=&quot;highlighter-rouge&quot;&gt;srun&lt;/code&gt; you have to wait.&lt;/li&gt;
+  &lt;li&gt;With &lt;code class=&quot;highlighter-rouge&quot;&gt;srun&lt;/code&gt;, you have to wait until your program is done and then remember to log out.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The preferred way to run computation on a cluster like Farm is by submitting jobs that run &lt;strong&gt;non-interactively&lt;/strong&gt; using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Launching a &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt; job looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sbatch -p bit150 -t 30 my_script.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This will tell the cluster to find a time to allocate resources to my job for 30 minutes, and then run the script &lt;code class=&quot;highlighter-rouge&quot;&gt;my_script.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The key to using &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt; is writing a good script. The body of the script is the set of commands you would type in to Bash if you were there to control it. But you start the script with some special commands to tell the cluster how to run your job.&lt;/p&gt;
+
+&lt;p&gt;The simplest script looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+module load bio
+
+blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -db /group/BIT150/blast_databases/refseq_human_protein &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -query myoD.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -out myoD_blast_table.txt &lt;span class=&quot;se&quot;&gt;\#&lt;/span&gt; some comment &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -outfmt 6    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The first line tells the cluster to run this script with the &lt;code class=&quot;highlighter-rouge&quot;&gt;bash&lt;/code&gt; shell.&lt;/li&gt;
+  &lt;li&gt;The second tells it to load the bio module&lt;/li&gt;
+  &lt;li&gt;Then we give the command for running blast.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We can then modify this script to do longer, more intensive jobs:&lt;/p&gt;
+
+&lt;p&gt;The following script does a blast using a query file that includes 10 different sequences:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+module load bio
+
+blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -db /group/BIT150/blast_databases/refseq_human_protein &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -query /group/BIT150/Lab_2/mouse_protein_set1.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -out mouse_protein_set1_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -outfmt 6    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;modular-scripts&quot;&gt;Modular scripts&lt;/h2&gt;
+&lt;p&gt;The above script is fine, but it is a bit hard to read, and is also hard to modify. Say you wanted to blast a different gene against a different database? How would you change the script?&lt;/p&gt;
+
+&lt;p&gt;The way to write cleaner scripts is to use bash variables. We saw variables earlier when writing for loops. The concept here is the same. We can assign a &lt;strong&gt;value&lt;/strong&gt; to a &lt;strong&gt;variable&lt;/strong&gt; in the top of the script, and then use the variable later:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+module load bio
+
+&lt;span class=&quot;c&quot;&gt;# declare database and query files&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;database&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/blast_databases/refseq_human_protein
+&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/Lab_2/mouse_protein_set1.fasta
+&lt;span class=&quot;nv&quot;&gt;output_file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mouse_protein_set1_blast_table.txt
+
+blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -db &lt;span class=&quot;nv&quot;&gt;$database&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -query &lt;span class=&quot;nv&quot;&gt;$query&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -out mouse_protein_set1_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -outfmt 6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now the call to &lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt; is much clearer. It’s also often helpful to separate directories from file names, and base names from file extensions. A better script might look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+module load bio
+
+&lt;span class=&quot;c&quot;&gt;# declare database directory&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;database_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/blast_databases/
+
+&lt;span class=&quot;c&quot;&gt;# declare input file directory&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;query_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/Lab_2
+
+&lt;span class=&quot;c&quot;&gt;# declare output file directory&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;output_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.
+
+&lt;span class=&quot;c&quot;&gt;# database&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;database&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;refseq_human_protein
+
+&lt;span class=&quot;c&quot;&gt;# query&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mouse_protein_set1
+
+blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -db &lt;span class=&quot;nv&quot;&gt;$database_dir&lt;/span&gt;/&lt;span class=&quot;nv&quot;&gt;$database&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -query &lt;span class=&quot;nv&quot;&gt;$query_dir&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -out &lt;span class=&quot;nv&quot;&gt;$output_dir&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -outfmt 6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;activities&quot;&gt;Activities&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Modify the above script to blast the &lt;code class=&quot;highlighter-rouge&quot;&gt;mouse_protein_set1.fasta&lt;/code&gt; file against these three databases:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;refseq_human_protein
+refseq_mouse_protein
+refseq_zebrafish_protein
+refseq_plant_protein
+swissprot
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Modifying the above script, write a &lt;strong&gt;for loop&lt;/strong&gt; to blast each of the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_2/individual_genes&lt;/code&gt;, saving each in it’s own file in an output directory of your home directory?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;notes-1&quot;&gt;Notes&lt;/h2&gt;
+
+&lt;p&gt;When submitting &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt; jobs, two important commands are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;squeue -p bit150&lt;/code&gt;, or &lt;code class=&quot;highlighter-rouge&quot;&gt;squeue -u bit150-01&lt;/code&gt;. These show you if your job is running&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;scancel -u bit150-01&lt;/code&gt;. This cancels all your running jobs. You can also do: &lt;code class=&quot;highlighter-rouge&quot;&gt;scancel 15968444&lt;/code&gt; to cancel a specific job numer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;homework&quot;&gt;Homework:&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;Find the amino acid sequence of your gene&lt;/li&gt;
+  &lt;li&gt;Choose three of the blast databases on Farm. Here is a list:
+    &lt;blockquote&gt;
+
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Database&lt;/th&gt;
+            &lt;th&gt;Type&lt;/th&gt;
+            &lt;th&gt;program&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;refseq_human_protein&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Protein&lt;/td&gt;
+            &lt;td&gt;blastp&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;refseq_mouse_protein&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Protein&lt;/td&gt;
+            &lt;td&gt;blastp&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;refseq_zebrafish_protein&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Protein&lt;/td&gt;
+            &lt;td&gt;blastp&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;refseq_plant_protein&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Protein&lt;/td&gt;
+            &lt;td&gt;blastp&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;swissprot&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Protein&lt;/td&gt;
+            &lt;td&gt;blastp&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cdd_NCBI&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Domains&lt;/td&gt;
+            &lt;td&gt;rpsblast&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Pfam&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Domains&lt;/td&gt;
+            &lt;td&gt;rpsblast&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Smart&lt;/code&gt;&lt;/td&gt;
+            &lt;td&gt;Domains&lt;/td&gt;
+            &lt;td&gt;rpsblast&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Write a script to BLAST your sequence against these three databases. Note that the last three are databases of protein domains. These require the &lt;code class=&quot;highlighter-rouge&quot;&gt;rpsblast&lt;/code&gt; program instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Now, go to NCBI’s blast server and run the same searches there. Compare the results.&lt;/li&gt;
+  &lt;li&gt;Write a Markdown document describing what you learned about your gene. Include your script from step 3.&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Lab 2 - Bash automation</title>
    <link href="http://localhost:4000/2017/10/05/lab-02/"/>
    <updated>2017-10-05T00:00:00-07:00</updated>
    <id>http://localhost:4000/BIT150_website/2017/10/05/lab-02</id>
-   <content type="html">&lt;p&gt;Goals:&lt;/p&gt;
-
-&lt;p&gt;Introduce HPC. Short lecture on using a cluster&lt;/p&gt;
-
+   <content type="html">&lt;h1 id=&quot;outline&quot;&gt;Outline:&lt;/h1&gt;
 &lt;ul&gt;
-  &lt;li&gt;Head node vs compute nodes&lt;/li&gt;
-  &lt;li&gt;Submitting jobs&lt;/li&gt;
-  &lt;li&gt;Storage&lt;/li&gt;
-  &lt;li&gt;Moving files on and off&lt;/li&gt;
-  &lt;li&gt;modules&lt;/li&gt;
+  &lt;li&gt;Automation in Unix&lt;/li&gt;
+  &lt;li&gt;Intro to using a computer cluster&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;BLAST tutorial&lt;/p&gt;
+&lt;h1 id=&quot;projects&quot;&gt;Projects&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;After the tutorials today, there will hopefully be time to work on your database projects. The projects are due next Thursday in Lecture. In lecture, you will each be expected to give a short (3-5 minute) presentation of your database to your group. We’ll then collect and summarize the range of databases you explore as a class.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;unix-tutorial&quot;&gt;Unix tutorial&lt;/h1&gt;
+
+&lt;p&gt;In Lab 1, we covered commands to move around the Unix file system. These included:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;start with getting aa sequence from your protein and blasting against (mouse? human? zebrafish?)&lt;/li&gt;
-  &lt;li&gt;Discuss automation&lt;/li&gt;
-  &lt;li&gt;follow ANGUS. blast mouse against zebrafish
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt;: List the current working directory&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt;: Change to a new directory&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;: list files, folders, and programs&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt;: view the help page for a program&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We also covered the basic structure of a unix command:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command -argument input_file &amp;gt; output_file&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;These commands are summarized in the file: &lt;a href=&quot;/BIT150_website/2017/09/27/unix_commands/&quot;&gt;Unix commands cheatsheat&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Today, we will continue this tutorial. We will focus on how to automate actions in Unix. This includes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;wild cards&lt;/li&gt;
+  &lt;li&gt;scripts&lt;/li&gt;
+  &lt;li&gt;for loops&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will also cover some other useful commands including:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tail&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;wc&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;refresher-activity&quot;&gt;Refresher activity&lt;/h2&gt;
+
+&lt;p&gt;Open the data-shell directory in &lt;code class=&quot;highlighter-rouge&quot;&gt;Git BASH&lt;/code&gt;. Type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -F
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There is a folder called &lt;code class=&quot;highlighter-rouge&quot;&gt;Desktop&lt;/code&gt;. Inside it is a folder called &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden&lt;/code&gt;. Somewhere inside that folder is a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;youfoundit.txt&lt;/code&gt;. Find the file. Once you’ve found it, enter the command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat youfoundit.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The command &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; takes as input a file name, and simply reads the file and prints its output to the screen.&lt;/p&gt;
+
+&lt;h2 id=&quot;automation-1&quot;&gt;Automation-1&lt;/h2&gt;
+
+&lt;p&gt;Now, we’ll return to processing Nelle’s data files using the &lt;code class=&quot;highlighter-rouge&quot;&gt;goostats&lt;/code&gt; program.&lt;/p&gt;
+
+&lt;p&gt;Return to the &lt;code class=&quot;highlighter-rouge&quot;&gt;data_shell&lt;/code&gt; directory, and then go to the &lt;code class=&quot;highlighter-rouge&quot;&gt;north-pacific-gyre/2012-07-03&lt;/code&gt; folder.&lt;/p&gt;
+
+&lt;p&gt;Remember, the command to process a file looks like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;programs/goostat NENE01729A.txt &amp;gt; output_NENE01729A.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Process the first three files: &lt;code class=&quot;highlighter-rouge&quot;&gt;NENE01729A.txt&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NENE01729B.txt&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;NENE02040A.txt&lt;/code&gt;. Use the &lt;code class=&quot;highlighter-rouge&quot;&gt;up-arrow&lt;/code&gt; to repeat the previous command, and then the arrow keys to modify it. You can open the folder in Windows File-Explorer to see the output files. Or type &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -F&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;cleaning-up-our-mess&quot;&gt;Cleaning up our mess&lt;/h3&gt;
+
+&lt;p&gt;Note that with these output files, our data directory is getting messy. It would be nicer to have the raw data files in one folder and the output files in another folder.&lt;/p&gt;
+
+&lt;p&gt;Let’s make an output folder, and move our output files there. On Windows, you could create a new directory. In BASH, type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir output
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;On Windows, you could select each file and drag it to the folder. In BASH, type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv output_NENE01729A.txt output/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can also re-name files with the &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv output/output_NENE01729B.txt output/renamed_file.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: We didn’t have to move to the &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt; directory to do this renaming. We just gave the relative path to the file.&lt;/p&gt;
+
+&lt;h4 id=&quot;wildcards&quot;&gt;Wildcards&lt;/h4&gt;
+
+&lt;p&gt;Remember, BASH is all about automation. We don’t have to type the &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command for each file separately. We can use a wild-card to select all the output files at once:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv output* output/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; character matches any set of character. Before running the &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command, BASH first expands &lt;code class=&quot;highlighter-rouge&quot;&gt;output*&lt;/code&gt; to all files that start with &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt;, and then contain 0 or more additional characters. It then passes them all to mv command.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hint&lt;/strong&gt; There’s no &lt;code class=&quot;highlighter-rouge&quot;&gt;UNDO&lt;/code&gt; in BASH! It’s always a good idea to test out a BASH command like this before you run it. Before running a command, you can use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt; to print out exactly what BASH is going to do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo &quot;mv output* output/&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Be sure to put the command in quotes.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt; is similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, except for commands instead of files. &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; prints the contents of the file to the screen. &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt; prints the command itself to the screen.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo &quot;Some text&quot;
+echo &quot;output*&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You don’t always need the quotes, but it’s a good habid.&lt;/p&gt;
+
+&lt;p&gt;Wildcards work with many commands. Try it with &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -F NENE*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;activity&quot;&gt;Activity:&lt;/h3&gt;
+&lt;p&gt;Find all files that have the character &lt;code class=&quot;highlighter-rouge&quot;&gt;A&lt;/code&gt; in them. How many are there?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Before continuing, all output files should be in the output folder.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;automation-2&quot;&gt;Automation-2&lt;/h2&gt;
+
+&lt;p&gt;Wildcards are one way to automate. Scripts are another.&lt;/p&gt;
+
+&lt;p&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;goostat&lt;/code&gt; again, but this time write directly into the &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt; folder.&lt;/p&gt;
+
+&lt;p&gt;Remember the command? You can find it by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Open &lt;code class=&quot;highlighter-rouge&quot;&gt;Notepad++&lt;/code&gt;. Copy the comand, paste it there&lt;/li&gt;
+  &lt;li&gt;Paste it several times&lt;/li&gt;
+  &lt;li&gt;Replace the file name with the others in the directory.&lt;/li&gt;
+  &lt;li&gt;Copy it all, paste it in terminal.&lt;/li&gt;
+  &lt;li&gt;Is this easier? No. &lt;strong&gt;But it’s documented!&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Alternatively, save it as &lt;code class=&quot;highlighter-rouge&quot;&gt;process_goostats.sh&lt;/code&gt;. &lt;strong&gt;Be sure to change character encoding to Unix&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Run with &lt;code class=&quot;highlighter-rouge&quot;&gt;bash process_goostats.sh&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;for-loops&quot;&gt;For-loops&lt;/h3&gt;
+
+&lt;p&gt;But, we can tell Bash to automate the creation of each of these lines.&lt;/p&gt;
+
+&lt;p&gt;Computers are great a repetitive tasks like this. They do it faster, with fewer mistakes.&lt;/p&gt;
+
+&lt;p&gt;A &lt;strong&gt;for loop&lt;/strong&gt; is a tool for repeating the same action several times with a different input each time.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for file in *.txt
+do
+  programs/goostat $file &amp;gt; output/output_$file
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The loop has several parts:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;for file in *.txt&lt;/code&gt;: This declares the loop and the input for each iteration.
+    &lt;ol&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*.txt&lt;/code&gt; gives a list of files. We can view the list with &lt;code class=&quot;highlighter-rouge&quot;&gt;echo *.txt&lt;/code&gt;. Lists in Bash are separate by spaces&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt; is a &lt;strong&gt;variable&lt;/strong&gt;. What the loop will do is it will take the name of the first file from the list, and assign it to the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt;. It will then run the lines between &lt;code class=&quot;highlighter-rouge&quot;&gt;do&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;done&lt;/code&gt;. Once those lines are done, it will assign the next file name to the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;do/done&lt;/code&gt; block, we can refer to the actual file name by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;$file&lt;/code&gt;, or better &lt;code class=&quot;highlighter-rouge&quot;&gt;${file}&lt;/code&gt;. When bash sees &lt;code class=&quot;highlighter-rouge&quot;&gt;$file&lt;/code&gt;, it replaces it with the file name stored in the variable.&lt;/li&gt;
+      &lt;li&gt;Do: &lt;code class=&quot;highlighter-rouge&quot;&gt;file=NENE01729A.txt&lt;/code&gt;, and then &lt;code class=&quot;highlighter-rouge&quot;&gt;echo $file&lt;/code&gt;. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;echo file&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Now, do: &lt;code class=&quot;highlighter-rouge&quot;&gt;file=some_other_file.txt&lt;/code&gt;, and then &lt;code class=&quot;highlighter-rouge&quot;&gt;echo $file&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Before we run the script, let’s test it. Replace the line &lt;code class=&quot;highlighter-rouge&quot;&gt;program...&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;echo &quot;program...&quot;&lt;/code&gt;. Then copy the lines and paste into the terminal.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;This just wrote out exactly what we were trying to do by hand!&lt;/strong&gt; We could copy these lines. We could copy these lines into a new script, and then run it with &lt;code class=&quot;highlighter-rouge&quot;&gt;bash process_all.sh&lt;/code&gt;. But, instead, if we just remove the &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;, and run the loop, it will send these lines directly to the Bash engine and execute them!&lt;/p&gt;
+
+&lt;p&gt;Do this, then run the script with &lt;code class=&quot;highlighter-rouge&quot;&gt;bash process_goostats.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;make-a-nicer-script&quot;&gt;Make a nicer script.&lt;/h3&gt;
+
+&lt;p&gt;Scripts are both a tool for automation, and also a tool for documentation. If you write your scripts well, they both save you time now, and also help when you come back later and want to do the same or similar actions again, or when you have to write up your methods.&lt;/p&gt;
+
+&lt;p&gt;We can do several things to make this script nicer.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Add comments. You can write lines in your script that begin with the hash character &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;. Bash will ignore these lines:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# echo some text
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;We can add a line that tells us what the computer is currently doing:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo &quot;Currently processing file $file&quot;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;activity-1&quot;&gt;Activity:&lt;/h3&gt;
+
+&lt;p&gt;Write a script to process all pairs of files using the program &lt;code class=&quot;highlighter-rouge&quot;&gt;goodiff&lt;/code&gt;. Concatenate the output into one file that looks like:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;file1&lt;/td&gt;
+      &lt;td&gt;file2&lt;/td&gt;
+      &lt;td&gt;score&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;file1&lt;/td&gt;
+      &lt;td&gt;file3&lt;/td&gt;
+      &lt;td&gt;score&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;file2&lt;/td&gt;
+      &lt;td&gt;file3&lt;/td&gt;
+      &lt;td&gt;score&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Hints:&lt;/p&gt;
+
+&lt;p&gt;Everything that shows up on the screen can be written instead to a file. Try and compare these lines:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# using echo
+echo &quot;my text&quot;
+echo &quot;my text&quot; &amp;gt; my_file.txt
+
+# using cat
+cat my_file.txt
+cat my_file.txt &amp;gt; new_file.txt
+cat new_file.txt
+cat my_file.txt &amp;gt;&amp;gt; new_file.txt
+cat new_file.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A single “&amp;gt;” says: “create a new file with this name and capture the output into this file”.&lt;/li&gt;
+  &lt;li&gt;Two “»” says: “append the output to the end of the existing file (and create a new file if needed)”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;things-to-remember&quot;&gt;Things to remember:&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Bash identifies separate arguments to commands by spaces. This means that spaces in file names cause problems
     &lt;ul&gt;
-      &lt;li&gt;ideally replace with corn against arabidopsis, or human against mouse&lt;/li&gt;
-      &lt;li&gt;submit 1-core jobs&lt;/li&gt;
+      &lt;li&gt;This is why you should enclose commands in quotation marks &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;&lt;/code&gt;. Things in quotation marks are interpreted as being part of the same argument&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Discuss output
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;In Notepad++, create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;My File.txt&lt;/code&gt;. Put some text in it.&lt;/li&gt;
+  &lt;li&gt;In Bash, type: &lt;code class=&quot;highlighter-rouge&quot;&gt;cat My File.txt&lt;/code&gt;. You get an error&lt;/li&gt;
+  &lt;li&gt;Try: &lt;code class=&quot;highlighter-rouge&quot;&gt;cat &quot;My File.txt&quot;&lt;/code&gt;. It works!&lt;/li&gt;
+  &lt;li&gt;Try: &lt;code class=&quot;highlighter-rouge&quot;&gt;file=&quot;My File.txt&quot;&lt;/code&gt;, and then &lt;code class=&quot;highlighter-rouge&quot;&gt;cat $file&lt;/code&gt;. You get an error.&lt;/li&gt;
+  &lt;li&gt;Try &lt;code class=&quot;highlighter-rouge&quot;&gt;cat &quot;$file&quot;&lt;/code&gt;. It works!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Other helpful commands:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;wc file&lt;/code&gt; Counts the number of lines, words, and characters in a file&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head file&lt;/code&gt; Prints the first 10 lines of a file. You can change the number with the &lt;code class=&quot;highlighter-rouge&quot;&gt;-n 3&lt;/code&gt; option (replacing 3 with the number you want.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tail file&lt;/code&gt; Prints the last 10 lines of a file.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;less file&lt;/code&gt; Gives an interactive view of the file. You can page-down using space or the arrow keys. To exit, type &lt;code class=&quot;highlighter-rouge&quot;&gt;q&lt;/code&gt;. The &lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; command uses &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; to show the help file for each command.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;intro-to-high-performance-computing&quot;&gt;Intro to High Performance Computing&lt;/h1&gt;
+
+&lt;h3 id=&quot;key-ideas&quot;&gt;Key ideas:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The Farm cluster is a &lt;strong&gt;shared resource&lt;/strong&gt;. It is important to follow some rules so that you do not interfere with other users.&lt;/li&gt;
+  &lt;li&gt;The Farm cluster has a head node and then a bunch of compute nodes
     &lt;ul&gt;
-      &lt;li&gt;
-        &lt;h2 id=&quot;human-readable-vs-table&quot;&gt;human readable vs table&lt;/h2&gt;
-      &lt;/li&gt;
+      &lt;li&gt;You log in from your computer to the head node, and then ask for time on a compute node.&lt;/li&gt;
+      &lt;li&gt;You have to move files from your computer to the cluster. Once there, the whole file system is shared among all nodes. You don’t need to keep copying files&lt;/li&gt;
+      &lt;li&gt;The cluster runs Linux (clone of Unix). You control it using Bash&lt;/li&gt;
+      &lt;li&gt;There are lots of programs installed, and different versions of many programs. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt; to select which programs you want to use. It takes care of the rest.&lt;/li&gt;
+      &lt;li&gt;You can log in to Farm from anywhere as long as you have your username / password. This will be given to you (it’s not your Kerberos login).&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;slurm&quot;&gt;&lt;a href=&quot;https://slurm.schedmd.com/&quot;&gt;SLURM&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;log-in&quot;&gt;Log in:&lt;/h3&gt;
+&lt;p&gt;To log in, from a Unix terminal type:&lt;/p&gt;
 
-&lt;h3 id=&quot;batch-jobs&quot;&gt;Batch Jobs&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;sbatch&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;interactive&quot;&gt;Interactive&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;srun&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;modules&quot;&gt;modules&lt;/h3&gt;
-
-&lt;h2 id=&quot;running-blast-from-the-bash-terminal&quot;&gt;Running BLAST from the Bash Terminal&lt;/h2&gt;
-
-&lt;p&gt;First, create a directory for storing all of the files used in today’s lab exercise:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir lab-02
-cd lab-02
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh username@farm.cse.ucdavis.edu
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Next, we need to add the &lt;strong&gt;BLAST&lt;/strong&gt; program to our environment variable PATH (&lt;strong&gt;$PATH&lt;/strong&gt;) by loading the module:&lt;/p&gt;
+&lt;p&gt;Then enter your password. You will arrive at your personal &lt;strong&gt;home directory&lt;/strong&gt;, which will be: &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/username&lt;/code&gt;. Only you can write / modify files in this directory.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load blast
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;h3 id=&quot;directories&quot;&gt;Directories:&lt;/h3&gt;
+&lt;p&gt;There is a class directory called: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150&lt;/code&gt;. You can access these files, but they are locked - you cannot change them. If you want to share files with the class, you can put them in: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Share&lt;/code&gt;. Change to each of these directories (using &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt;), and view their contents (using &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;).&lt;/p&gt;
 
-&lt;p&gt;Now, let’s grab the mouse and zebrafish RefSeq
-protein data sets from NCBI, and put them in our work directory. We’ll
-use &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt; to download the files:&lt;/p&gt;
+&lt;h3 id=&quot;moving-files-on-and-off&quot;&gt;Moving files on and off:&lt;/h3&gt;
+&lt;p&gt;Open the &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt; program. This program sets up a secure connection to the Farm file server and lets you move files on and off of the cluster. It works a lot like &lt;code class=&quot;highlighter-rouge&quot;&gt;Windows File Explorer&lt;/code&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.1.protein.faa.gz
-curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.2.protein.faa.gz
-curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.3.protein.faa.gz
+&lt;p&gt;To use:&lt;/p&gt;
 
-curl -O ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;ol&gt;
+  &lt;li&gt;Select new site, enter: Host: &lt;code class=&quot;highlighter-rouge&quot;&gt;farm.cse.ucdavis.edu&lt;/code&gt;, Port: &lt;code class=&quot;highlighter-rouge&quot;&gt;2022&lt;/code&gt;, Protocol: &lt;code class=&quot;highlighter-rouge&quot;&gt;SFTP&lt;/code&gt;, Logon Type: “Normal”, User: &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt;, Password: &lt;code class=&quot;highlighter-rouge&quot;&gt;password&lt;/code&gt;, Click &lt;code class=&quot;highlighter-rouge&quot;&gt;Connect&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;On the left is a file explorer for your computer. Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Z:/Classes/BIT150/Lab_2&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;On the right is a file explorer for Farm’s file system. Create a directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_2&lt;/code&gt;. You can also do this in the terminal (&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir Lab_2&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;Find the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;brac1.fasta&lt;/code&gt;, and drag it onto Farm.&lt;/li&gt;
+  &lt;li&gt;In the terminal, enter the command: &lt;code class=&quot;highlighter-rouge&quot;&gt;echo Some Text &amp;gt; new_file.txt&lt;/code&gt;. In &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt;, refresh the Farm file explorer. The file &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file.txt&lt;/code&gt; should appear. Double-click, or drag it to your computer.&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Thought Questions:&lt;/strong&gt;&lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;What does the -O option specify for the curl command?
-      &lt;ul&gt;
-        &lt;li&gt;How can you find out?&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Let’s look at the files in the current directory:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -l
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;You should see output similar to:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;smhigdon@farm:~/BIT150/lab-02$ ls -l
-total 29116
--rw-rw-r-- 1 smhigdon smhigdon  3433688 Sep 14 23:54 mouse.1.protein.faa.gz
--rw-rw-r-- 1 smhigdon smhigdon  5451738 Sep 14 23:54 mouse.2.protein.faa.gz
--rw-rw-r-- 1 smhigdon smhigdon  6898191 Sep 14 23:54 mouse.3.protein.faa.gz
--rw-rw-r-- 1 smhigdon smhigdon 14021957 Sep 14 23:54 zebrafish.1.protein.faa.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;All four of the files are FASTA protein files (that’s what the .faa
-suggests) that are compressed with &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt; (that’s what the .gz means).&lt;/p&gt;
-
-&lt;p&gt;Let’s uncompress them:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gunzip *.faa.gz
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;and let’s look at the first few sequences in the file:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head mouse.1.protein.faa
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;These are protein sequences in &lt;strong&gt;FASTA&lt;/strong&gt; format. FASTA format is something
-many of you have probably seen in one form or another – it’s pretty
-ubiquitous. FASTA files are text files that contain records; each record
-starts with a line beginning with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;, and then contains one or more
-lines of sequence text. The line beginning with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; is called the &lt;strong&gt;header&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;Let’s take the first two sequences we just saw using the head command and save them to a file. We can achieve this by using output redirection with &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;, which says:&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;“take all output from the previous command and store it in the following file.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head -11 mouse.1.protein.faa &amp;gt; mm-first.fa
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;So now, for example, you can do &lt;code class=&quot;highlighter-rouge&quot;&gt;cat mm-first.fa&lt;/code&gt; to see the contents of
-that file (or &lt;code class=&quot;highlighter-rouge&quot;&gt;less mm-first.fa&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;Now let’s &lt;strong&gt;BLAST&lt;/strong&gt; these two sequences against the entire zebrafish
-protein data set. First, we need to tell BLAST that the zebrafish
-sequences are:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;(a) a database, and&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;(b) a protein database.
-That’s done by calling &lt;code class=&quot;highlighter-rouge&quot;&gt;makeblastdb&lt;/code&gt;:&lt;/p&gt;
-
-    &lt;p&gt;makeblastdb -in zebrafish.1.protein.faa -dbtype prot&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Next, we call &lt;strong&gt;BLAST&lt;/strong&gt; to do the search:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -query mm-first.fa -db zebrafish.1.protein.faa
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This should run pretty quickly, but you’re going to get a lot of output!!
-To save it to a file instead of watching it go past on the screen,
-ask BLAST to save the output to a file that we’ll name &lt;code class=&quot;highlighter-rouge&quot;&gt;mm-first.x.zebrafish.txt&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -query mm-first.fa -db zebrafish.1.protein.faa -out mm-first.x.zebrafish.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now you can &lt;code class=&quot;highlighter-rouge&quot;&gt;page&lt;/code&gt; through this file at your leisure by typing:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less mm-first.x.zebrafish.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;(Type spacebar to move down, and ‘q’ to get out of paging mode.)&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Let’s do some more sequences (this one will take a little longer to run):&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head -500 mouse.1.protein.faa &amp;gt; mm-second.fa
-blastp -query mm-second.fa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This will compare the first 83 sequences.  You can look at the output file with:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less mm-second.x.zebrafish.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;(again, type ‘q’ to get out of paging mode.)&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Thought Questions&lt;/strong&gt;:&lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;You can execute multiple commands at a time;&lt;/li&gt;
-    &lt;li&gt;You might see a warning -
-    &lt;code class=&quot;highlighter-rouge&quot;&gt;Selenocysteine (U) at position 310 replaced by X&lt;/code&gt;
-      &lt;ul&gt;
-        &lt;li&gt;what does this mean?&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/li&gt;
-    &lt;li&gt;Why did it take longer to BLAST &lt;code class=&quot;highlighter-rouge&quot;&gt;mm-second.fa&lt;/code&gt; than &lt;code class=&quot;highlighter-rouge&quot;&gt;mm-first.fa&lt;/code&gt;?&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;items-for-discussion&quot;&gt;Items for discussion:&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt; options and -help.&lt;/li&gt;
-  &lt;li&gt;command line options, more generally - why so many?&lt;/li&gt;
-  &lt;li&gt;automation rocks!&lt;/li&gt;
-  &lt;li&gt;when you shut down, you lose all your data&lt;/li&gt;
-  &lt;li&gt;what computer(s) is this all happening on?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;visualizing-blast-output-in-rstudio&quot;&gt;Visualizing BLAST output in RStudio&lt;/h2&gt;
 </content>
  </entry>
  
