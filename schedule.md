@@ -14,9 +14,9 @@ Schedule is subject to change
 | T   | 10:00 - 10:50   | 3-Oct   | What makes a good database? | [Goodman et al., 2014](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003542){:target="_blank"}
 | TR  |  10:00 - 10:50  | 5-Oct   | BLAST |
 | TR  |  3:10 - 5:00    | 5-Oct   | HPC and BLAST | [Lab_02](/BIT150_website/2017/10/05/lab-02/){:target="_blank"}
-| T   | 10:00 - 10:50   | 10-Oct   | PSICQUIC |
+| T   | 10:00 - 10:50   | 10-Oct   | BLAST |
 | TR  |  10:00 - 10:50  | 12-Oct   | Project 1 Presentations |
-| TR  |  3:10 - 5:00    | 12-Oct   | R, Bioconductor | <!-- [Lab_03](){:target="_blank"} -->
+| TR  |  3:10 - 5:00    | 12-Oct   | HPC and BLAST | [Lab_03](/BIT150_website/2017/10/12/lab-03/){:target="_blank"}
 | T   | 10:00 - 10:50   | 17-Oct   | Secondary Databases - ENTREZ; SQL |
 | TR  |  10:00 - 10:50  | 19-Oct   | Secondary Databases - Biomart |
 | TR  |  3:10 - 5:00    | 19-Oct   | R, dplyr | <!-- [Lab_04](){:target="_blank"} -->
