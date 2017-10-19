@@ -330,7 +330,13 @@ There are several steps to this. They follow very closely to what you do on the 
 listMarts(host = 'www.ensembl.org')
 ```
 
-We want the `ensembl Genes 90` Mart. Select it:
+We want the `ensembl Genes 90` Mart. 
+
+> Note: There are other sites with other Marts.
+> 
+> ex. "plants.ensembl.org" for plant biomarts
+
+Select it:
 
 ```
 ensembl <- useMart('ENSEMBL_MART_ENSEMBL')
