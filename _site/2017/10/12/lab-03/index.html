@@ -145,10 +145,53 @@
   <div class="lab">
   <h1 id="outline">Outline:</h1>
 <ul>
+  <li>review of for loops</li>
   <li>Intro to using a computer cluster</li>
   <li>Running BLAST from the command line</li>
   <li>Running more complex BLAST jobs</li>
 </ul>
+
+<h1 id="review-of-loops">Review of loops</h1>
+<p>In the homework, I asked you to write a script to process all pairs of files through the <code class="highlighter-rouge">goodiff</code> program. This requires <strong>nested for loops</strong></p>
+
+<p>Let’s start in the <code class="highlighter-rouge">north-pacific-gyre/2012-07-03</code> data files folder.</p>
+
+<p>We can see all the files we want to process with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ls *.txt
+</code></pre>
+</div>
+
+<p><strong>Note: some of you may have other <code class="highlighter-rouge">.txt</code> files in this folder. If you do, modify the above command to only list the data files</strong></p>
+
+<p>To process all pairs of files, we want to create two variables to hold the names of the two files to process: <code class="highlighter-rouge">file1</code> and <code class="highlighter-rouge">file2</code>. Then we want to use <strong>for loops</strong> to substitute each possible pair of files for these two variables.</p>
+
+<p>First, lets start by processing the first file against all others. You could use a script like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>file1=NENE01729A.txt
+for file2 in NE*.txt
+do
+ echo Processing $file1 $file2
+ programs/goodiff $file1 $file2 &gt;&gt; output/goodiff_results.txt
+done
+</code></pre>
+</div>
+
+<p>No, we want to run this whole script again and again, but each time with a different <code class="highlighter-rouge">file1</code>. We can do this by writing a loop for file1, where the <strong>body</strong> of the loop is this first loop:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>for file1 in NE*.txt
+do
+  echo $file1
+  for file2 in NE*.txt
+  do
+   echo Processing $file1 $file2
+   programs/goodiff $file1 $file2 &gt;&gt; output/goodiff_results.txt
+  done
+done
+</code></pre>
+</div>
+
+<p>That’s it!</p>
 
 <h1 id="intro-to-high-performance-computing">Intro to High Performance Computing</h1>
 
@@ -187,8 +230,8 @@
 <ol>
   <li>Select new site, enter: Host: <code class="highlighter-rouge">farm.cse.ucdavis.edu</code>, Port: <code class="highlighter-rouge">2022</code>, Protocol: <code class="highlighter-rouge">SFTP</code>, Logon Type: “Normal”, User: <code class="highlighter-rouge">username</code>, Password: <code class="highlighter-rouge">password</code>, Click <code class="highlighter-rouge">Connect</code>.</li>
   <li>On the left is a file explorer for your computer. Navigate to the <code class="highlighter-rouge">Z:/Classes/BIT150/Lab_3</code>.</li>
-  <li>On the right is a file explorer for Farm’s file system. Create a directory called <code class="highlighter-rouge">Lab_3</code>. You can also do this in the terminal (<code class="highlighter-rouge">mkdir Lab_2</code>).</li>
-  <li>Find the file: <code class="highlighter-rouge">brac1.fasta</code>, and drag it onto Farm.</li>
+  <li>On the right is a file explorer for Farm’s file system. Create a directory called <code class="highlighter-rouge">Lab_3</code>. You can also do this in the terminal (<code class="highlighter-rouge">mkdir Lab_3</code>).</li>
+  <li>Find the file: <code class="highlighter-rouge">brca1.fasta</code>, and drag it onto Farm.</li>
   <li>In the terminal, enter the command: <code class="highlighter-rouge">echo Some Text &gt; new_file.txt</code>. In <code class="highlighter-rouge">FileZilla</code>, refresh the Farm file explorer. The file <code class="highlighter-rouge">new_file.txt</code> should appear. Double-click, or drag it to your computer.</li>
 </ol>
 
@@ -222,9 +265,9 @@
 
 <p>Now that we have access to a powerful computer, we can use BLAST to search a database for our sequence.</p>
 
-<p>Our sequence is in the file <code class="highlighter-rouge">myoD.fasta</code>, the file we moved to Farm. View the file with:</p>
+<p>Our sequence is in the file <code class="highlighter-rouge">brca1.fasta</code>, the file we moved to Farm. View the file with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>head myoD.fasta
+<div class="highlighter-rouge"><pre class="highlight"><code>head brca1.fasta
 </code></pre>
 </div>
 
@@ -244,15 +287,15 @@
 
 <p>Now, we can run blast. A run looks like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>blastp -db /group/BIT150/blast_databases/refseq_human_protein -query myoD.fasta -out myoD_blast.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>blastp -db /group/BIT150/blast_databases/refseq_human_protein -query brca1.fasta -out brca1_blast.txt
 </code></pre>
 </div>
 
 <ul>
   <li><code class="highlighter-rouge">blastp</code> is the program for protein-protein blast.</li>
   <li><code class="highlighter-rouge">db /group/BIT150/blast_databases/refseq_human_protein</code> specifies the blast database that we want to use. We select the <code class="highlighter-rouge">refseq_human_protein </code> database in the <code class="highlighter-rouge">/group/BIT150/blast_databases/</code> directory</li>
-  <li><code class="highlighter-rouge">query myoD.fasta</code> specifies the query sequence</li>
-  <li><code class="highlighter-rouge">out myoD_blast.txt </code> specifes we want the output stored in the file called <code class="highlighter-rouge">myoD_blast.txt </code></li>
+  <li><code class="highlighter-rouge">query brca1.fasta</code> specifies the query sequence</li>
+  <li><code class="highlighter-rouge">out brca1_blast.txt </code> specifes we want the output stored in the file called <code class="highlighter-rouge">brca1_blast.txt </code></li>
 </ul>
 
 <p>Look at the file. It’s long. A good viewer is <code class="highlighter-rouge">less</code>. Or, you can download it to your computer using <code class="highlighter-rouge">FileZilla</code>, and view it in <code class="highlighter-rouge">Notepad++</code>.</p>
@@ -263,9 +306,9 @@
 
 <div class="highlighter-rouge"><pre class="highlight"><code>blastp  \
    -db /group/BIT150/blast_databases/refseq_human_protein \
-   -query myoD.fasta \
-   -out myoD_blast_table.txt \
-   -outfmt 6   
+   -query brca1.fasta \
+   -out brca1_blast_table.txt \
+   -outfmt 7   
 </code></pre>
 </div>
 
@@ -318,9 +361,9 @@ module load bio
 
 blastp  <span class="se">\</span>
    -db /group/BIT150/blast_databases/refseq_human_protein <span class="se">\</span>
-   -query myoD.fasta <span class="se">\</span>
-   -out myoD_blast_table.txt <span class="se">\#</span> some comment <span class="se">\</span>
-   -outfmt 6    
+   -query brca1.fasta <span class="se">\</span>
+   -out brca1_blast_table.txt <span class="se">\</span>
+   -outfmt 7    
 </code></pre>
 </div>
 
@@ -340,9 +383,9 @@ module load bio
 
 blastp  <span class="se">\</span>
    -db /group/BIT150/blast_databases/refseq_human_protein <span class="se">\</span>
-   -query /group/BIT150/Lab_2/mouse_protein_set1.fasta <span class="se">\</span>
+   -query /group/BIT150/Lab_3/mouse_protein_set1.fasta <span class="se">\</span>
    -out mouse_protein_set1_blast_table.txt <span class="se">\</span>
-   -outfmt 6    
+   -outfmt 7    
 </code></pre>
 </div>
 
@@ -357,14 +400,14 @@ module load bio
 
 <span class="c"># declare database and query files</span>
 <span class="nv">database</span><span class="o">=</span>/group/BIT150/blast_databases/refseq_human_protein
-<span class="nv">query</span><span class="o">=</span>/group/BIT150/Lab_2/mouse_protein_set1.fasta
+<span class="nv">query</span><span class="o">=</span>/group/BIT150/Lab_3/mouse_protein_set1.fasta
 <span class="nv">output_file</span><span class="o">=</span>mouse_protein_set1_blast_table.txt
 
 blastp  <span class="se">\</span>
    -db <span class="nv">$database</span> <span class="se">\</span>
    -query <span class="nv">$query</span> <span class="se">\</span>
    -out mouse_protein_set1_blast_table.txt <span class="se">\</span>
-   -outfmt 6
+   -outfmt 7
 </code></pre>
 </div>
 
@@ -378,7 +421,7 @@ module load bio
 <span class="nv">database_dir</span><span class="o">=</span>/group/BIT150/blast_databases/
 
 <span class="c"># declare input file directory</span>
-<span class="nv">query_dir</span><span class="o">=</span>/group/BIT150/Lab_2
+<span class="nv">query_dir</span><span class="o">=</span>/group/BIT150/Lab_3
 
 <span class="c"># declare output file directory</span>
 <span class="nv">output_dir</span><span class="o">=</span>.
@@ -393,14 +436,14 @@ blastp  <span class="se">\</span>
    -db <span class="nv">$database_dir</span>/<span class="nv">$database</span> <span class="se">\</span>
    -query <span class="nv">$query_dir</span>/<span class="k">${</span><span class="nv">query</span><span class="k">}</span>.fasta <span class="se">\</span>
    -out <span class="nv">$output_dir</span>/<span class="k">${</span><span class="nv">query</span><span class="k">}</span>_blast_table.txt <span class="se">\</span>
-   -outfmt 6
+   -outfmt 7
 </code></pre>
 </div>
 
 <h3 id="activities">Activities</h3>
 
 <ol>
-  <li>Modify the above script to blast the <code class="highlighter-rouge">mouse_protein_set1.fasta</code> file against these three databases:</li>
+  <li>Modify the above script to blast the <code class="highlighter-rouge">mouse_protein_set1.fasta</code> file against three of these databases:</li>
 </ol>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>refseq_human_protein
@@ -412,7 +455,7 @@ swissprot
 </div>
 
 <ol>
-  <li>Modifying the above script, write a <strong>for loop</strong> to blast each of the files in <code class="highlighter-rouge">/group/BIT150/Lab_2/individual_genes</code>, saving each in it’s own file in an output directory of your home directory?</li>
+  <li>Modifying the above script, write a <strong>for loop</strong> to blast each of the files in <code class="highlighter-rouge">/group/BIT150/Lab_3/individual_genes</code> against one of the protein databases, saving each in it’s own file in an output directory of your home directory?</li>
 </ol>
 
 <h2 id="notes-1">Notes</h2>
@@ -500,27 +543,27 @@ swissprot
     
       <li>
         <h3>
+          <a href="/BIT150_website/2017/10/19/lab-04/">
+            Lab 4 - Gene interaction data and intro to R
+            <small>19 Oct 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/BIT150_website/2017/10/17/project-2/">
+            Project 2 - building a genetic model of a trait
+            <small>17 Oct 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
           <a href="/BIT150_website/2017/10/05/bash_profile/">
             .bash_profile and the shell ENVIRONMENT
             <small>05 Oct 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/BIT150_website/2017/10/05/lab-02/">
-            Lab 2 - Bash automation
-            <small>05 Oct 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/BIT150_website/2017/10/02/unix-on-windows/">
-            Working on your PC
-            <small>02 Oct 2017</small>
           </a>
         </h3>
       </li>

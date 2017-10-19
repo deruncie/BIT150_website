@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2017-10-09T23:16:45-07:00</updated>
+ <updated>2017-10-19T13:46:12-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -13,16 +13,646 @@
 
  
  <entry>
+   <title>Lab 4 - Gene interaction data and intro to R</title>
+   <link href="http://localhost:4000/2017/10/19/lab-04/"/>
+   <updated>2017-10-19T00:00:00-07:00</updated>
+   <id>http://localhost:4000/BIT150_website/2017/10/19/lab-04</id>
+   <content type="html">&lt;p&gt;In this lab, we will learn to work with &lt;strong&gt;table data&lt;/strong&gt;. We’ll use data from online databases, and view,
+arrange, and merge the data using the programing language &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;. The data that we’ll focus on
+is data on gene interactions, and data on gene annotations. Our goal is to develop techniques to 
+test the hypothesis:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The genes that cause a disease function in the same networks or pathways&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;step-1-gene-interaction-data&quot;&gt;Step 1: Gene interaction data&lt;/h2&gt;
+
+&lt;p&gt;In class, we discussed the &lt;a href=&quot;http://www.ebi.ac.uk/Tools/webservices/psicquic/view&quot;&gt;PSICQUIC&lt;/a&gt; federated database, a system for querying many autonomous
+databases of gene interactions through one unified client. PSICQUIC is very powerful. However, its
+output is difficult to process because the results from the different databases don’t all have the same
+format.&lt;/p&gt;
+
+&lt;p&gt;Instead, in Lab today, we’ll use just one of these autonomous databases called &lt;a href=&quot;https://string-db.org/&quot;&gt;STRING&lt;/a&gt;.
+String is a relatively recent database that has many nice features.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Start by going to the STRING website and doing a query for genes that interact with BRCA1 in humans.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Take a few minutes to explore the results.
+    &lt;blockquote&gt;
+      &lt;p&gt;Questions:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;What information does STRING provide about each gene (ie Node)?&lt;/li&gt;
+        &lt;li&gt;What information does STRING provide about each interaction (ie Edge)?&lt;/li&gt;
+        &lt;li&gt;Why are 10 genes shown? Find a setting that controls how large the set of genes and interactions is.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Click the &lt;strong&gt;Exports&lt;/strong&gt; button. You’ll see the interaction data in table format. We want to download this data so that we can process it. Click the &lt;strong&gt;download&lt;/strong&gt; button for &lt;code class=&quot;highlighter-rouge&quot;&gt;... as simple tabular text output&lt;/code&gt;. Save the file on your desktop as &lt;code class=&quot;highlighter-rouge&quot;&gt;BRCA1_String.tsv&lt;/code&gt;. Open the file with &lt;code class=&quot;highlighter-rouge&quot;&gt;Notepad++&lt;/code&gt;.
+    &lt;blockquote&gt;
+      &lt;p&gt;Note:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;In a text editor, a &lt;code class=&quot;highlighter-rouge&quot;&gt;tsv&lt;/code&gt; file looks fairly ordered, but is still hard to read. The file would look pretty much like this if you used &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; to view the file in BASH.&lt;/li&gt;
+        &lt;li&gt;The main thing to notice here is what separates the &lt;code class=&quot;highlighter-rouge&quot;&gt;fields&lt;/code&gt; (or columns). In this file it is just &lt;code class=&quot;highlighter-rouge&quot;&gt;whitespace&lt;/code&gt;. In a &lt;code class=&quot;highlighter-rouge&quot;&gt;csv&lt;/code&gt; file, there would be a comma (&lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt;) separating each field. In a &lt;code class=&quot;highlighter-rouge&quot;&gt;tsv&lt;/code&gt; file, it’s actually the &lt;code class=&quot;highlighter-rouge&quot;&gt;TAB&lt;/code&gt; character (not a space). This is important because then programs that read this file can tell the difference between a &lt;strong&gt;value&lt;/strong&gt; with multiple words (“Gene 3”), and two values in different fields (“Gene” “3”).&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;If you haven’t worked with &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt; before, you would probably open this file in &lt;code class=&quot;highlighter-rouge&quot;&gt;Excel&lt;/code&gt;. Go ahead an do this. &lt;code class=&quot;highlighter-rouge&quot;&gt;Excel&lt;/code&gt; understands the &lt;code class=&quot;highlighter-rouge&quot;&gt;tsv&lt;/code&gt; format, and correctly separates the data into columns.
+    &lt;blockquote&gt;
+      &lt;p&gt;Question:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;In Excel, can you sort the interactions by their experimental evidence? What is the strongest-supported interaction in this list?&lt;/li&gt;
+        &lt;li&gt;In Excel, can you find all interactions that involve BRCA1 itself? How many are there?&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;p&gt;Note:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;Excel is relatively easy to use. However, it can cause lots of problems in Bioinformatics! One common problem is that Excel tries to be &lt;strong&gt;too smart&lt;/strong&gt;.&lt;/li&gt;
+        &lt;li&gt;Try adding a new entry for an interaction between BRCA1 and SEPT2. What happens? What problems would this cause?&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;step-2-intro-to-r&quot;&gt;Step 2. Intro to R.&lt;/h2&gt;
+
+&lt;p&gt;Instead, let’s load this same data table into &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;First, open &lt;code class=&quot;highlighter-rouge&quot;&gt;RStudio&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Rstudio&lt;/code&gt; is like an operating system designed for working in &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;. The RStudio program has its own Terminal (called &lt;code class=&quot;highlighter-rouge&quot;&gt;Console&lt;/code&gt;), a File Explorer (called &lt;code class=&quot;highlighter-rouge&quot;&gt;Files&lt;/code&gt;), and a text editor.&lt;/p&gt;
+
+&lt;p&gt;To use &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;, we enter commands in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Console&lt;/code&gt;. This is very much like entering commands in &lt;code class=&quot;highlighter-rouge&quot;&gt;Bash&lt;/code&gt; - just the language is different.&lt;/p&gt;
+
+&lt;p&gt;First, we want to change the directory of our &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt; session to our computer’s desktop where our file is. In &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;, the command is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;setwd('~/Desktop')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This accomplishes the same thing as:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-{bash}&quot;&gt;cd ~/Desktop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;in Bash.&lt;/p&gt;
+
+&lt;p&gt;We can see the files in the current directory by typing:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;list.files()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This accomplishes the same thing as:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-{bash}&quot;&gt;ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In Bash, the format of a command was:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;command [arguments] [&amp;gt; output_file]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If we don’t give an &lt;code class=&quot;highlighter-rouge&quot;&gt;output_file&lt;/code&gt;, Bash writes the output to the screen. 
+But we can &lt;strong&gt;capture&lt;/strong&gt; the output in a file to store it and use it later.&lt;/p&gt;
+
+&lt;p&gt;In R, we refer to &lt;code class=&quot;highlighter-rouge&quot;&gt;functions&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;command&lt;/code&gt;s or &lt;code class=&quot;highlighter-rouge&quot;&gt;program&lt;/code&gt;s. The general format is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;output &amp;lt;- function(argument1,argument2,...)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Just like Bash, if we don’t include &lt;code class=&quot;highlighter-rouge&quot;&gt;output &amp;lt;-&lt;/code&gt;, R will print the output of the function to the screen.
+But if you do, it will capture the output in the &lt;strong&gt;variable&lt;/strong&gt; output. 
+The language is different, but the idea is really the same! 
+The main difference here is that &lt;code class=&quot;highlighter-rouge&quot;&gt;output_file&lt;/code&gt; in Bash is a file on your hard-drive. It’s permanent. 
+But &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt; is just held in memory. When you close &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt; disappears! 
+This is both good and bad. Good, because memory is MUCH faster than the hard-drive. Bad, because you have 
+to save your work in some way more permanent.&lt;/p&gt;
+
+&lt;h3 id=&quot;scripts&quot;&gt;Scripts&lt;/h3&gt;
+&lt;p&gt;Just like in Bash, we can write scripts in R to record the commands that we would type into the &lt;code class=&quot;highlighter-rouge&quot;&gt;Console&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;RStudio gives us a text editor to do this. But it has a nice feature:&lt;/p&gt;
+
+&lt;p&gt;Make a new &lt;code class=&quot;highlighter-rouge&quot;&gt;R Script&lt;/code&gt;. Then type this line:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;x &amp;lt;- 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, put your cursor on the line and type &lt;code class=&quot;highlighter-rouge&quot;&gt;CTRL+Enter&lt;/code&gt;. RStudio sends the command to the console and runs it!
+No more copy + paste!&lt;/p&gt;
+
+&lt;p&gt;You can also run a whole script with the &lt;code class=&quot;highlighter-rouge&quot;&gt;Source&lt;/code&gt; button in RStudio, or with the command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;source('my_file.R`)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;R Scripts use comments just like Bash scripts. Just use the &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; character at the start of the line.&lt;/p&gt;
+
+&lt;h3 id=&quot;packages&quot;&gt;Packages&lt;/h3&gt;
+
+&lt;p&gt;Remember that on Farm, we had to type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load bio
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;to tell Bash to prepare the BLAST programs for us to use?&lt;/p&gt;
+
+&lt;p&gt;R is the same, but instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;modules&lt;/code&gt;, R uses &lt;code class=&quot;highlighter-rouge&quot;&gt;packages&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;libraries&lt;/code&gt;. For today’s work, we need to load two packages:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;library(tidyr) # for working with tables
+library(biomaRt) # for downloading data from BioMart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you get an error message for either library, you’ll have to install these packages:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;install.packages('tidyr')
+source(&quot;https://bioconductor.org/biocLite.R&quot;)
+biocLite(&quot;biomaRt&quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;loading-data&quot;&gt;Loading data&lt;/h3&gt;
+&lt;p&gt;Since R works with variables instead of files, we have to load data before we can use it.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brca1_data &amp;lt;- read.delim(file='BRCA1_String.tsv',header=TRUE,stringsAsFactors = FALSE)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Note in R Studio how as you type this line, it starts making suggestions for you. Enhanced auto-complete!&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Question:&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;What is the function? What are the arguments?&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Nothing happens when we run this function, because we captured the output in the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;brca1_data&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;How do we view this variable? In Unix, we used &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, etc.&lt;/p&gt;
+
+&lt;p&gt;In R, we can:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Just type the variable name and hit &lt;code class=&quot;highlighter-rouge&quot;&gt;Enter&lt;/code&gt;. This prints all (or most) to the screen&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;View(brca1_data)&lt;/code&gt;. RStudio’s spreadsheet viewer.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head(brca1_data)&lt;/code&gt;. The first 6 lines&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;glimpse(brca1_data)&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Things to note:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Observations&lt;/code&gt; are entries = rows.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Variables&lt;/code&gt; are features = columns.&lt;/li&gt;
+  &lt;li&gt;Each column has a particular data type. &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;chr&amp;gt;&lt;/code&gt; is &lt;strong&gt;character&lt;/strong&gt;, meaning text. &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;dbl&amp;gt;&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;int&amp;gt;&lt;/code&gt; are numbers. It’s important to check that this was imported correctly.&lt;/li&gt;
+  &lt;li&gt;The name of the first column didn’t import well (it starts with &lt;code class=&quot;highlighter-rouge&quot;&gt;X.&lt;/code&gt;?) We can change it like this:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;colnames(brca1_data)               # gets all the names of the columns
+colnames(brca1_data)[1]            # gets only the first column name
+colnames(brca1_data)[1] &amp;lt;- 'node1' # assigns the first column name a new value
+colnames(brca1_data)               # check that it changed!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;accessing-data&quot;&gt;Accessing data&lt;/h3&gt;
+
+&lt;p&gt;We can access a row (a particular interaction) like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;slice(brca1_data,1) # row 1
+slice(brca1_data,10) # row 10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The arguments are: (1) Name of table variable, (2) row number to select&lt;/p&gt;
+
+&lt;p&gt;We can &lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt; the rows like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;filter(brca1_data,node1 == 'BRCA1')
+filter(brca1_data,experimentally_determined_interaction &amp;gt; 0.5)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The arguments are: (1) Name of table variable, (2) filter criteria.&lt;/p&gt;
+
+&lt;p&gt;We can access a column (a feature) like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brca1_data$combined_score # get data from combined_score column
+select(brca1_data,combined_score,node1) # select two columns
+select(brca1_data,1:3) # select first three columns
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Each of these print the whole result to the screen. How would you print only the first 6 lines? The first 10?&lt;/p&gt;
+
+  &lt;p&gt;Hint: You can view all possible arguments to a function by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;?head&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can sort the data like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arrange(brca1_data,experimentally_determined_interaction)  # increasing values
+arrange(brca1_data,desc(experimentally_determined_interaction)) # increasing values
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can make a new row like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;new_interaction &amp;lt;- data_frame(node1='SEPT2', node2='MARCH1')
+bind_rows(brca1_data,new_interaction)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;It worked, but it filled in &lt;code class=&quot;highlighter-rouge&quot;&gt;NA&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;NA&amp;gt;&lt;/code&gt; for all the other columns because we didn’t provide data for those.&lt;/p&gt;
+
+&lt;h3 id=&quot;saving-tables&quot;&gt;Saving tables&lt;/h3&gt;
+
+&lt;p&gt;Once we’ve processed data, we have to save it to a new file, or it will be lost when we close R.&lt;/p&gt;
+
+&lt;p&gt;To save a table as a new &lt;code class=&quot;highlighter-rouge&quot;&gt;.tsv&lt;/code&gt; file, do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;write.table(brca1_data,file = 'processed_BRCA1_interactions.tsv',row.names=FALSE,sep='\t')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Activity:&lt;/p&gt;
+
+  &lt;p&gt;Select only interactions that include BRCA1, have experimentally_determined_interaction &amp;gt; 0.5,
+and make a new table including only &lt;code class=&quot;highlighter-rouge&quot;&gt;node1&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;node2&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;experimentally_determined_interaction&lt;/code&gt; as columns. Save this as a file.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;data-integration&quot;&gt;Data integration&lt;/h2&gt;
+
+&lt;p&gt;No that we’ve seen how to do basic data table processing in R, let’s use these skills for some real bioinformatics.&lt;/p&gt;
+
+&lt;p&gt;The BRCA1 is known for its role in Breast Cancer.&lt;/p&gt;
+
+&lt;p&gt;Remember our original hypothesis:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The genes that cause a disease function in the same networks or pathways&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Today, I’d like to try to address a related, but simpler hypothesis:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Genes that interact with each other cause similar diseases&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Question:&lt;/p&gt;
+
+  &lt;p&gt;We now have a data table listing genes that interact. What do we need to test this hypothesis? Where could we get the data?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;querying-biomart-from-r&quot;&gt;Querying BioMart from R&lt;/h2&gt;
+
+&lt;p&gt;The Ensembl BioMart of Human Genes has an &lt;strong&gt;attribute&lt;/strong&gt; imported from the OMIM database describing diseases associated with each gene.&lt;/p&gt;
+
+&lt;p&gt;Go to &lt;a href=&quot;http://www.ensembl.org/biomart/martview&quot;&gt;BioMart&lt;/a&gt;, and do a query for the BRCA1 human gene, and get its MIM disease annotations.&lt;/p&gt;
+
+&lt;p&gt;We want to do the following:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Get a list of all the genes in our data that interact directly with BRCA1&lt;/li&gt;
+  &lt;li&gt;Run a BioMart query for all of these genes, extracting all their MIM disease annotations&lt;/li&gt;
+  &lt;li&gt;Test if any sets of genes cause the same diseases&lt;/li&gt;
+  &lt;li&gt;Select interactions that may be important for specific diseases&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;list-genes-that-interact-with-brca1&quot;&gt;List genes that interact with BRCA1&lt;/h3&gt;
+
+&lt;p&gt;We can get this information from &lt;code class=&quot;highlighter-rouge&quot;&gt;brca1_data&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Filter interactions where node1 or node2 is BRCA1&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;brca1_interactions &amp;lt;- filter(brca1_data,node1=='BRCA1' | node2 == 'BRCA1')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Extract the node1 genes and the node2 genes.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note: These are &lt;strong&gt;exchangeable&lt;/strong&gt;. There’s no direction of interaction information here&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;node1_genes &amp;lt;- brca1_interactions$node1  # we want the data
+node2_genes &amp;lt;- brca1_interactions$node2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Combine these into one list&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;all_genes &amp;lt;- c(node1_genes,node2_genes)  # the function `c` appends two lists together
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Find only the unique genes&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;unique_genes &amp;lt;- unique(all_genes)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;set-up-a-biomart-query&quot;&gt;Set up a biomart query&lt;/h3&gt;
+
+&lt;p&gt;Load the &lt;code class=&quot;highlighter-rouge&quot;&gt;biomaRt&lt;/code&gt; package if you haven’t:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;library(biomaRt)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There are several steps to this. They follow very closely to what you do on the website.&lt;/p&gt;
+
+&lt;h3 id=&quot;find-available-marts-ie-data-warehouses&quot;&gt;Find available marts (ie data warehouses)&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listMarts(host = 'www.ensembl.org')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We want the &lt;code class=&quot;highlighter-rouge&quot;&gt;ensembl Genes 90&lt;/code&gt; Mart. Select it:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ensembl = useMart('ENSEMBL_MART_ENSEMBL')
+ensembl
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The variable &lt;code class=&quot;highlighter-rouge&quot;&gt;ensembl&lt;/code&gt; holds information about the connection between R and Ensembl&lt;/p&gt;
+
+&lt;h3 id=&quot;select-a-dataset&quot;&gt;Select a dataset&lt;/h3&gt;
+
+&lt;p&gt;To view available datasets, do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listDatasets(ensembl)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Find the one we want (&lt;code class=&quot;highlighter-rouge&quot;&gt;hsapiens_gene_ensembl&lt;/code&gt;), and select it:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ensembl_human = useDataset('hsapiens_gene_ensembl',mart = ensembl)
+ensembl_human
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;select-filters-and-attributes-for-the-query&quot;&gt;Select filters and attributes for the query&lt;/h3&gt;
+
+&lt;p&gt;To find available filters, do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listFilters(ensembl_human)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Our gene names are HUGO names (a standardized human-readable gene name). The filter is: &lt;code class=&quot;highlighter-rouge&quot;&gt;hgnc_symbol&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;To find available attributes, do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listAttributes(ensembl_human)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We want our results to include both the HUGO ID and the MIM diseases: &lt;code class=&quot;highlighter-rouge&quot;&gt;mim_morbid_description&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;run-the-query&quot;&gt;Run the query&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mim_results &amp;lt;- getBM(mart = ensembl_human,
+                     attributes = c('hgnc_symbol','mim_morbid_description'), # note how we make a list with the `c()` function
+                     filters = c('hgnc_symbol'),
+                     values = unique_genes # When we run, R will expand our the variable `unique_genes`, just like BASH did.
+                     )
+View(mim_results)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Questions:&lt;/p&gt;
+
+  &lt;p&gt;Did all genes get annotations? Were all genes identified in Ensembl?
+Does each gene have a single disease annotation?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;process-results&quot;&gt;Process results&lt;/h3&gt;
+
+&lt;p&gt;Now, we want to address the question: do any genes in this set relate to the same disease?&lt;/p&gt;
+
+&lt;p&gt;For this, we’ll use one of the most powerful tools in R for processing data: The &lt;strong&gt;split-apply-combine&lt;/strong&gt; approach.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Split the data into different groups by rows&lt;/li&gt;
+  &lt;li&gt;Apply a function separately to each group&lt;/li&gt;
+  &lt;li&gt;Combine the results back into a new table&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here, we will do the following:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Split the annotation data by disease&lt;/li&gt;
+  &lt;li&gt;For each disease, collect all genes associated&lt;/li&gt;
+  &lt;li&gt;Combine into a table, one row for each disease, with all associated genes listed, plus a count of how many genes per disease&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;split-the-annotation-data-by-disease&quot;&gt;Split the annotation data by disease&lt;/h4&gt;
+
+&lt;p&gt;To split the data, we tell R how we want it split:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mim_results &amp;lt;- group_by(mim_results,mim_morbid_description)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;apply-a-function-separately-to-each-group-combine-the-results&quot;&gt;Apply a function separately to each group, combine the results&lt;/h4&gt;
+
+&lt;p&gt;We want to apply two functions to each group:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;n()&lt;/code&gt;: count how many rows (ie genes)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;toString()&lt;/code&gt;: paste all gene names together into a single string (ie long word or sentence)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;We use the &lt;code class=&quot;highlighter-rouge&quot;&gt;summarize&lt;/code&gt; function:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mim_summary &amp;lt;- summarize(mim_results,
+                          num_genes = n(),
+                          gene_list = toString(hgnc_symbol))
+View(mim_summary)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;sort-the-results-to-answer-the-question&quot;&gt;Sort the results to answer the question:&lt;/h4&gt;
+&lt;p&gt;You can also do this in the SpreadSheet view directly&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arrange(mim_summary,desc(num_genes))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Questions:&lt;/p&gt;
+
+  &lt;p&gt;What diseases are associated with multiple genes in this set?
+Are there any &lt;strong&gt;interactions&lt;/strong&gt; that where both genes cause the same disease? How would you address this question?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;summary&quot;&gt;Summary&lt;/h3&gt;
+&lt;p&gt;To see how the &lt;strong&gt;split-apply-combine&lt;/strong&gt; is working in more detail, think of it like a for loop (yes, we can use them in R too!)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;summary_table &amp;lt;- data_frame() # make empty table to hold results
+for(disease in unique(mim_results$mim_morbid_description)){  # Try to read this for loop syntax. It works just like the one in Bash!
+  disease_results &amp;lt;- filter(mim_results,mim_morbid_description == disease) # select the subset of the rows for the current disease
+  
+  n &amp;lt;- nrow(disease_results)  # count the number of rows in the table for the current disease
+  gene_list &amp;lt;- toString(disease_results$hgnc_symbol)  # paste together all the gene names
+  
+  disease_table &amp;lt;- data_frame(disease = disease, n = n, gene_list = gene_list) # make a small table to hold this disease's results
+  
+  summary_table &amp;lt;- bind_rows(summary_table,disease_table)    # append this disease's results to the full table
+}
+View(summary_table)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;save-the-results-in-a-tsv-file&quot;&gt;Save the results in a &lt;code class=&quot;highlighter-rouge&quot;&gt;.tsv&lt;/code&gt; file:&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;write.table(mim_summary,file = 'BRCA1_interactors_diseases.tsv',row.names=FALSE,sep='\t')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;summary-1&quot;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;Here is some more background&lt;/p&gt;
+
+&lt;h3 id=&quot;what-is-r&quot;&gt;What is &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;?&lt;/h3&gt;
+
+&lt;p&gt;R is a programing language. It’s primary purpose is for statistical analyses. 
+But it’s also very useful for general data science work, including Bioinformatics. 
+R is &lt;strong&gt;Open Source&lt;/strong&gt;, meaning that anyone can write programs in &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;, and share them for free.
+Because of this, there are &lt;strong&gt;packages&lt;/strong&gt; in R for almost any Bioinformatics task you will want to do.&lt;/p&gt;
+
+&lt;p&gt;For our purposes here, the main advantages of processing data tables in R vs Excel are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We can write scripts to automate tasks&lt;/li&gt;
+  &lt;li&gt;Scripts serve as documentation, or a lab notebook of what we did&lt;/li&gt;
+  &lt;li&gt;R doesn’t do anything that you don’t tell it to do (unlike Excel).&lt;/li&gt;
+  &lt;li&gt;R can process datafiles that are too large for Excel.&lt;/li&gt;
+  &lt;li&gt;R can connect directly to online databases&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These are basically the same reasons why we use Bash and Unix rather than Windows for Bioinformatics!&lt;/p&gt;
+
+&lt;h3 id=&quot;r-resources&quot;&gt;R resources:&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf&quot;&gt;Data Wrangling Cheat Sheet&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.datacarpentry.org/R-genomics/01-intro-to-R.html&quot;&gt;Intro to R tutorial&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;assignment&quot;&gt;Assignment&lt;/h2&gt;
+
+&lt;p&gt;Repeat the activity we did here with your gene for Project 2.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Take your gene. Use String, or another database if you’d like to download interacting genes.&lt;/li&gt;
+  &lt;li&gt;Import the data into R, and use R to get a list of all unique genes.&lt;/li&gt;
+  &lt;li&gt;Use BioMart to download some attribute of the genes (MIM, GO annotation, Reactome reacting, KEGG pathway), 
+and ask if multiple of the interacting genes have similar roles.&lt;/li&gt;
+  &lt;li&gt;Prepare a brief report in markdown of what you found.&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Project 2 - building a genetic model of a trait</title>
+   <link href="http://localhost:4000/2017/10/17/project-2/"/>
+   <updated>2017-10-17T00:00:00-07:00</updated>
+   <id>http://localhost:4000/BIT150_website/2017/10/17/project-2</id>
+   <content type="html">&lt;h2 id=&quot;project-2---building-a-genetic-model-of-a-trait&quot;&gt;Project 2 - building a genetic model of a trait&lt;/h2&gt;
+
+&lt;p&gt;The objective of this project is to draw together multiple sources of information to build a model, or hypothesis, about the cause of a disease or other trait. I want you to go beyond the explanations for why a particular gene causes a trait that you find in databases like &lt;strong&gt;OMIM&lt;/strong&gt;, or &lt;strong&gt;GeneCards&lt;/strong&gt;. Consider the following hypotheses:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The genes that cause a disease function in the same networks or pathways&lt;/li&gt;
+  &lt;li&gt;Genes with similar functions cause similar diseases&lt;/li&gt;
+  &lt;li&gt;The most important mutations occur in particular regions of a genome (genes, exons, promoters)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I want you to explore these hypotheses with respect to a specific trait or disease. Can you find evidence that supports each of these hypotheses? If so, can you use these ideas to guide your genetic model? If not, why not? What does that suggest about your trait?&lt;/p&gt;
+
+&lt;p&gt;For this project, you can work in teams of 2.&lt;/p&gt;
+
+&lt;p&gt;First, choose a gene associated with a trait. You can use the same trait you used in Project 1 if you’d like. Again, you will have the most success if you choose a trait in a model system (Human, mouse, or Arabidopsis).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://docs.google.com/spreadsheets/d/1Tdm3W4fI42nl6Ha9YmtxxoREfwVDhhaxaXBd6jQhM8Q/edit?usp=sharing&quot;&gt;Enter your gene and trait here&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you have chosen your trait, begin by outlining how you could test each of the hypotheses. What information do you need to begin?&lt;/p&gt;
+
+&lt;p&gt;Over the next several weeks, we will cover several bioinformatics tools that can be used to address these questions. As we learn a tool, apply it to your trait, and collect the results. At the end, synthesis your results as much as you can into a genetic model for your trait.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Due&lt;/strong&gt;: 11/14/17&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Lab 3 - HPC and Command Line BLAST</title>
    <link href="http://localhost:4000/2017/10/12/lab-03/"/>
    <updated>2017-10-12T00:00:00-07:00</updated>
    <id>http://localhost:4000/BIT150_website/2017/10/12/lab-03</id>
    <content type="html">&lt;h1 id=&quot;outline&quot;&gt;Outline:&lt;/h1&gt;
 &lt;ul&gt;
+  &lt;li&gt;review of for loops&lt;/li&gt;
   &lt;li&gt;Intro to using a computer cluster&lt;/li&gt;
   &lt;li&gt;Running BLAST from the command line&lt;/li&gt;
   &lt;li&gt;Running more complex BLAST jobs&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h1 id=&quot;review-of-loops&quot;&gt;Review of loops&lt;/h1&gt;
+&lt;p&gt;In the homework, I asked you to write a script to process all pairs of files through the &lt;code class=&quot;highlighter-rouge&quot;&gt;goodiff&lt;/code&gt; program. This requires &lt;strong&gt;nested for loops&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s start in the &lt;code class=&quot;highlighter-rouge&quot;&gt;north-pacific-gyre/2012-07-03&lt;/code&gt; data files folder.&lt;/p&gt;
+
+&lt;p&gt;We can see all the files we want to process with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls *.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note: some of you may have other &lt;code class=&quot;highlighter-rouge&quot;&gt;.txt&lt;/code&gt; files in this folder. If you do, modify the above command to only list the data files&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;To process all pairs of files, we want to create two variables to hold the names of the two files to process: &lt;code class=&quot;highlighter-rouge&quot;&gt;file1&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;file2&lt;/code&gt;. Then we want to use &lt;strong&gt;for loops&lt;/strong&gt; to substitute each possible pair of files for these two variables.&lt;/p&gt;
+
+&lt;p&gt;First, lets start by processing the first file against all others. You could use a script like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;file1=NENE01729A.txt
+for file2 in NE*.txt
+do
+ echo Processing $file1 $file2
+ programs/goodiff $file1 $file2 &amp;gt;&amp;gt; output/goodiff_results.txt
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;No, we want to run this whole script again and again, but each time with a different &lt;code class=&quot;highlighter-rouge&quot;&gt;file1&lt;/code&gt;. We can do this by writing a loop for file1, where the &lt;strong&gt;body&lt;/strong&gt; of the loop is this first loop:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for file1 in NE*.txt
+do
+  echo $file1
+  for file2 in NE*.txt
+  do
+   echo Processing $file1 $file2
+   programs/goodiff $file1 $file2 &amp;gt;&amp;gt; output/goodiff_results.txt
+  done
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;That’s it!&lt;/p&gt;
 
 &lt;h1 id=&quot;intro-to-high-performance-computing&quot;&gt;Intro to High Performance Computing&lt;/h1&gt;
 
@@ -61,8 +691,8 @@
 &lt;ol&gt;
   &lt;li&gt;Select new site, enter: Host: &lt;code class=&quot;highlighter-rouge&quot;&gt;farm.cse.ucdavis.edu&lt;/code&gt;, Port: &lt;code class=&quot;highlighter-rouge&quot;&gt;2022&lt;/code&gt;, Protocol: &lt;code class=&quot;highlighter-rouge&quot;&gt;SFTP&lt;/code&gt;, Logon Type: “Normal”, User: &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt;, Password: &lt;code class=&quot;highlighter-rouge&quot;&gt;password&lt;/code&gt;, Click &lt;code class=&quot;highlighter-rouge&quot;&gt;Connect&lt;/code&gt;.&lt;/li&gt;
   &lt;li&gt;On the left is a file explorer for your computer. Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Z:/Classes/BIT150/Lab_3&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;On the right is a file explorer for Farm’s file system. Create a directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_3&lt;/code&gt;. You can also do this in the terminal (&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir Lab_2&lt;/code&gt;).&lt;/li&gt;
-  &lt;li&gt;Find the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;brac1.fasta&lt;/code&gt;, and drag it onto Farm.&lt;/li&gt;
+  &lt;li&gt;On the right is a file explorer for Farm’s file system. Create a directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_3&lt;/code&gt;. You can also do this in the terminal (&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir Lab_3&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;Find the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;brca1.fasta&lt;/code&gt;, and drag it onto Farm.&lt;/li&gt;
   &lt;li&gt;In the terminal, enter the command: &lt;code class=&quot;highlighter-rouge&quot;&gt;echo Some Text &amp;gt; new_file.txt&lt;/code&gt;. In &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt;, refresh the Farm file explorer. The file &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file.txt&lt;/code&gt; should appear. Double-click, or drag it to your computer.&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -96,9 +726,9 @@
 
 &lt;p&gt;Now that we have access to a powerful computer, we can use BLAST to search a database for our sequence.&lt;/p&gt;
 
-&lt;p&gt;Our sequence is in the file &lt;code class=&quot;highlighter-rouge&quot;&gt;myoD.fasta&lt;/code&gt;, the file we moved to Farm. View the file with:&lt;/p&gt;
+&lt;p&gt;Our sequence is in the file &lt;code class=&quot;highlighter-rouge&quot;&gt;brca1.fasta&lt;/code&gt;, the file we moved to Farm. View the file with:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head myoD.fasta
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head brca1.fasta
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -118,15 +748,15 @@
 
 &lt;p&gt;Now, we can run blast. A run looks like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -db /group/BIT150/blast_databases/refseq_human_protein -query myoD.fasta -out myoD_blast.txt
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp -db /group/BIT150/blast_databases/refseq_human_protein -query brca1.fasta -out brca1_blast.txt
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;blastp&lt;/code&gt; is the program for protein-protein blast.&lt;/li&gt;
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;db /group/BIT150/blast_databases/refseq_human_protein&lt;/code&gt; specifies the blast database that we want to use. We select the &lt;code class=&quot;highlighter-rouge&quot;&gt;refseq_human_protein &lt;/code&gt; database in the &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/blast_databases/&lt;/code&gt; directory&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;query myoD.fasta&lt;/code&gt; specifies the query sequence&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;out myoD_blast.txt &lt;/code&gt; specifes we want the output stored in the file called &lt;code class=&quot;highlighter-rouge&quot;&gt;myoD_blast.txt &lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;query brca1.fasta&lt;/code&gt; specifies the query sequence&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;out brca1_blast.txt &lt;/code&gt; specifes we want the output stored in the file called &lt;code class=&quot;highlighter-rouge&quot;&gt;brca1_blast.txt &lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Look at the file. It’s long. A good viewer is &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;. Or, you can download it to your computer using &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt;, and view it in &lt;code class=&quot;highlighter-rouge&quot;&gt;Notepad++&lt;/code&gt;.&lt;/p&gt;
@@ -137,9 +767,9 @@
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;blastp  \
    -db /group/BIT150/blast_databases/refseq_human_protein \
-   -query myoD.fasta \
-   -out myoD_blast_table.txt \
-   -outfmt 6   
+   -query brca1.fasta \
+   -out brca1_blast_table.txt \
+   -outfmt 7   
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -192,9 +822,9 @@ module load bio
 
 blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -db /group/BIT150/blast_databases/refseq_human_protein &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -query myoD.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -out myoD_blast_table.txt &lt;span class=&quot;se&quot;&gt;\#&lt;/span&gt; some comment &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -outfmt 6    
+   -query brca1.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -out brca1_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -outfmt 7    
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -214,9 +844,9 @@ module load bio
 
 blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -db /group/BIT150/blast_databases/refseq_human_protein &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -query /group/BIT150/Lab_2/mouse_protein_set1.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+   -query /group/BIT150/Lab_3/mouse_protein_set1.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -out mouse_protein_set1_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -outfmt 6    
+   -outfmt 7    
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -231,14 +861,14 @@ module load bio
 
 &lt;span class=&quot;c&quot;&gt;# declare database and query files&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;database&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/blast_databases/refseq_human_protein
-&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/Lab_2/mouse_protein_set1.fasta
+&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/Lab_3/mouse_protein_set1.fasta
 &lt;span class=&quot;nv&quot;&gt;output_file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mouse_protein_set1_blast_table.txt
 
 blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -db &lt;span class=&quot;nv&quot;&gt;$database&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -query &lt;span class=&quot;nv&quot;&gt;$query&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -out mouse_protein_set1_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -outfmt 6
+   -outfmt 7
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -252,7 +882,7 @@ module load bio
 &lt;span class=&quot;nv&quot;&gt;database_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/blast_databases/
 
 &lt;span class=&quot;c&quot;&gt;# declare input file directory&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;query_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/Lab_2
+&lt;span class=&quot;nv&quot;&gt;query_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/group/BIT150/Lab_3
 
 &lt;span class=&quot;c&quot;&gt;# declare output file directory&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;output_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.
@@ -267,14 +897,14 @@ blastp  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -db &lt;span class=&quot;nv&quot;&gt;$database_dir&lt;/span&gt;/&lt;span class=&quot;nv&quot;&gt;$database&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -query &lt;span class=&quot;nv&quot;&gt;$query_dir&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;.fasta &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
    -out &lt;span class=&quot;nv&quot;&gt;$output_dir&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;_blast_table.txt &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-   -outfmt 6
+   -outfmt 7
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
 &lt;h3 id=&quot;activities&quot;&gt;Activities&lt;/h3&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Modify the above script to blast the &lt;code class=&quot;highlighter-rouge&quot;&gt;mouse_protein_set1.fasta&lt;/code&gt; file against these three databases:&lt;/li&gt;
+  &lt;li&gt;Modify the above script to blast the &lt;code class=&quot;highlighter-rouge&quot;&gt;mouse_protein_set1.fasta&lt;/code&gt; file against three of these databases:&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;refseq_human_protein
@@ -286,7 +916,7 @@ swissprot
 &lt;/div&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Modifying the above script, write a &lt;strong&gt;for loop&lt;/strong&gt; to blast each of the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_2/individual_genes&lt;/code&gt;, saving each in it’s own file in an output directory of your home directory?&lt;/li&gt;
+  &lt;li&gt;Modifying the above script, write a &lt;strong&gt;for loop&lt;/strong&gt; to blast each of the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_3/individual_genes&lt;/code&gt; against one of the protein databases, saving each in it’s own file in an output directory of your home directory?&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&quot;notes-1&quot;&gt;Notes&lt;/h2&gt;
