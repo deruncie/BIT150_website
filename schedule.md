@@ -17,9 +17,9 @@ Schedule is subject to change
 | T   | 10:00 - 10:50   | 10-Oct   | BLAST |
 | TR  |  10:00 - 10:50  | 12-Oct   | Project 1 Presentations |
 | TR  |  3:10 - 5:00    | 12-Oct   | HPC and BLAST | [Lab_03](/BIT150_website/2017/10/12/lab-03/){:target="_blank"}
-| T   | 10:00 - 10:50   | 17-Oct   | Secondary Databases - ENTREZ; SQL |
-| TR  |  10:00 - 10:50  | 19-Oct   | Secondary Databases - Biomart |
-| TR  |  3:10 - 5:00    | 19-Oct   | R, dplyr | <!-- [Lab_04](){:target="_blank"} -->
+| T   | 10:00 - 10:50   | 17-Oct   | Secondary Databases - Biomart |
+| TR  |  10:00 - 10:50  | 19-Oct   | Secondary Databases - PSICQUIC |
+| TR  |  3:10 - 5:00    | 19-Oct   | R, dplyr | [Lab_04](/BIT150_website/2017/10/19/lab-04/){:target="_blank"}
 | T   | 10:00 - 10:50   | 24-Oct   | Gene Function |
 | TR  |  10:00 - 10:50  | 26-Oct   | Protein-Protein Interactions |
 | TR  |  3:10 - 5:00    | 26-Oct   | Cytoscape | <!-- [Lab_05](){:target="_blank"} -->
