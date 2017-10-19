@@ -144,7 +144,7 @@
   <span class="post-date">19 Oct 2017</span>
   <div class="lab">
   <p>In this lab, we will learn to work with <strong>table data</strong>. We’ll use data from online databases, and view,
-arrange, and merge the data using the programing language <code class="highlighter-rouge">R</code>. The data that we’ll focus on
+arrange, and analyze the data using the programing language <code class="highlighter-rouge">R</code>. The data that we’ll focus on
 is data on gene interactions, and data on gene annotations. Our goal is to develop techniques to 
 test the hypothesis:</p>
 
@@ -507,9 +507,17 @@ node2_genes &lt;- brca1_interactions$node2
 </code></pre>
 </div>
 
-<p>We want the <code class="highlighter-rouge">ensembl Genes 90</code> Mart. Select it:</p>
+<p>We want the <code class="highlighter-rouge">ensembl Genes 90</code> Mart.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ensembl = useMart('ENSEMBL_MART_ENSEMBL')
+<blockquote>
+  <p>Note: There are other sites with other Marts.</p>
+
+  <p>ex. “plants.ensembl.org” for plant biomarts</p>
+</blockquote>
+
+<p>Select it:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ensembl &lt;- useMart('ENSEMBL_MART_ENSEMBL')
 ensembl
 </code></pre>
 </div>
@@ -526,7 +534,7 @@ ensembl
 
 <p>Find the one we want (<code class="highlighter-rouge">hsapiens_gene_ensembl</code>), and select it:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ensembl_human = useDataset('hsapiens_gene_ensembl',mart = ensembl)
+<div class="highlighter-rouge"><pre class="highlight"><code>ensembl_human &lt;- useDataset('hsapiens_gene_ensembl',mart = ensembl)
 ensembl_human
 </code></pre>
 </div>
@@ -629,16 +637,37 @@ Are there any <strong>interactions</strong> that where both genes cause the same
 <h3 id="summary">Summary</h3>
 <p>To see how the <strong>split-apply-combine</strong> is working in more detail, think of it like a for loop (yes, we can use them in R too!)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>summary_table &lt;- data_frame() # make empty table to hold results
-for(disease in unique(mim_results$mim_morbid_description)){  # Try to read this for loop syntax. It works just like the one in Bash!
-  disease_results &lt;- filter(mim_results,mim_morbid_description == disease) # select the subset of the rows for the current disease
+<p>Make an empty table to hold results</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>summary_table &lt;- data_frame() 
+</code></pre>
+</div>
+
+<p>Get a list of the diseases:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>disease_list &lt;- unique(mim_results$mim_morbid_description)
+</code></pre>
+</div>
+
+<p>Write a for loop. It works just like the one in Bash! But the syntax is a bit different.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>for(disease in disease_list){  
+
+   # select the subset of the rows for the current disease
+  disease_results &lt;- filter(mim_results,mim_morbid_description == disease) 
   
-  n &lt;- nrow(disease_results)  # count the number of rows in the table for the current disease
-  gene_list &lt;- toString(disease_results$hgnc_symbol)  # paste together all the gene names
+   # count the number of rows in the table for the current disease
+  n &lt;- nrow(disease_results)    
+
+   # paste together all the gene names
+  gene_list &lt;- toString(disease_results$hgnc_symbol)    
+
+	# make a small table to hold this disease's results
+  disease_table &lt;- data_frame(disease = disease, n = n, gene_list = gene_list) 
   
-  disease_table &lt;- data_frame(disease = disease, n = n, gene_list = gene_list) # make a small table to hold this disease's results
-  
-  summary_table &lt;- bind_rows(summary_table,disease_table)    # append this disease's results to the full table
+   # append this disease's results to the full table
+  summary_table &lt;- bind_rows(summary_table,disease_table)    
+
 }
 View(summary_table)
 </code></pre>
@@ -691,6 +720,8 @@ and ask if multiple of the interacting genes have similar roles.</li>
   <li>Prepare a brief report in markdown of what you found.</li>
 </ol>
 
+<p>Going forward, consider analyses like this for Project 2 itself!</p>
+
 
 </div>
 
@@ -699,6 +730,15 @@ and ask if multiple of the interacting genes have similar roles.</li>
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/BIT150_website/2017/10/19/lab-04/">
+            Lab 04
+            <small>19 Oct 2017</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>
@@ -714,15 +754,6 @@ and ask if multiple of the interacting genes have similar roles.</li>
           <a href="/BIT150_website/2017/10/12/lab-03/">
             Lab 3 - HPC and Command Line BLAST
             <small>12 Oct 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/BIT150_website/2017/10/05/bash_profile/">
-            .bash_profile and the shell ENVIRONMENT
-            <small>05 Oct 2017</small>
           </a>
         </h3>
       </li>
