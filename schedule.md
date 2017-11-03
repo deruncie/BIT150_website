@@ -22,10 +22,10 @@ Schedule is subject to change
 | TR  |  3:10 - 5:00    | 19-Oct   | R, dplyr | [Lab_04](/BIT150_website/2017/10/19/lab-04/){:target="_blank"}
 | T   | 10:00 - 10:50   | 24-Oct   | Gene Function |
 | TR  |  10:00 - 10:50  | 26-Oct   | Protein-Protein Interactions |
-| TR  |  3:10 - 5:00    | 26-Oct   | Cytoscape | <!-- [Lab_05](){:target="_blank"} -->
+| TR  |  3:10 - 5:00    | 26-Oct   | Cytoscape | [Lab_05](/BIT150_website/2017/10/26/lab-05/){:target="_blank"}
 | T   | 10:00 - 10:50   | 31-Oct   | Genomic Coordinates |
-| TR  |  10:00 - 10:50  | 2-Nov   | Genomic Tracks |
-| TR  |  3:10 - 5:00    | 2-Nov   | Genome Tracks | <!-- [Lab_06](){:target="_blank"} -->
+| TR  |  10:00 - 10:50  | 2-Nov   | Genome Tracks |
+| TR  |  3:10 - 5:00    | 2-Nov   | Genome Tracks | [Lab_06](/BIT150_website/2017/11/02/lab-06/){:target="_blank"}
 | T   | 10:00 - 10:50   | 7-Nov   | Genomic Variation |
 | TR  |  10:00 - 10:50  | 9-Nov   | GWAS |
 | TR  |  3:10 - 5:00    | 9-Nov   | Population Genetics Data | <!-- [Lab_07](){:target="_blank"} -->
