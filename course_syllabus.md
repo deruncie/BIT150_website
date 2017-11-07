@@ -21,7 +21,7 @@ Fall Quarter 2017
 
 **TA:** Shawn Higdon, <smhigdon@ucdavis.edu>
 
-**Office Hours:** Tuesdays 4-5pm PES 1137
+**Office Hours:** Tuesdays 3-5pm PES 1137
 
 
 
