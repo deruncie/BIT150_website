@@ -1,4 +1,559 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-11-02T14:35:34-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 6 - Genome Browsers</title><link href="http://localhost:4000/BIT150_website/2017/11/02/lab-06/" rel="alternate" type="text/html" title="Lab 6 - Genome Browsers" /><published>2017-11-02T00:00:00-07:00</published><updated>2017-11-02T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/11/02/lab-06</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/02/lab-06/">&lt;h1 id=&quot;goals&quot;&gt;Goals&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-11-16T12:06:18-08:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 8 - Genome Assembly</title><link href="http://localhost:4000/BIT150_website/2017/11/16/lab-08/" rel="alternate" type="text/html" title="Lab 8 - Genome Assembly" /><published>2017-11-16T00:00:00-08:00</published><updated>2017-11-16T00:00:00-08:00</updated><id>http://localhost:4000/BIT150_website/2017/11/16/lab-08</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/16/lab-08/">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#getting-setup&quot;&gt;Getting Setup&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#illumina-paired-end-reads&quot;&gt;Illumina Paired End Reads&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#fastq-file-format&quot;&gt;FastQ File Format&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#genome-assembly&quot;&gt;Genome Assembly&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#putting-it-all-together&quot;&gt;Putting it all Together&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#lab-8-assignment&quot;&gt;Lab 8 Assignment&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;laboratory-objectives&quot;&gt;Laboratory Objectives&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Familiarize concepts and principles related to genome sequencing&lt;/li&gt;
+  &lt;li&gt;Interpret genome assembly quality using standardized metrics&lt;/li&gt;
+  &lt;li&gt;Develop shell scripts that combine multiple programs for data analysis&lt;/li&gt;
+  &lt;li&gt;As part of the assignment, responses to all &lt;strong&gt;Thought Questions&lt;/strong&gt; will be required&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;getting-setup&quot;&gt;Getting Setup&lt;/h2&gt;
+
+&lt;p&gt;Today, you will analyze and process raw DNA sequence files from an &lt;em&gt;Escherichia coli&lt;/em&gt; genome at the command line using programs on the &lt;strong&gt;farm cluster&lt;/strong&gt;. Recall that in order to run computationally intensive commands on the farm cluster, we must first request the necessary compute space &lt;strong&gt;outside of the login node&lt;/strong&gt; using the &lt;code class=&quot;highlighter-rouge&quot;&gt;srun&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Login to farm at the command line: &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh user-id@farm.cse.ucdavis.edu&lt;/code&gt; and enter your password.&lt;/li&gt;
+  &lt;li&gt;Once you are logged in, request the resources for an interactive job to use in lab today:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;srun -p bit150 -t 2:00:00 --mem=8000 -n 2 --pty bash -l&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;linking-sequence-data-into-a-working-directory&quot;&gt;Linking sequence data into a working directory&lt;/h3&gt;
+
+&lt;p&gt;Once we have our interactive jobs running, the next step is to create a directory to work in for today’s lab. We will put all files and subfolders associated with this lab into the directory &lt;code class=&quot;highlighter-rouge&quot;&gt;~/lab_08&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir -p ~/Lab_8&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Next, let’s create a &lt;code class=&quot;highlighter-rouge&quot;&gt;symbolic link&lt;/code&gt; to each of the data files that we will be working with today from the &lt;code class=&quot;highlighter-rouge&quot;&gt;/groups/BIT150/Lab_8&lt;/code&gt; folder. These two files contain the raw nucleotide reads for the Escherichia coli O104:H4 str. TY-2482 genome. To do this, we need to move into the &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_8&lt;/code&gt; directory and then type the command to create symbolic links.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd lab_8
+ln -s /group/Lab_8/*.fastq.gz .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To verify that the symbolic links were created, type the following command:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls -l&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You should see output similar to the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;total 0
+lrwxrwxrwx 1 smhigdon smhigdon 40 Nov 15 22:11 SRR292770_1.fastq.gz -&amp;gt; /group/BIT150/Lab_8/SRR292770_1.fastq.gz
+lrwxrwxrwx 1 smhigdon smhigdon 40 Nov 15 22:11 SRR292770_2.fastq.gz -&amp;gt; /group/BIT150/Lab_8/SRR292770_2.fastq.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;These are FASTQ files - let’s explore the meaning of the data contained within them…&lt;/p&gt;
+
+&lt;h2 id=&quot;illumina-paired-end-reads&quot;&gt;Illumina Paired End Reads&lt;/h2&gt;
+
+&lt;p&gt;Illumina reads come in two styles - single read &lt;strong&gt;(SR)&lt;/strong&gt; and paired end reads &lt;strong&gt;(PE)&lt;/strong&gt;. &lt;strong&gt;SR&lt;/strong&gt; read data of sequencing libraries is generally less expensive to generate, while &lt;strong&gt;PE&lt;/strong&gt; read data is more costly to generate but contains additional information that is advantageous for generating genome assemblies. Illumina sequences are generated using the &lt;strong&gt;sequencing by synthesis method:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab8-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Paired end reads provide more information than single end reads because they provide sequence information pertaining to the reverse compliment of each sequence insert. This will often allow for the creation of a genome assembly with higher contiguity because the paired end reads can be used to resolve uncertainty in genomic regions of nucleotide residue homogeneity &lt;strong&gt;(homopolymer repeats)&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab8-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;fastq-file-format&quot;&gt;FASTQ File format&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/FASTQ_format&quot; target=&quot;_blank&quot;&gt;FASTQ Format&lt;/a&gt; is the standard file format for Illumina sequence data. This file format is what you should currently expect to receive when downloading sequence data either from an online repository or from the file server of a DNA sequencing facility. However, fastq files are not the first form of the data that is generated from Illumina sequencers:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab8-3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The fastq files contain data associated with each DNA insert read sequence generated from each PCR-amplified cluster on an Illumina flowcell. Each short read sequence record within the fastq files contain 4 lines:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab8-4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that we have an idea of what a fastq file should look like, lets take a look at our files to make sure they meet the criteria for the fastq format:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less SRR292770_1.fastq.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;(use the spacebar to scroll down, and type ‘q’ to exit ‘less’)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less SRR292770_2.fastq.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Notice that the two files have a common identifier that designates them as coming from the same sample. Now that we have confirmed the content of our files, let’s move on to assembling the reads into a genome.&lt;/p&gt;
+
+&lt;h4 id=&quot;thought-questions&quot;&gt;Thought Questions&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Why are there &lt;code class=&quot;highlighter-rouge&quot;&gt;_1&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;_2&lt;/code&gt; in the file names?&lt;/li&gt;
+    &lt;li&gt;Why is each of the four lines from a fastq file read important?&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;genome-assembly&quot;&gt;Genome Assembly&lt;/h2&gt;
+
+&lt;p&gt;There are two main strategies for genome assembly using DNA sequencing reads, &lt;strong&gt;&lt;em&gt;de novo&lt;/em&gt; assembly&lt;/strong&gt; and &lt;strong&gt;reference based mapping&lt;/strong&gt;. Among the algorithm types used to carry out &lt;strong&gt;&lt;em&gt;de novo&lt;/em&gt; assembly&lt;/strong&gt;, the two most common strategies are &lt;strong&gt;&lt;em&gt;De Bruijn Graph Assembly&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;Overlap Layout Consensus&lt;/em&gt;&lt;/strong&gt;. For more information on the differences between these two, here are links to some papers if you are interested:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ncbi.nlm.nih.gov/pubmed/22184334&quot; target=&quot;_blank&quot;&gt;Li et al., 2012&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2336801/&quot; target=&quot;_blank&quot;&gt;Zerbino et al., 2008&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.sciencedirect.com/science/article/pii/S0888754310000492&quot; target=&quot;_blank&quot;&gt;Miller et al., 2010&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;De Bruijn Graph Assembly&lt;/em&gt;&lt;/strong&gt; involves breaking all of the sequence reads down into smaller sequence fragments &lt;strong&gt;(substrings)&lt;/strong&gt; of a specified length &lt;strong&gt;(k-size)&lt;/strong&gt;, which are commonly referred to as &lt;strong&gt;k-mers&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab8-5.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The k-mers are typically ordered within a &lt;a href=&quot;https://en.wikipedia.org/wiki/Hash_table&quot; target=&quot;_blank&quot;&gt;hash table&lt;/a&gt;, and a directional network graph is then constructed. Here is an example using a k-size of 3 that demonstrates the concept:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab8-6.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;megahit&quot;&gt;MEGAhit&lt;/h3&gt;
+
+&lt;p&gt;To assemble the &lt;em&gt;E. coli&lt;/em&gt; genome reads we have been working with, we will use &lt;strong&gt;MEGAhit&lt;/strong&gt;, which is an ultra-fast short read assembly program that takes a &lt;em&gt;De Bruijn Graph&lt;/em&gt; approach. MEGAhit was designed for metagenome assembly, but it can also be used to assemble the shotgun whole genome sequence data from the DNA libraries of mono-isolate microbial genomes as well.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The paper can be found &lt;a href=&quot;https://www.ncbi.nlm.nih.gov/pubmed/25609793&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/voutcn/megahit&quot; target=&quot;_blank&quot;&gt;MEGAhit source code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;k-mer-size-assembly-activity&quot;&gt;k-mer size assembly activity&lt;/h3&gt;
+
+&lt;p&gt;One question you may have thought of is, &lt;strong&gt;“which k-mer size should be used for the assembly”&lt;/strong&gt; or, &lt;strong&gt;“is there an optimal k-mer size for assembly?”&lt;/strong&gt; We will now do an in-class exercise together to investigate these questions.&lt;/p&gt;
+
+&lt;p&gt;Let’s work together to answer these questions by assembling the read data using all possible k-mer sizes for the data that MEGAhit will allow. MEGAhit only allows for k-mer sizes of odd numbers.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;First&lt;/strong&gt;, click the following link to get to a live googlesheet for this exercise: &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1Oxw2HLbRqEqduValTQ__I7atl23L6gMHZgwiwUj8UMU/edit#gid=0&quot; target=&quot;_blank&quot;&gt;https://docs.google.com/spreadsheets/d/1Oxw2HLbRqEqduValTQ__I7atl23L6gMHZgwiwUj8UMU/edit#gid=0&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, choose a k-mer size and fill in your name. &lt;strong&gt;Our goal is to cover all k-mer sizes in this exercise, so if you see an empty slot, grab it.&lt;/strong&gt; Because the sequence read data we are working was generated using only 50 amplification cycles, we have really short reads and will only be able to cover 17 k-mer sizes during this exercise. If all of the k-mers have already been chosen, just choose the one you like the most, add your name in the column and continue with the exercise.&lt;/p&gt;
+
+&lt;p&gt;Once you have selected a k-mer size for your assembly, in the same directory containing the symbolic links to the fastq files we generated (~/lab_8), type the following command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load megahit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Recall that loading this module will connect your &lt;strong&gt;PATH&lt;/strong&gt; environment variable to the directory with code for the MEGAhit program.&lt;/p&gt;
+
+&lt;p&gt;Now, type or copy the following command, and replace the &lt;em&gt;##&lt;/em&gt; characters with your chosen k-mer size.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;megahit --k-min ## --k-max ## --kmin-1pass -t 2 -1 SRR292770_1.fastq.gz -2 SRR292770_2.fastq.gz -o megahit_Ecoli_k##
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After you enter this command, you will see lines of code begin to appear at the prompt.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;While the program is running, let’s discuss some aspects of the assembly output MEGAhit will provide.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Number of assembled &lt;strong&gt;contigs&lt;/strong&gt; (contiguous sequences of DNA)&lt;/li&gt;
+  &lt;li&gt;Total assembly length (in bp)&lt;/li&gt;
+  &lt;li&gt;The N50 value
+    &lt;ul&gt;
+      &lt;li&gt;Note that one of the most common assembly statistics is the &lt;strong&gt;N50&lt;/strong&gt; value.&lt;/li&gt;
+      &lt;li&gt;The &lt;strong&gt;N50&lt;/strong&gt; value of an assembly is defined as the length of the smallest contig within a subset of the largest assembled contigs whose sum represents 50 percent of the total number of bases assembled.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When your assembly is complete, copy and paste the assembly statistics reported in the terminal by MEGAhit into the &lt;strong&gt;googlesheet&lt;/strong&gt; for your chosen k-mer size.&lt;/p&gt;
+
+&lt;p&gt;You can also explore the assembly file generated with MEGAhit by typing the following command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less -S megahit_Ecoli_k##/final.contigs.fa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;** Again, replace the &lt;code class=&quot;highlighter-rouge&quot;&gt;##&lt;/code&gt; characters with your chosen k-mer size.&lt;/p&gt;
+
+&lt;h4 id=&quot;thought-questions-1&quot;&gt;Thought Questions&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Why and how do different k-mer sizes affect the assembly results?&lt;/li&gt;
+    &lt;li&gt;When would a short k-mer size be useful compared to the use of a long k-mer size?&lt;/li&gt;
+    &lt;li&gt;How can the concept of k-mer size be related to &lt;code class=&quot;highlighter-rouge&quot;&gt;seed&lt;/code&gt; size in BLAST?&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;MEGAhit provided us with a limited number of assembly statistics, and a question that may come to mind is…&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Are there other ways to assess the quality of my genome assembly?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The answer is yes, and to generate additional genome assembly metrics, we will use the program below.&lt;/p&gt;
+
+&lt;h2 id=&quot;assembly-quality&quot;&gt;Assembly Quality&lt;/h2&gt;
+
+&lt;h3 id=&quot;quast-quality-assessment-tool-for-genome-assemblies&quot;&gt;QUAST: QUality ASsessment Tool for Genome Assemblies&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Click &lt;a href=&quot;http://quast.sourceforge.net/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt; for more information on QUAST.&lt;/li&gt;
+  &lt;li&gt;The paper can be found &lt;a href=&quot;https://academic.oup.com/bioinformatics/article/29/8/1072/228832/QUAST-quality-assessment-tool-for-genome&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/ablab/quast&quot; target=&quot;_blank&quot;&gt;QUAST source code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To evaluate the quality of your MEGAhit assembly in more detail, descend into the directory containing the megahit output:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;substitute the &lt;code class=&quot;highlighter-rouge&quot;&gt;##&lt;/code&gt; for the numbers you used before in the megahit command.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd megahit_Ecoli_k##
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next, load the &lt;code class=&quot;highlighter-rouge&quot;&gt;bio&lt;/code&gt; module:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load bio
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Recall  that we used the &lt;code class=&quot;highlighter-rouge&quot;&gt;bio&lt;/code&gt; module when we were using BLAST at the command line in Lab 3. Loading this customized farm module will actually add many bioinformatics programs to your &lt;strong&gt;$PATH&lt;/strong&gt; so that you can easily use them in your interactive shell. To check out some of these programs, try typing the following commands after you have loaded the &lt;code class=&quot;highlighter-rouge&quot;&gt;bio&lt;/code&gt; module:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;To view python modules: &lt;code class=&quot;highlighter-rouge&quot;&gt;pip list&lt;/code&gt;&lt;/li&gt;
+    &lt;li&gt;To view &lt;a href=&quot;https://bioconda.github.io/&quot; target=&quot;_blank&quot;&gt;bioconda&lt;/a&gt; modules: &lt;code class=&quot;highlighter-rouge&quot;&gt;conda list&lt;/code&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now, execute the following command to run QUAST on your &lt;em&gt;E. coli&lt;/em&gt; assembly:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;quast.py final.contigs.fa -o quast_output
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Running &lt;code class=&quot;highlighter-rouge&quot;&gt;QUAST&lt;/code&gt; on the input file containing the &lt;em&gt;E. coli&lt;/em&gt; TY-2482 assembly contigs from MEGAhit actually generated many files nested within the new directory, &lt;code class=&quot;highlighter-rouge&quot;&gt;quast_output&lt;/code&gt;. Let’s have a look at the report in plain text file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less -S quast_output/report.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You should see something very similar to the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;All statistics are based on contigs of size &amp;gt;= 500 bp, unless otherwise noted (e.g., &quot;# contigs (&amp;gt;= 0 bp)&quot; and &quot;Tota
+
+Assembly                    final.contigs
+# contigs (&amp;gt;= 0 bp)         719
+# contigs (&amp;gt;= 1000 bp)      369
+# contigs (&amp;gt;= 5000 bp)      211
+# contigs (&amp;gt;= 10000 bp)     151
+# contigs (&amp;gt;= 25000 bp)     60
+# contigs (&amp;gt;= 50000 bp)     19
+Total length (&amp;gt;= 0 bp)      5210009
+Total length (&amp;gt;= 1000 bp)   5065636
+Total length (&amp;gt;= 5000 bp)   4702255
+Total length (&amp;gt;= 10000 bp)  4259183
+Total length (&amp;gt;= 25000 bp)  2792051
+Total length (&amp;gt;= 50000 bp)  1285159
+# contigs                   463
+Largest contig              143131
+Total length                5130667
+GC (%)                      50.49
+N50                         30790
+N75                         14105
+L50                         52
+L75                         117
+# N's per 100 kbp           0.00
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note that another assembly statistic that is commonly referenced is the &lt;strong&gt;L50&lt;/strong&gt; value, which is defined as the minimum number of contigs whose length sum is equal to the N50 value.**&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;thought-questions-2&quot;&gt;Thought Questions&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Why are there so many contigs?&lt;/li&gt;
+    &lt;li&gt;How informative is the N50 value if you are comparing two genome assemblies that are different in total length?&lt;/li&gt;
+    &lt;li&gt;What would be needed to produce an assembly with a total number of contigs under, say 10…or perhaps even a &lt;strong&gt;single contig scaffold&lt;/strong&gt;?&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;putting-it-all-together&quot;&gt;Putting it all together&lt;/h2&gt;
+
+&lt;p&gt;Running through this entire process step by step is great for learning how everything works, but what if you need to assemble a large genome that will take a longer amount of time than, say five to ten minutes? A more efficient way to conduct this entire computational analysis is to write a shell script that can be submitted to SLURM with the &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt; command. Let’s take a look at the example script below:&lt;/p&gt;
+
+&lt;h3 id=&quot;sbatch-script&quot;&gt;sbatch script&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash -l&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#SBATCH -p high&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -D /home/smhigdon/BIT150/&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -o /home/smhigdon/BIT150/slurm-log/MEGA_B150-stdout-%j.txt&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -e /home/smhigdon/BIT150/slurm-log/MEGA_B150-stderr-%j.txt&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -J MEGA_B150&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -N 1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -n 8&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH --mem=16000&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH -t 24:00:00&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH --mail-type=END,FAIL&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#SBATCH --mail-user=smhigdon@ucdavis.edu&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Name: megahit_BIT150.sh&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Created by: Shawn Higdon&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# creation date: April 25, 2017&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# This is a pipeline for the assembly of Illumina PEx50 reads for individual microbial genomes.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;## Load the required software module&lt;/span&gt;
+
+module load bio
+
+&lt;span class=&quot;nv&quot;&gt;OUTPUT_FOLDER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;lab_8
+mkdir -p &lt;span class=&quot;nv&quot;&gt;$OUTPUT_FOLDER&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Step One: Assemble the preprocessed read files for each sample using MEGAHIT&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;MEGAHIT_FOLDER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$OUTPUT_FOLDER&lt;/span&gt;/megahit &lt;span class=&quot;c&quot;&gt;# make a megahit output folder&lt;/span&gt;
+
+megahit -1 &lt;span class=&quot;nv&quot;&gt;$OUTPUT_FOLDER&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;1.fq.gz -2 &lt;span class=&quot;nv&quot;&gt;$OUTPUT_FOLDER&lt;/span&gt;/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;2.fq.gz -o &lt;span class=&quot;nv&quot;&gt;$MEGAHIT_FOLDER&lt;/span&gt; -t 8
+
+&lt;span class=&quot;c&quot;&gt;# Step Two: Use Quast to determine the quality of the MEGAHIT assembly&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;QUAST_FOLDER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$MEGAHIT_FOLDER&lt;/span&gt;/quast
+
+quast.py &lt;span class=&quot;nv&quot;&gt;$MEGAHIT_FOLDER&lt;/span&gt;/final.contigs.fa -o &lt;span class=&quot;nv&quot;&gt;$QUAST_FOLDER&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note the addition of the &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt; specific lines at the top of the script. Creating a directory called slurm-log at the specified path, and referencing it in the script with the &lt;code class=&quot;highlighter-rouge&quot;&gt;-e&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;-o&lt;/code&gt; options tells &lt;code class=&quot;highlighter-rouge&quot;&gt;slurm&lt;/code&gt; to generate error and output files, which aid in debugging your scripts. Adding the &lt;code class=&quot;highlighter-rouge&quot;&gt;--mail&lt;/code&gt; options also activates the &lt;code class=&quot;highlighter-rouge&quot;&gt;slurm&lt;/code&gt; feature of mailing the user when the job is complete.&lt;/p&gt;
+
+  &lt;p&gt;Having built in all of these &lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch&lt;/code&gt; commands, submitting this job is as simple as typing:&lt;/p&gt;
+
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sbatch megahit_BIT150.sh&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;lab-8-assignment&quot;&gt;Lab 8 Assignment&lt;/h2&gt;
+
+&lt;p&gt;For the assignment, create a markdown document that addresses the following and submit the document to canvas in &lt;strong&gt;html&lt;/strong&gt; format:&lt;/p&gt;
+
+&lt;h3 id=&quot;part-1&quot;&gt;Part 1&lt;/h3&gt;
+
+&lt;p&gt;Provide a response to each of the &lt;strong&gt;&lt;em&gt;Thought Questions&lt;/em&gt;&lt;/strong&gt; that are presented at the end of each major section in this lab.&lt;/p&gt;
+
+&lt;h3 id=&quot;part-2&quot;&gt;Part 2&lt;/h3&gt;
+
+&lt;p&gt;There are many Bioinformatics programs that have been written to carry out a &lt;strong&gt;&lt;em&gt;Dr Bruijn Graph&lt;/em&gt;&lt;/strong&gt; based de novo assembly using paired-end Illumina reads. Here is a list of some assemblers that are already installed on farm:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href=&quot;http://online.liebertpub.com/doi/abs/10.1089/cmb.2012.0021&quot; target=&quot;_blank&quot;&gt;SPAdes&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://genome.cshlp.org/content/18/5/821.short&quot; target=&quot;_blank&quot;&gt;Velvet&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://link.springer.com/chapter/10.1007%2F978-3-642-12683-3_28&quot; target=&quot;_blank&quot;&gt;IDBA&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://genome.cshlp.org/content/19/6/1117.short&quot; target=&quot;_blank&quot;&gt;Abyss&lt;/a&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Choose one of these programs and learn how it works by reading the documentation. Your task is to write an sbatch script that will assemble the same set of paired end reads you used in lab today using an assembler of your choice. Then, use &lt;strong&gt;QUAST&lt;/strong&gt; to assess the assembly metrics of your new assembly.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Compare and contrast the outcome of your new assembly to the results of an assembly that was generated by running MEGAhit on the &lt;em&gt;E. coli&lt;/em&gt; strain TY-2482 paired end reads with the default parameters. This data can be found on farm at the following path: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_8/megahit_output&lt;/code&gt;. Speculate as to why differences may or may not have occurred for each of the relevant assembly statistics.&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Be sure to include the code for your script in the markdown document.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;To view the documentation for the assembly programs at the command line, type the following commands:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Spades: &lt;code class=&quot;highlighter-rouge&quot;&gt;spades.py --h&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Velvet: &lt;code class=&quot;highlighter-rouge&quot;&gt;velveth&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;IDBA: &lt;code class=&quot;highlighter-rouge&quot;&gt;idba -h&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Abyss: &lt;code class=&quot;highlighter-rouge&quot;&gt;man abyss&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Note:&lt;/em&gt;&lt;/strong&gt; Spades, Velvet and Abyss can all be accessed using, &lt;code class=&quot;highlighter-rouge&quot;&gt;module load bio&lt;/code&gt;, which access to IDBA requires, &lt;code class=&quot;highlighter-rouge&quot;&gt;module load idba&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Performing a google search is also a good place to start looking for usage examples.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;project-3.md&quot; target=&quot;_blank&quot;&gt;Project 3&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Overview</summary></entry><entry><title type="html">Lab 7 - Genome-wide association study</title><link href="http://localhost:4000/BIT150_website/2017/11/09/lab-07/" rel="alternate" type="text/html" title="Lab 7 - Genome-wide association study" /><published>2017-11-09T00:00:00-08:00</published><updated>2017-11-09T00:00:00-08:00</updated><id>http://localhost:4000/BIT150_website/2017/11/09/lab-07</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/09/lab-07/">&lt;h1 id=&quot;goals&quot;&gt;Goals&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Use the GWAS Catalog to find variants associated with specific traits&lt;/li&gt;
+  &lt;li&gt;Understand statistics reported in GWAS studies&lt;/li&gt;
+  &lt;li&gt;Predict the functional effects of specific allelic variants&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;activity&quot;&gt;Activity&lt;/h1&gt;
+
+&lt;h2 id=&quot;introduction-to-gwas-catalog&quot;&gt;Introduction to GWAS Catalog&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Go to: &lt;a href=&quot;https://www.ebi.ac.uk/gwas/&quot;&gt;GWAS Catalog&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;The GWAS Catalog is operated by the National Human Genome Research Institute and the European Bioinformatics Institute. The Catalog is a quality controlled, manually curated, collection of all published genome-wide association studies assaying at least 100,000 SNPs and all SNP-trait associations with p-values &amp;lt; 1.0 x 10&lt;sup&gt;-5&lt;/sup&gt;. In plant there is similar GWAS Catelog in &lt;em&gt;Arabidopsis&lt;/em&gt;&lt;/p&gt;
+
+      &lt;p&gt;ex:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;https://aragwas.1001genomes.org&quot;&gt;AraGWAS&lt;/a&gt; developed within the &lt;em&gt;Arabidopsis&lt;/em&gt; 1001 Genome project&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Click on &lt;strong&gt;Diagram&lt;/strong&gt;.
+    &lt;blockquote&gt;
+      &lt;p&gt;This diagram shows all SNP-trait associations with p-value ≤ 5.0 × 10&lt;sup&gt;-8&lt;/sup&gt;. You can view the SNP distribution by filtering different types of phenotypes, for example: cardiovascular disease, response to drugs, or you can type any thing in the blank space &lt;strong&gt;Filter by trait&lt;/strong&gt;. After filtering, you can click each colored dots to get more detail information about the significant associations.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Click on &lt;strong&gt;Search&lt;/strong&gt;, let’s search &lt;strong&gt;height&lt;/strong&gt; for the analysis.
+    &lt;blockquote&gt;
+      &lt;p&gt;There are several ways of searching:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;Enter a disease name: ex. &lt;code class=&quot;highlighter-rouge&quot;&gt;breast cancer&lt;/code&gt;&lt;/li&gt;
+        &lt;li&gt;Enter a genome region: ex. &lt;code class=&quot;highlighter-rouge&quot;&gt;6:16000000-25000000&lt;/code&gt;, read as chr:start-stop.&lt;/li&gt;
+        &lt;li&gt;Enter a SNP name: ex. &lt;code class=&quot;highlighter-rouge&quot;&gt;rs7329174&lt;/code&gt;.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Become familiar with association information you can get from a search.
+    &lt;blockquote&gt;
+      &lt;p&gt;Note these features:&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;SNP name&lt;/strong&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;RAF&lt;/strong&gt;: Risk/effect allele frequency in controls&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;P-value&lt;/strong&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;OR&lt;/strong&gt;: Odds ratio associate with SNP&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Beta&lt;/strong&gt;: Beta coefficient associte with increase or decrease of the SNP&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;CI&lt;/strong&gt;: 95% confidence interval&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Region&lt;/strong&gt;: cytogenetics region of SNP&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Location&lt;/strong&gt;: chr:start-end&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Functional class&lt;/strong&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Reported/mapped gene&lt;/strong&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Understand individual associated SNPs (select SNPs with effectSize &amp;gt;2).
+    &lt;blockquote&gt;
+      &lt;p&gt;click the &lt;strong&gt;arrow&lt;/strong&gt; right next to the SNP name, it will go to individual SNP association page.
+click &lt;strong&gt;Genomic context&lt;/strong&gt;, it is the similar genome browser you learned previous week, play around the different track and see what kind of information you can find.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Understand the SNP effects on gene regulation.
+    &lt;blockquote&gt;
+      &lt;p&gt;click on &lt;strong&gt;Genes and gene regulation&lt;/strong&gt;, and find the consequence of the transcripts, either a coding transcript or non-coding transcript, does this SNP will lead to non-sense mediate decay (MND)? Which tissue has the biggest effect of this SNP on the gene expression?&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Understand the population genetics of SNPs.
+    &lt;blockquote&gt;
+      &lt;p&gt;click &lt;strong&gt;Population genetics&lt;/strong&gt; and check the allele frequency in different population, does certain population have high risk for this SNP? Below 1000 Genomes Project Phase 3 allele frequencies there is bar chart for the allele frequency in five major populations (African, American, European, South Asian, East Asian). Below there is more defined populations within these five major populations.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Understand linkage disequilibrium.
+    &lt;blockquote&gt;
+      &lt;p&gt;click &lt;strong&gt;Linkage disequilibrium&lt;/strong&gt;, and view the &lt;strong&gt;LD Manhattan plot&lt;/strong&gt; and &lt;strong&gt;LD heatmap plot&lt;/strong&gt; by click &lt;strong&gt;View plot&lt;/strong&gt; of LD plot. Check the heatmap in each population (eg. African, American, European, South Asian).&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Understand Phylogenetic contexts.
+    &lt;blockquote&gt;
+      &lt;p&gt;click &lt;strong&gt;Phylogenetic contexts&lt;/strong&gt; and see what is conservation level across different species. click you can choose 8 primate, 21 eutherian mammals, 27 amniota vertebrates, and 53 eutherian mammals.&lt;/p&gt;
+
+      &lt;ul&gt;
+        &lt;li&gt;Note: Not every species has a sequence alignments, some loci only have sequence alignments in primates.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Understand the global pattern of assocation SNPs in R.
+    &lt;blockquote&gt;
+      &lt;p&gt;After you search the disease you want to study, click &lt;strong&gt;Download association results&lt;/strong&gt; to download entire association SNPs. Save the file on your desktop.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;load the library&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;library(readr)
+library(dplyr)
+library(ggplot2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;change directory&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;setwd('~/Desktop')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;read the file&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;snps &amp;lt;- read_delim(&quot;~/Desktop/downloads.tsv&quot;, &quot;\t&quot;, escape_double = FALSE, trim_ws = TRUE)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;check column name&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;colnames(snps)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;identify the SNP with the largest OR or Beta effect size&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;colnames(snps)[31] &amp;lt;- 'effectSize'
+biggest_effect_size &amp;lt;- max(snps$effectSize, na.rm = TRUE)
+filter(snps, effectSize == biggest_effect_size)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;look at the distribution of OR or Beta effect size&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;histogram(snps$effectSize, na.rm = TRUE, breaks=100)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;identify the SNPs with OR or Beta effect size &amp;gt;2&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;filter(snps, effectSize &amp;gt; 2)
+nrow(filter(snps, effectSize &amp;gt; 2))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;count the frequncy of SNP context and make barplot&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;counts &amp;lt;- as.data.frame(table(snps$CONTEXT))
+colnames(counts)[1] &amp;lt;- 'context'
+colnames(counts)[2] &amp;lt;- 'count'
+counts &amp;lt;- mutate(counts, frequency = count/sum(counts$count))
+
+ggplot(counts, aes(x=context, y=frequency)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  xlab(&quot;Context of SNPs&quot;) +
+  ylab(&quot;Counts&quot;) +
+  theme(axis.text.x=element_text(angle=45,hjust=1,size=10))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;assignment&quot;&gt;Assignment&lt;/h2&gt;
+
+&lt;p&gt;Answer the following questions:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Select one disease you want to study (make sure that disease has at least 50 association SNPs?&lt;/li&gt;
+  &lt;li&gt;See the distribution of the SNPs on the genome for certain disease.&lt;/li&gt;
+  &lt;li&gt;Familiar with the output of the SNP associations in the GWAS Catalog.&lt;/li&gt;
+  &lt;li&gt;What kind of gene regulation consequences in your assocation SNPs?&lt;/li&gt;
+  &lt;li&gt;Does LD around the assocation SNPs is different among populations by visualizing LD heatmap?&lt;/li&gt;
+  &lt;li&gt;Does certain population has high risk for the disease you study?&lt;/li&gt;
+  &lt;li&gt;What is the phylogenetic conservation in the association SNPs?&lt;/li&gt;
+  &lt;li&gt;Use R code to select the SNP which has the biggest effect (OR or Beta).&lt;/li&gt;
+  &lt;li&gt;What the disease you study what is the distribution of different association SNP context?&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Goals</summary></entry><entry><title type="html">Lab 6 - Genome Browsers</title><link href="http://localhost:4000/BIT150_website/2017/11/02/lab-06/" rel="alternate" type="text/html" title="Lab 6 - Genome Browsers" /><published>2017-11-02T00:00:00-07:00</published><updated>2017-11-02T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/11/02/lab-06</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/02/lab-06/">&lt;h1 id=&quot;goals&quot;&gt;Goals&lt;/h1&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Use the UCSC Genome Browser to view genomic features&lt;/li&gt;
@@ -1708,769 +2263,4 @@ remove foo.txt?
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;In response to this interactive prompt by the system, you may then respond by simply typing &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; for yes or no respectively, followed by the return key. If you types &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;, the file will not be deleted, whereas typing &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; deletes the file. You may think that this is a bit tedious, typing &lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; every time you want to safeguard deleting a file by mistake - it is! Luckily, there is a way to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command safe by default, by embedding an &lt;code class=&quot;highlighter-rouge&quot;&gt;alias&lt;/code&gt; into your &lt;code class=&quot;highlighter-rouge&quot;&gt;.bash_profile&lt;/code&gt;. &lt;a href=&quot;/BIT150_website/2017/10/05/bash_profile/&quot; target=&quot;_blank&quot;&gt;See the lab page on the .bash_profile&lt;/a&gt;.&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">BASH on Windows 10</summary></entry><entry><title type="html">Slack Workspace for BIT150</title><link href="http://localhost:4000/BIT150_website/2017/10/01/slack_site/" rel="alternate" type="text/html" title="Slack Workspace for BIT150" /><published>2017-10-01T00:00:00-07:00</published><updated>2017-10-01T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/01/slack_site</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/01/slack_site/">&lt;p&gt;&lt;a href=&quot;https://www.slack.com/features&quot; target=&quot;_blank&quot;&gt;Slack&lt;/a&gt; is one method of staying connected that has been widely adopted by different groups within the UC Davis community. Dan and I have created a Slack workspace specifically for our use this quarter in the BIT150 class.&lt;/p&gt;
-
-&lt;p&gt;Please follow &lt;a href=&quot;https://join.slack.com/t/bit150-2017/shared_invite/enQtMjQ5NzU1MzI1NTExLTJiYTU2YjkzYzdiOTgxMjlkOGQwNGE3NzVjNzUwZjIxYmI1NDEyMWVkODFmNjVhN2ZlZmJlM2I4MmQ0ZmU3Nzg&quot; target=&quot;_blank&quot;&gt;this link&lt;/a&gt; to join the BIT150-2017 slack channel.&lt;/p&gt;
-
-&lt;p&gt;Some benefits for us to use slack are:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;sharing documents with one another&lt;/li&gt;
-  &lt;li&gt;group messaging&lt;/li&gt;
-  &lt;li&gt;direct messaging&lt;/li&gt;
-  &lt;li&gt;asking questions about course related content&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Using slack is not a requirement, but it is a great way for connecting with one another when we are not in class.&lt;/p&gt;
-
-&lt;p&gt;If you have any questions about slack, please feel free to e-mail us:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;mailto:deruncie@ucdavis.edu&quot;&gt;deruncie@ucdavis.edu&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;mailto:smhigdon@ucdavis.edu&quot;&gt;smhigdon@ucdavis.edu&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;OR&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Write the questions directly in the slack workspace once you join!&lt;/p&gt;
-
-&lt;p&gt;Dan and Shawn&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Slack is one method of staying connected that has been widely adopted by different groups within the UC Davis community. Dan and I have created a Slack workspace specifically for our use this quarter in the BIT150 class.</summary></entry><entry><title type="html">Introduction to the Unix Shell</title><link href="http://localhost:4000/BIT150_website/2017/09/28/command-line/" rel="alternate" type="text/html" title="Introduction to the Unix Shell" /><published>2017-09-28T00:00:00-07:00</published><updated>2017-09-28T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/09/28/command-line</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/09/28/command-line/">&lt;blockquote&gt;
-  &lt;p&gt;Lessons modified from: &lt;a href=&quot;https://hackmd.io/MwIwZgLAJgrA7HAtANmADgKaIgTisRAQ0JAMIGNC4AGE8uCZHIA=&quot;&gt;Data Carpentry Intro to Shell&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Helpful Links:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/swcarpentry/DEPRECATED-boot-camps/blob/master/shell/shell_cheatsheet.md&quot;&gt;Shell Basic Commands&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://fosswire.com/post/2007/08/unixlinux-command-cheat-sheet/&quot;&gt;Shell Cheatsheet&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://explainshell.com&quot;&gt;Explain Shell&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;the-shell&quot;&gt;The Shell&lt;/h1&gt;
-
-&lt;h2 id=&quot;learning-objectives&quot;&gt;Learning Objectives&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Describe what the shell is and how it is used.&lt;/li&gt;
-  &lt;li&gt;Summarize reasons why learning the shell is beneficial.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;what-is-the-shell&quot;&gt;What is the shell?&lt;/h2&gt;
-
-&lt;p&gt;The &lt;em&gt;shell&lt;/em&gt; is a program that presents a command line interface
-which allows you to control your computer using commands entered
-with a keyboard instead of controlling graphical user interfaces
-(GUIs) with a mouse/keyboard combination.&lt;/p&gt;
-
-&lt;p&gt;There are many reasons to learn about the shell.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;For most bioinformatics tools, you have to use the shell. There is no
-graphical interface.&lt;/li&gt;
-  &lt;li&gt;The shell gives you &lt;strong&gt;power&lt;/strong&gt;. The command line gives you the power to do your work more efficiently and more quickly. When you need to do things tens to hundreds of times, knowing how to use the shell is transformative.&lt;/li&gt;
-  &lt;li&gt;To use remote computers or cloud computing, you need to use the shell.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/gvng.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Unix is user-friendly. It’s just very selective about who its friends are.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;how-to-access-the-shell&quot;&gt;How to access the shell&lt;/h2&gt;
-
-&lt;p&gt;The shell is already available on Mac and Linux. For Windows, you’ll
-have to download a separate program.&lt;/p&gt;
-
-&lt;h2 id=&quot;mac&quot;&gt;Mac&lt;/h2&gt;
-&lt;p&gt;On Mac, the shell is available through the pre-installed &lt;em&gt;Terminal&lt;/em&gt; application: Applications -&amp;gt; Utilities -&amp;gt; Terminal
-Go ahead and drag the Terminal application to your Dock for easy access.&lt;/p&gt;
-
-&lt;h2 id=&quot;windows&quot;&gt;Windows&lt;/h2&gt;
-&lt;p&gt;For Windows, we’re going to be using gitbash.
-Download and install &lt;a href=&quot;http://msysgit.github.io&quot;&gt;gitbash&lt;/a&gt; on your computer.
-Open up the program.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;starting-with-the-shell&quot;&gt;Starting with the shell&lt;/h2&gt;
-
-&lt;p&gt;We will spend most of our time learning about the basics of the shell by manipulating some experimental data.&lt;/p&gt;
-
-&lt;p&gt;Now we’re going to download the data for the tutorial. For this you’ll need internet access, because you’re going to get it off the web.&lt;/p&gt;
-
-&lt;p&gt;Open the shell.&lt;/p&gt;
-
-&lt;p&gt;Enter the command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/edamame-course/edamame-data.git
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This command will grab all of the data needed for this workshop from the internet.  (We’re not going to talk about git right now, but it’s a tool for
-implementing version control.)&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Now let’s go in to that directory&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd
-cd edamame-data
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;The command &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt; stands for ‘change directory’&lt;/p&gt;
-
-&lt;p&gt;In this directory, there should be some things we just downloaded.
-Let’s check. Type:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;ls stands for ‘list’ and it returns the contents of a directory as a list.&lt;/p&gt;
-
-&lt;p&gt;There are a few directories there, but not too many. Let’s go look in the data directory.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd shell
-ls
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;In there, all mixed up together are files and directories/folders. If we want to know which is which, we can type:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -F
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Anything with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;/&quot;&lt;/code&gt; after it is a directory.  Things with a &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;&quot;&lt;/code&gt; after them are programs. If there’s nothing there it’s a file.&lt;/p&gt;
-
-&lt;p&gt;You can also use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -l&lt;/code&gt; to see whether items in a directory are files or directories. &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -l&lt;/code&gt; gives a lot more information too, such as the size of the file&lt;/p&gt;
-
-&lt;p&gt;So, we can see that we have several files, directories and a program. Great!&lt;/p&gt;
-
-&lt;h2 id=&quot;arguments&quot;&gt;Arguments&lt;/h2&gt;
-
-&lt;p&gt;Most programs take additional arguments that control their exact behavior. For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;-F&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt; are arguments to &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;.  The &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; program, like many programs, take a lot of arguments. But how do we know what the options are to particular commands?&lt;/p&gt;
-
-&lt;p&gt;Most commonly used shell programs have a manual. You can access the manual using the &lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; program. Try entering:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;man ls
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This will open the manual page for &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;. Use the space key to go forward and b to go backwards. When you are done reading, just hit &lt;code class=&quot;highlighter-rouge&quot;&gt;q&lt;/code&gt; to quit.&lt;/p&gt;
-
-&lt;p&gt;Programs that are run from the shell can get extremely complicated. To see an example, open up the manual page for the &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; program. No one can possibly learn all of these arguments, of course. So you will probably find yourself referring back to the manual page frequently.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-unix-directory-file-structure-aka-where-am-i&quot;&gt;The Unix directory file structure (a.k.a. where am I?)&lt;/h2&gt;
-
-&lt;p&gt;As you’ve already just seen, you can move around in different directories or folders at the command line. Why would you want to do this, rather than just navigating around the normal way.&lt;/p&gt;
-
-&lt;p&gt;When you’re working with bioinformatics programs, you’re working with your data and it’s key to be able to have that data in the right place and make sure the program has access to the data. Many of the problems people run in to with command line bioinformatics programs is not having the data in the place the program expects it to be.&lt;/p&gt;
-
-&lt;h2 id=&quot;moving-around-the-file-system&quot;&gt;Moving around the file system&lt;/h2&gt;
-
-&lt;p&gt;Let’s practice moving around a bit.&lt;/p&gt;
-
-&lt;p&gt;We’re going to work in that &lt;code class=&quot;highlighter-rouge&quot;&gt;shell&lt;/code&gt; directory we just downloaded.&lt;/p&gt;
-
-&lt;p&gt;First let’s navigate there using the regular way by clicking on the different folders.&lt;/p&gt;
-
-&lt;p&gt;First we did something like go to the folder of our username. Then we opened
-&lt;code class=&quot;highlighter-rouge&quot;&gt;'edamame-data'&lt;/code&gt; then &lt;code class=&quot;highlighter-rouge&quot;&gt;'shell'&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Let’s draw out how that went.&lt;/p&gt;
-
-&lt;p&gt;Now let’s draw some of the other files and folders we could have clicked on.&lt;/p&gt;
-
-&lt;p&gt;This is called a hierarchical file system structure, like an upside down tree with root (/) at the base that looks like this.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Exercise&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Now we’re going to try a hunt. Move around in the ‘hidden’ directory and try to find the file &lt;code class=&quot;highlighter-rouge&quot;&gt;'youfoundit.txt'&lt;/code&gt;
-***&lt;/p&gt;
-
-&lt;h2 id=&quot;examining-the-contents-of-other-directories&quot;&gt;Examining the contents of other directories&lt;/h2&gt;
-
-&lt;p&gt;By default, the &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; commands lists the contents of the working directory (i.e. the directory you are in). You can always find the directory you are in using the &lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt; command. However, you can also give &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; the names of other directories to view. Navigate to the home directory if you are not already there.&lt;/p&gt;
-
-&lt;p&gt;Type:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then enter the command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls edamame-data
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This will list the contents of the &lt;code class=&quot;highlighter-rouge&quot;&gt;edamame-data&lt;/code&gt; directory without you having to navigate there.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt; command works in a similar way. Try entering:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd
-cd edamame-data/shell/hidden
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;and you will jump directly to &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden&lt;/code&gt; without having to go through the intermediate directory.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;Exercise&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Try finding the &lt;code class=&quot;highlighter-rouge&quot;&gt;'anotherfile.txt'&lt;/code&gt; file without changing directories.
-&lt;em&gt;**&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;shortcut-tab-completion&quot;&gt;Shortcut: Tab Completion&lt;/h3&gt;
-
-&lt;p&gt;Navigate to the home directory. Typing out directory names can waste a lot of time. When you start typing out the name of a directory, then hit the tab key, the shell will try to fill in the rest of the directory name. For example, enter:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd e&amp;lt;tab&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The shell will fill in the rest of the directory name for &lt;code class=&quot;highlighter-rouge&quot;&gt;edamame-data&lt;/code&gt;. Now go to edamame-data/shell/MiSeq&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls C01&amp;lt;tab&amp;gt;&amp;lt;tab&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;When you hit the first tab, nothing happens. The reason is that there
-are multiple directories in the home directory which start with
-&lt;code class=&quot;highlighter-rouge&quot;&gt;C01&lt;/code&gt;. Thus, the shell does not know which one to fill in. When you hit
-tab again, the shell will list the possible choices.&lt;/p&gt;
-
-&lt;p&gt;Tab completion can also fill in the names of programs. For example,
-enter &lt;code class=&quot;highlighter-rouge&quot;&gt;e&amp;lt;tab&amp;gt;&amp;lt;tab&amp;gt;&lt;/code&gt;. You will see the name of every program that
-starts with an &lt;code class=&quot;highlighter-rouge&quot;&gt;e&lt;/code&gt;. One of those is &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;. If you enter &lt;code class=&quot;highlighter-rouge&quot;&gt;ec&amp;lt;tab&amp;gt;&lt;/code&gt; you
-will see that tab completion works.&lt;/p&gt;
-
-&lt;h2 id=&quot;saving-time-with-shortcuts-wild-cards-and-tab-completion&quot;&gt;Saving time with shortcuts, wild cards, and tab completion&lt;/h2&gt;
-
-&lt;h3 id=&quot;shortcuts&quot;&gt;Shortcuts&lt;/h3&gt;
-
-&lt;p&gt;There are some shortcuts which you should know about. Dealing with the
-home directory is very common. So, in the shell the tilde character,
-&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;~&quot;&lt;/code&gt;, is a shortcut for your home directory. Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;edamame&lt;/code&gt;
-directory:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd
-cd edamame-data
-cd shell
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Then enter the command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls ~
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This prints the contents of your home directory, without you having to
-type the full path. The shortcut &lt;code class=&quot;highlighter-rouge&quot;&gt;..&lt;/code&gt; always refers to the directory
-above your current directory. Thus:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls ..
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;prints the contents of the &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/username/edamame-data&lt;/code&gt;. You can chain
-these together, so:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls ../../
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;prints the contents of &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/username&lt;/code&gt; which is your home
-directory. Finally, the special directory &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt; always refers to your
-current directory. So, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls .&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;ls ././././.&lt;/code&gt; all do the
-same thing, they print the contents of the current directory. This may
-seem like a useless shortcut right now, but we’ll see when it is
-needed in a little while.&lt;/p&gt;
-
-&lt;p&gt;To summarize, while you are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;shell&lt;/code&gt; directory, the commands
-&lt;code class=&quot;highlighter-rouge&quot;&gt;ls ~&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls ~/.&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls ../../&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;ls /home/username&lt;/code&gt; all do exactly the
-same thing. These shortcuts are not necessary, they are provided for
-your convenience.&lt;/p&gt;
-
-&lt;h3 id=&quot;wild-cards&quot;&gt;Wild cards&lt;/h3&gt;
-
-&lt;p&gt;Navigate to the MiSeq directory using”&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/edamame-data/shell/MiSeq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;This directory contains our FASTQ files and some other ones we’ll need for analyses. If we type &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;, we will see that there are a bunch of files with long file names. Some of the end with &lt;code class=&quot;highlighter-rouge&quot;&gt;.fastq&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; character is a shortcut for “everything”. Thus, if you enter &lt;code class=&quot;highlighter-rouge&quot;&gt;ls *&lt;/code&gt;, you will see all of the contents of a given directory. Now try this command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls *fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This lists every file that ends with a &lt;code class=&quot;highlighter-rouge&quot;&gt;fastq&lt;/code&gt;. This command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls /usr/bin/*.sh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Lists every file in &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/bin&lt;/code&gt; that ends in the characters &lt;code class=&quot;highlighter-rouge&quot;&gt;.sh&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;We have paired end sequencing, so for every sample we have two files. If we want to just see the list of the files for the forward direction sequencing we can use:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls *R*fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;lists every file in the current directory whose name contains the letter &lt;code class=&quot;highlighter-rouge&quot;&gt;R&lt;/code&gt;, and ends with &lt;code class=&quot;highlighter-rouge&quot;&gt;fastq&lt;/code&gt;. There are twenty such files which
-we would expect because we have 20 samples.&lt;/p&gt;
-
-&lt;p&gt;So how does this actually work? Well…when the shell (bash) sees a word that contains the &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; character, it automatically looks for filenames
-that match the given pattern. In this case, it identified four such files. Then, it replaced the &lt;code class=&quot;highlighter-rouge&quot;&gt;*R*fastq&lt;/code&gt; with the list of files, separated by spaces.&lt;/p&gt;
-
-&lt;p&gt;What happens if you do &lt;code class=&quot;highlighter-rouge&quot;&gt;R*fastq&lt;/code&gt;?&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;Short Exercise&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Do each of the following using a single &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; command without
-navigating to a different directory.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;List all of the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin&lt;/code&gt; that start with the letter ‘c&lt;/li&gt;
-  &lt;li&gt;List all of the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin&lt;/code&gt; that contain the letter ‘a’&lt;/li&gt;
-  &lt;li&gt;List all of the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin&lt;/code&gt; that end with the letter ‘o’&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;BONUS: List all of the files in ‘/bin’ that contain the letter ‘a’ or ‘c’&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;command-history&quot;&gt;Command History&lt;/h2&gt;
-
-&lt;p&gt;You can easily access previous commands.  Hit the up arrow. Hit it again.  You can step backwards through your command history. The down arrow takes your forwards in the command history.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^-C&lt;/code&gt; will cancel the command you are writing, and give you a fresh prompt.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^-R&lt;/code&gt; will do a reverse-search through your command history.  This is very useful.&lt;/p&gt;
-
-&lt;p&gt;You can also review your recent commands with the &lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt; command.  Just enter:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;history
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;to see a numbered list of recent commands, including this just issues
-&lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt; command.  You can reuse one of these commands directly by
-referring to the number of that command.&lt;/p&gt;
-
-&lt;p&gt;If your history looked like this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;259  ls *
-260  ls /usr/bin/*.sh
-261  ls *R*fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;then you could repeat command #260 by simply entering:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;!260
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;(that’s an exclamation mark).&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;Short Exercise&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Find the line number in your history for the last exercise (listing
-files in /bin) and reissue that command.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;examining-files&quot;&gt;Examining Files&lt;/h2&gt;
-
-&lt;p&gt;We now know how to switch directories, run programs, and look at the
-contents of directories, but how do we look at the contents of files?&lt;/p&gt;
-
-&lt;p&gt;The easiest way to examine a file is to just print out all of the
-contents using the program &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;. Enter the following command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat C01D01F_sub.fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This prints out the contents of the &lt;code class=&quot;highlighter-rouge&quot;&gt;C01D01F_sub.fastq&lt;/code&gt; file.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;Short Exercises&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Print out the contents of the &lt;code class=&quot;highlighter-rouge&quot;&gt;~/edamame-data/shell/MiSeq/Centralia_mapping_files/Collapsed_Centralia_full_map.txt&lt;/code&gt;
-file. What does this file contain?&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Without changing directories, (you should still be in &lt;code class=&quot;highlighter-rouge&quot;&gt;edamame-data&lt;/code&gt;),
-use one short command to print the contents of all of the files in
-the &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/username/edamame-data/shell/MiSeq&lt;/code&gt; directory.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Make sure we’re in the right place for the next set of the lessons. We
-want to be in the &lt;code class=&quot;highlighter-rouge&quot;&gt;shell&lt;/code&gt; directory. Check if you’re there with &lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt;
-and if not navigate there. One way to do that would be&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd ~/edamame-data/shell/MiSeq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; is a terrific program, but when the file is really big, it can
-be annoying to use. The program, &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;, is useful for this
-case. Enter the following command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less C01D01F_sub.fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; opens the file, and lets you navigate through it. The commands
-are identical to the &lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; program.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Some commands in &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;key&lt;/th&gt;
-      &lt;th&gt;action&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;“space”&lt;/td&gt;
-      &lt;td&gt;to go forward&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;“b”&lt;/td&gt;
-      &lt;td&gt;to go backwarsd&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;“g”&lt;/td&gt;
-      &lt;td&gt;to go to the beginning&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;“G”&lt;/td&gt;
-      &lt;td&gt;to go to the end&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;“q”&lt;/td&gt;
-      &lt;td&gt;to quit&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; also gives you a way of searching through files. Just hit the
-“/” key to begin a search. Enter the name of the word you would like
-to search for and hit enter. It will jump to the next location where
-that word is found. Try searching the &lt;code class=&quot;highlighter-rouge&quot;&gt;dictionary.txt&lt;/code&gt; file for the
-word “cat”. If you hit “/” then “enter”, &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; will just repeat
-the previous search. &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; searches from the current location and
-works its way forward. If you are at the end of the file and search
-for the word “cat”, &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; will not find it. You need to go to the
-beginning of the file and search.&lt;/p&gt;
-
-&lt;p&gt;For instance, let’s search for the sequence &lt;code class=&quot;highlighter-rouge&quot;&gt;1101:14341&lt;/code&gt; in our file.
-You can see that we go right to that sequence and can see
-what it looks like.&lt;/p&gt;
-
-&lt;p&gt;Remember, the &lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; program actually uses &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; internally and
-therefore uses the same commands, so you can search documentation
-using “/” as well!&lt;/p&gt;
-
-&lt;p&gt;There’s another way that we can look at files, and in this case, just
-look at part of them. This can be particularly useful if we just want
-to see the beginning or end of the file, or see how it’s formatted.&lt;/p&gt;
-
-&lt;p&gt;The commands are &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;tail&lt;/code&gt; and they just let you look at
-the beginning and end of a file respectively.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head C01D01F_sub.fastq
-tail C01D01F_sub.fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;-n&lt;/code&gt; option to either of these commands can be used to print the
-first or last &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; lines of a file. To print the first/last line of the
-file use:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;head -n 1 C01D01F_sub.fastq
-tail -n 1 C01D01F_sub.fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;searching-files&quot;&gt;Searching files&lt;/h2&gt;
-
-&lt;p&gt;We showed a little how to search within a file using &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;. We can also
-search within files without even opening them, using &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;. Grep is a command-line
-utility for searching plain-text data sets for lines matching a string or regular expression.
-Let’s give it a try!&lt;/p&gt;
-
-&lt;p&gt;Let’s search for that sequence &lt;code class=&quot;highlighter-rouge&quot;&gt;22029:7208&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;C01D01F_sub.fastq&lt;/code&gt; file.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep 22029:7208 C01D01F_sub.fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;We get back the whole line that had &lt;code class=&quot;highlighter-rouge&quot;&gt;'22029:7208'&lt;/code&gt; in it. What if we wanted all
-four lines, the whole part of that FASTQ sequence, back instead.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -A 3 22029:7208 C01D01F_sub.fastq
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;-A&lt;/code&gt; flag stands for “after match” so it’s returning the line that
-matches plus the three after it. The &lt;code class=&quot;highlighter-rouge&quot;&gt;-B&lt;/code&gt; flag returns that number of lines
-before the match.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Exercise&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Search for the sequence &lt;code class=&quot;highlighter-rouge&quot;&gt;'TTATCCGGATTTATTGGGTTTAAAGGGT'&lt;/code&gt; in the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;C01D01F_sub.fastq&lt;/code&gt; file and in the output have the sequence name and the sequence. e.g.
-&lt;code class=&quot;highlighter-rouge&quot;&gt;@M00967:43:000000000-A3JHG:1:2114:11799:28499 1:N:0:188
-TACGGAGGATGCGAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGGATGCAG&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Search for that sequence in all the FASTQ files.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;redirection--pipes&quot;&gt;Redirection / Pipes&lt;/h2&gt;
-
-&lt;p&gt;We’re excited we have all these sequences that we care about that we just got from the FASTQ files. That is a really important motif that is going to help us answer our important question. But all those sequences just went whizzing by with grep. How can we capture them?&lt;/p&gt;
-
-&lt;p&gt;We can do that with something called “redirection”. The idea is that we’re redirecting the output to the terminal (all the stuff that went whizzing by) to something else. In this case, we want to print it to a file, so that we can look at it later.&lt;/p&gt;
-
-&lt;p&gt;The redirection command for putting something in a file is &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Let’s try it out and put all the sequences that contain &lt;code class=&quot;highlighter-rouge&quot;&gt;'TTATCCGGATTTATTGGGTTTAAAGGGT'&lt;/code&gt;
-from all the files in to another file called &lt;code class=&quot;highlighter-rouge&quot;&gt;'good-data2.txt'&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -B 2 TTATCCGGATTTATTGGGTTTAAAGGGT *.fastq &amp;gt; good-data2.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The prompt should sit there a little bit, and then it should look like nothing happened. But type &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;. You should have a new file called &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.txt&lt;/code&gt;. Take a look at it and see if it has what you think it should.&lt;/p&gt;
-
-&lt;p&gt;Another useful redirection command that is called a “pipe”, and it is invoked by typing the character &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt; with a single space between itself and both commands that are being connected. It’s probably not a key on your keyboard you use very much. What &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt; does is take the output that would usually be output to the terminal and redirects it as input for the next command. When it was all whizzing by before, we wished we could just slow it down and look at it, like we can with &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;. Well it turns out that we can by piping the output of the &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; command to the &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep TTATCCGGATTTATTGGGTTTAAAGGGT *.fastq | less
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now we can use the arrows to scroll up and down and use &lt;code class=&quot;highlighter-rouge&quot;&gt;q&lt;/code&gt; to get out.&lt;/p&gt;
-
-&lt;p&gt;We can also do something tricky and use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;wc&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;wc&lt;/code&gt; stands for
-&lt;code class=&quot;highlighter-rouge&quot;&gt;word count&lt;/code&gt;. It counts the number of lines or characters. So, we can use
-it to count the number of lines we’re getting back from our &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; command.
-And that will magically tell us how many sequences we’re finding. We’re&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep TTATCCGGATTTATTGGGTTTAAAGGGT *.fastq | wc
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;That tells us the number of lines, words and characters in the file. If we just want the number of lines, we can use the &lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt; flag for &lt;code class=&quot;highlighter-rouge&quot;&gt;lines&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep TTATCCGGATTTATTGGGTTTAAAGGGT *.fastq | wc -l
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Redirecting is not super intuitive, but it’s really powerful for stringing together these different commands, so you can do whatever you need to do.&lt;/p&gt;
-
-&lt;p&gt;The philosophy behind these command line programs is that none of them really do anything all that impressive. BUT when you start chaining
-them together, you can do some really powerful things really efficiently. If you want to be proficient at using the shell, you must learn to become proficient with the pipe and redirection operators:
-&lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;gt;&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;creating-moving-copying-and-removing&quot;&gt;Creating, moving, copying, and removing&lt;/h2&gt;
-
-&lt;p&gt;Now we can move around in the file structure, look at files, search files, redirect. But what if we want to do normal things like copy files or move them around or get rid of them. Sure we could do most of these things without the command line, but what fun would that be?! Besides it’s often faster to do it at the command line, or you’ll be on a remote server like Amazon where you won’t have another option.&lt;/p&gt;
-
-&lt;p&gt;The stability.files file is one that tells us what sample name goes with what sequences. This is a really important file, so we want to make a copy so we don’t lose it.&lt;/p&gt;
-
-&lt;p&gt;Lets copy the file using the &lt;code class=&quot;highlighter-rouge&quot;&gt;cp&lt;/code&gt; command. The &lt;code class=&quot;highlighter-rouge&quot;&gt;cp&lt;/code&gt; command backs up the file. Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;data&lt;/code&gt; directory and enter:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cp good-data2.txt good-data2.backup.txt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.backup.txt&lt;/code&gt; has been created as a copy of &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.txt&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Let’s make a &lt;code class=&quot;highlighter-rouge&quot;&gt;backup&lt;/code&gt; directory where we can put this file.&lt;/p&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir&lt;/code&gt; command is used to make a directory. Just enter &lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir&lt;/code&gt;
-followed by a space, then the directory name.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir backup
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;We can now move our backed up file in to this directory. We can
-move files around using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt;. Enter this command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv good-data2.backup.txt backup/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This moves &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.backup.txt&lt;/code&gt; into the directory &lt;code class=&quot;highlighter-rouge&quot;&gt;backup/&lt;/code&gt; or
-the full path would be &lt;code class=&quot;highlighter-rouge&quot;&gt;~/edamame-data/shell/MiSeq/backup&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command is also how you rename files. Since this file is so
-important, let’s rename it:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv backup/good-data2.backup.txt backup/good-data2.backup_IMPORTANT
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now the file name has been changed to good-data2.backup_IMPORTANT. Let’s delete
-the backup file now:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rm backup/good-data2.backup_IMPORTANT
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; file removes the file. Be careful with this command. It doesn’t
-just nicely put the files in the Trash. They’re really gone.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;Short Exercise&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Do the following:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Rename the &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.backup_IMPORTANT&lt;/code&gt; file to &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.backup.txt&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Create a directory in the &lt;code class=&quot;highlighter-rouge&quot;&gt;MiSeq&lt;/code&gt; directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Then, copy the &lt;code class=&quot;highlighter-rouge&quot;&gt;good-data2.backup.txt&lt;/code&gt; file into &lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;By default, &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt;, will NOT delete directories. You can tell &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; to
-delete a directory using the &lt;code class=&quot;highlighter-rouge&quot;&gt;-r&lt;/code&gt; option. Let’s delete that &lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt; directory
-we just made. Enter the following command:
-&lt;code class=&quot;highlighter-rouge&quot;&gt;rm -r new&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;running-programs&quot;&gt;Running programs&lt;/h2&gt;
-
-&lt;p&gt;Commands like &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt; are just ordinary programs on the computer. A program is just a file that you can &lt;em&gt;execute&lt;/em&gt;. The program &lt;code class=&quot;highlighter-rouge&quot;&gt;which&lt;/code&gt; tells you the location of a particular program. For example:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;which ls
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Will return “/bin/ls”. Thus, we can see that &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; is a program that sits inside of the &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin&lt;/code&gt; directory. Now enter:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;which find
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;You will see that &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; is a program that sits inside of the &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/bin&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;p&gt;So … when we enter a program name, like &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;, and hit enter, how does the shell know where to look for that program? How does it know to run &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin/ls&lt;/code&gt; when we enter &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;. The answer is that when we enter a program name and hit enter, there are a few standard places that the shell automatically looks. If it can’t find the program in any of those places, it will print an error saying “command not found”. Enter the command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo $PATH
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This will print out the value of the &lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt; environment variable. More on environment variables later. Notice that a list of directories, separated by colon characters, is listed. These are the places the shell looks for programs to run. If your program is not in this list, then an error is printed. The shell ONLY checks in the places listed in the &lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt; environment variable.&lt;/p&gt;
-
-&lt;p&gt;Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;shell&lt;/code&gt; directory and list the contents. You will notice that there is a program (executable file) called &lt;code class=&quot;highlighter-rouge&quot;&gt;hello.sh&lt;/code&gt; in this directory. Now, try to run the program by entering:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hello.sh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;You should get an error saying that hello.sh cannot be found. That is because the directory &lt;code class=&quot;highlighter-rouge&quot;&gt;/home/username/edamame-data/shell&lt;/code&gt; is not in the
-&lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt;. You can run the &lt;code class=&quot;highlighter-rouge&quot;&gt;hello.sh&lt;/code&gt; program by entering:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./hello.sh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Remember that &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt; is a shortcut for the current working directory. This tells the shell to run the &lt;code class=&quot;highlighter-rouge&quot;&gt;hello.sh&lt;/code&gt; program which is located right here. So, you can run any program by entering the path to that program. You can run &lt;code class=&quot;highlighter-rouge&quot;&gt;hello.sh&lt;/code&gt; equally well by specifying:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/home/username/edamame-data/shell/hello.sh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Or by entering:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/edamame-data/shell/hello.sh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;When there are no &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; characters, the shell assumes you want to look in one of the default places for the program.&lt;/p&gt;
-
-&lt;h1 id=&quot;for-future-reference&quot;&gt;For Future Reference&lt;/h1&gt;
-
-&lt;h1 id=&quot;finding-files&quot;&gt;Finding files&lt;/h1&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; program can be used to find files based on arbitrary criteria. Navigate to the &lt;code class=&quot;highlighter-rouge&quot;&gt;data&lt;/code&gt; directory and enter the following command:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find . -print
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This prints the name of every file or directory, recursively, starting from the current directory. Let’s exclude all of the directories:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find . -type f -print
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This tells &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; to locate only files. Now try these commands:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find . -type f -name &quot;*1*&quot;
-find . -type f -name &quot;*1*&quot; -or -name &quot;*2*&quot; -print
-find . -type f -name &quot;*1*&quot; -and -name &quot;*2*&quot; -print
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; command can acquire a list of files and perform some
-operation on each file. Try this command out:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find . -type f -exec grep Volume {} \;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This command finds every file starting from &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt;. Then it searches each file for a line which contains the word “Volume”. The &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;/code&gt; refers to
-the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;&gt;\;&lt;/code&gt; is used to terminate the command.  This command is slow, because it is calling a new instance of &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; for each item the &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; returns.&lt;/p&gt;
-
-&lt;p&gt;A faster way to do this is to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;xargs&lt;/code&gt; command:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find . -type f -print | xargs grep Volume
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; generates a list of all the files we are interested in, then we pipe them to &lt;code class=&quot;highlighter-rouge&quot;&gt;xargs&lt;/code&gt;.  &lt;code class=&quot;highlighter-rouge&quot;&gt;xargs&lt;/code&gt; takes the items given to it and passes them as arguments to &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;.  &lt;code class=&quot;highlighter-rouge&quot;&gt;xargs&lt;/code&gt; generally only creates a single instance of &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; (or whatever program it is running).&lt;/p&gt;
-
-&lt;h2 id=&quot;wherehow-can-i-learn-more-about-the-shell&quot;&gt;Where/How can I learn more about the shell?&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://rik.smith-unna.com/command_line_bootcamp/?id=takvnrdbvjd&quot;&gt;Command-Line Boot camp&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://files.fosswire.com/2007/08/fwunixref.pdf&quot;&gt;Command Reference&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://explainshell.com&quot;&gt;explainshell.com&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO.html&lt;/li&gt;
-  &lt;li&gt;man bash&lt;/li&gt;
-  &lt;li&gt;Google - if you don’t know how to do something, try a Google Search. Other people have probably had the same question.&lt;/li&gt;
-  &lt;li&gt;Learn by doing. There’s no real other way to learn this than by trying it out.&lt;/li&gt;
-  &lt;li&gt;Familiarize yourself with terminal-based text editors:
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.howtogeek.com/howto/42980/the-beginners-guide-to-nano-the-linux-command-line-text-editor/&quot; target=&quot;_blank&quot;&gt;nano&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-use-the-emacs-editor-in-linux&quot; target=&quot;_blank&quot;&gt;emacs&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://computers.tutsplus.com/tutorials/vim-for-beginners--cms-21118&quot; target=&quot;_blank&quot;&gt;vim&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Open pdfs from the command line, automate something you don’t really need to automate.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Lessons modified from: Data Carpentry Intro to Shell</summary></entry></feed>
+&lt;p&gt;In response to this interactive prompt by the system, you may then respond by simply typing &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; for yes or no respectively, followed by the return key. If you types &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;, the file will not be deleted, whereas typing &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; deletes the file. You may think that this is a bit tedious, typing &lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; every time you want to safeguard deleting a file by mistake - it is! Luckily, there is a way to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command safe by default, by embedding an &lt;code class=&quot;highlighter-rouge&quot;&gt;alias&lt;/code&gt; into your &lt;code class=&quot;highlighter-rouge&quot;&gt;.bash_profile&lt;/code&gt;. &lt;a href=&quot;/BIT150_website/2017/10/05/bash_profile/&quot; target=&quot;_blank&quot;&gt;See the lab page on the .bash_profile&lt;/a&gt;.&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">BASH on Windows 10</summary></entry></feed>

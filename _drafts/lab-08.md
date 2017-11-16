@@ -1,6 +1,11 @@
 Lab 8: Microbial Genome Assembly
 ================================
 
+## Overview
+
+* [Downloading Sequence Data](# downloading-sequence-data)
+* [FastQC](# FastQC)
+
 ## Downloading Sequence Data
 
 
@@ -11,7 +16,7 @@ files and subfolders associated with this lab into the directory ``~/lab_08``
 
 Next, let's download the fastq files containing the raw nucleotide reads for the Escherichia coli O104:H4 str. TY-2482 genome from the [ENA](http://www.ebi.ac.uk/ena):
 
-    cd lab_06/data
+    cd lab_08/data
     curl -O -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR292/SRR292770/SRR292770_1.fastq.gz
     curl -O -L ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR292/SRR292770/SRR292770_2.fastq.gz
 
@@ -172,7 +177,7 @@ Let's take a look at the output files::
 
 > Thought Questions:
 * Is the quality trimmed data "better" than before?
-* Does it matter that you still have adapters!?
+* Does it matter that you still have adapters?
 
 ## Genome Assembly
 
@@ -184,7 +189,7 @@ There are two main strategies for genome assembly using DNA sequencing reads, __
 
 ### MEGAhit
 
-To assemble the *E. coli* genome reads we have been working with, we will use **MEGAhit**, which is an ultra-fast short read assembly program that take a *De Bruijn Graph* approach.
+To assemble the *E. coli* genome reads we have been working with, we will use **MEGAhit**, which is an ultra-fast short read assembly program that takes a *De Bruijn Graph* approach.
 
 * The paper can be found [here](https://www.ncbi.nlm.nih.gov/pubmed/25609793)
 * [MEGAhit source code](https://github.com/voutcn/megahit)
@@ -262,7 +267,7 @@ L75                         117
 
 > **Thought Questions:**
 * Why do we have so many contigs?
-* What would be needed to produce an assembly with a total number of contigs under, say 10?
+* What would be needed to produce an assembly with a total number of contigs under, say 10...or perhaps even a **single contig scaffold**?
 
 ## Putting it all together: sbatch scripts
 
@@ -336,5 +341,7 @@ Running through this entire process step by step is great for learning how every
     stream
 
 ----
+
+
 
 > [Project 3](project-3.md)
