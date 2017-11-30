@@ -1,4 +1,370 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-11-16T12:06:18-08:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 8 - Genome Assembly</title><link href="http://localhost:4000/BIT150_website/2017/11/16/lab-08/" rel="alternate" type="text/html" title="Lab 8 - Genome Assembly" /><published>2017-11-16T00:00:00-08:00</published><updated>2017-11-16T00:00:00-08:00</updated><id>http://localhost:4000/BIT150_website/2017/11/16/lab-08</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/16/lab-08/">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2017-11-30T13:03:40-08:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 9 - Genome Annotation</title><link href="http://localhost:4000/BIT150_website/2017/11/30/lab-09/" rel="alternate" type="text/html" title="Lab 9 - Genome Annotation" /><published>2017-11-30T00:00:00-08:00</published><updated>2017-11-30T00:00:00-08:00</updated><id>http://localhost:4000/BIT150_website/2017/11/30/lab-09</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/30/lab-09/">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#getting-setup&quot;&gt;Getting Setup&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gene-prediction&quot;&gt;Gene Prediction&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#prokka&quot;&gt;PROKKA&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#downstream-analysis&quot;&gt;Downstream Analysis&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#pan-genome-analysis-with-roary&quot;&gt;Pan-genome analysis&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#visualizing-in-r&quot;&gt;Analysis in R&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#lab-9-assignment&quot;&gt;Lab 9 Assignment&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;laboratory-objectives&quot;&gt;Laboratory Objectives&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Familiarize concepts and principles related to genome annotation&lt;/li&gt;
+  &lt;li&gt;Explore strategies for downstream analysis of genome annotations&lt;/li&gt;
+  &lt;li&gt;Develop shell scripts to automate the annotation of multiple assemblies&lt;/li&gt;
+  &lt;li&gt;As part of the assignment, responses to all &lt;strong&gt;Thought Questions&lt;/strong&gt; will be required&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;getting-setup&quot;&gt;Getting Setup&lt;/h1&gt;
+
+&lt;p&gt;Last week, we assembled the genome of &lt;em&gt;E. coli&lt;/em&gt; O104:H4 strain TY-2482. This bacterium was identified as a virulent human pathogen that lead to a foodbourne disease outbreak in Europe. Today we will continue working with this organism by annotating its genome at the command line using programs on the &lt;strong&gt;farm cluster&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;To begin:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Login to farm at the command line: &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh user-id@farm.cse.ucdavis.edu&lt;/code&gt; and enter your password.&lt;/li&gt;
+  &lt;li&gt;Once you are logged in, request the following resources for an interactive job to use in lab today:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  srun -p bit150 -t 4:00:00 --mem=8000 -n 1 -c 3 --pty bash -l
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;gene-prediction&quot;&gt;Gene Prediction&lt;/h1&gt;
+
+&lt;p&gt;There are two major strategies for predicting genes within genome assemblies: reference based sequence alignment and &lt;em&gt;Ab initio&lt;/em&gt; (from the beginning) - we will be exploring the latter. While there are pros and cons to both strategies, the &lt;em&gt;Ab initio&lt;/em&gt; strategy is useful when a reference genome does not exist for the organism that has been sequenced. By this point, you are aware that genome features exist in several forms, including:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Protein Coding sequences&lt;/li&gt;
+  &lt;li&gt;Transfer RNAs (tRNAs)&lt;/li&gt;
+  &lt;li&gt;Ribosomal RNAs (rRNAs)&lt;/li&gt;
+  &lt;li&gt;Non-coding RNAs (ncRNAs)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Each of these DNA feature types can be modeled based on the tetranucleotide patterns and frequencies associated their occurrence in nature. Consequently, there are several Bioinformatics programs that have been developed to &lt;em&gt;annotate&lt;/em&gt; the stretches of genomic DNA that encode a given feature type. Today we will learn how to use the program &lt;strong&gt;PROKKA&lt;/strong&gt;, which calls upon several other bioinformatics programs in an integrated fashion to comprehensively annotate a prokaryotic genome.&lt;/p&gt;
+
+&lt;h2 id=&quot;thought-questions&quot;&gt;Thought Questions&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Describe potential benefits and limitations associated with using sequence alignment based techniques for genome annotation vs. &lt;em&gt;Ab initio&lt;/em&gt; strategies.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;prokka&quot;&gt;PROKKA&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/tseemann/prokka&quot; target=&quot;_blank&quot;&gt;Prokka: rapid prokaryotic genome annotation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://academic.oup.com/bioinformatics/article/30/14/2068/2390517&quot; target=&quot;_blank&quot;&gt;Prokka - iSCB Bioinformatics article&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Prokka is a bioinformatics program that is commonly used to annotate prokaryotic genomes using minimal computational resources. The major requirement of the input files is that they must be in &lt;em&gt;FASTA&lt;/em&gt; format.&lt;/p&gt;
+
+&lt;h2 id=&quot;programs-used-to-predict-genome-features&quot;&gt;Programs used to predict genome features&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/prokka-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;a-simplified-schema-of-the-prokka-pipeline&quot;&gt;A Simplified Schema of the PROKKA pipeline&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/prokka-2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;command-line-options&quot;&gt;&lt;a href=&quot;https://github.com/tseemann/prokka#command-line-options&quot; target=&quot;_blank&quot;&gt;Command Line Options&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;To view the command line options, we need to load the prokka module:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load tbl2asn prokka
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, type the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;prokka
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This should bring up a menu of the command line options that looks very similar to this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/prokka-3.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;annotating-your-e-coli-genome-assembly&quot;&gt;Annotating your &lt;em&gt;E. coli&lt;/em&gt; genome assembly&lt;/h2&gt;
+
+&lt;p&gt;Today you will annotate the assembled genome of &lt;em&gt;E. coli&lt;/em&gt; O104:H4 strain TY-2482 that was generated last week.&lt;/p&gt;
+
+&lt;p&gt;First, create a folder in your home directory to work in for today’s lab:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir Lab_9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Similar to last week, &lt;strong&gt;link-in&lt;/strong&gt; the data from the data storage directory for the class:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ln -s /group/BIT150/lab_8/megahit_results/final.contigs.fa ./ecoli_TY2482.contigs.fa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;time prokka --outdir prokka_annotation --prefix E.coli_TY-2482 --cpus 3 megahit_results/final.contigs.fa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Note: Adding the time command before any command will print the compute time when the task is completed.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;While this is running, let’s discuss the output formats &lt;strong&gt;(It should take about 5-10 minutes for PROKKA to finish)&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;output-formats&quot;&gt;Output Formats&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/prokka-4.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;While many of the output formats serve the purpose of submitting data to &lt;strong&gt;NCBI&lt;/strong&gt;, some useful formats for further analysis are the &lt;em&gt;FASTA amino acid&lt;/em&gt; (&lt;strong&gt;.faa&lt;/strong&gt;) and &lt;em&gt;GFF3 - General Feature Format 3&lt;/em&gt; (&lt;strong&gt;.gff&lt;/strong&gt;). Let’s do something with the GFF3 file we just created!&lt;/p&gt;
+
+&lt;h2 id=&quot;thought-questions-1&quot;&gt;Thought questions&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Describe key differences that are likely to exist among the rules used to define the transition state models underpinning the algorithms used by the various programs that PROKKA uses for comprehensive &lt;em&gt;Ab initio&lt;/em&gt; gene prediction.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;downstream-analysis&quot;&gt;Downstream Analysis&lt;/h1&gt;
+
+&lt;p&gt;Because prokaryotes have relatively small genomes compared to the majority of eukaryotes, a common practice in microbiology is to generate a large number of microbial isolates, extract their DNA and sequence their genomes. This has lead to the generation of thousands of microbial genome sequences, all of which may be compared to one another in countless ways. Today we will explore comparative microbial genomics by providing an introduction to the concept of the &lt;strong&gt;bacterial Pan Genome&lt;/strong&gt;. The &lt;strong&gt;Pan Genome is the union&lt;/strong&gt; of all genes that are identified among a clade of organisms. The clade may be defined at various levels, however it is commonly defined at the species level for Pan Genome analysis. In its most simplistic breakdown, a Pan Genome may then be categorized into a &lt;strong&gt;Core Genome&lt;/strong&gt; and &lt;strong&gt;Accessory Genome&lt;/strong&gt;. The Core Genome is comprised by all genes that are present within the majority of the taxa being compared at a designated threshold value (intersection of the union of all genes from all taxa in the comparison), while the Accessory Genome (also referred to as the complement of the intersection) consists of the genes that are not common to all taxa being compared.&lt;/p&gt;
+
+&lt;p&gt;Today we will use &lt;strong&gt;Roary&lt;/strong&gt; to compare the genome features of the virulent &lt;em&gt;E. coli&lt;/em&gt; O104:H4 strain TY-2482 to those of a closely related &lt;em&gt;E. coli&lt;/em&gt; isolate that is avirulent.&lt;/p&gt;
+
+&lt;h2 id=&quot;pan-genome-analysis-with-roary&quot;&gt;Pan Genome Analysis with Roary&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://sanger-pathogens.github.io/Roary/&quot;&gt;Roary: The Pan Genome&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://academic.oup.com/bioinformatics/article/31/22/3691/240757&quot;&gt;Roary - iSCB Bioinformatics Article&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Roary is a fantastic program for comparing the annotation files for multiple prokaryotic genomes because it achieves a core genome alignment in a relatively short time when using minimal compute requirements (see the paper for more info)! Roary is designed to compare high numbers of microbial genomes, but we will only compare two prokaryotic genomes today.&lt;/p&gt;
+
+&lt;p&gt;To begin the Pan Genome analysis, let’s make a new sub-directory inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_9&lt;/code&gt; directory and move into it:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir roary
+cd roary
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, &lt;strong&gt;link-in&lt;/strong&gt; the &lt;strong&gt;GFF3&lt;/strong&gt; file for the &lt;em&gt;avirulent reference&lt;/em&gt; strain of &lt;em&gt;E. coli O104:H4&lt;/em&gt; from the &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_9&lt;/code&gt; folder, and the &lt;strong&gt;GFF3&lt;/strong&gt; file from your &lt;strong&gt;prokka_annotation&lt;/strong&gt; folder to your present working directory (roary):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ln -s /group/BIT150/Lab_9/E.coli_O104-H4.gff .
+ln -s ../prokka_annotation/E.ecoli_TY2482.gff .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;At this point, you should have &lt;strong&gt;two GFF files&lt;/strong&gt; in your present working directory - check by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To begin using the program, we need to load another module:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module load bio3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next, let’s bring up the roary options menu:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;roary
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;As you can see, roary has many executable program options for customizing your pan-genome analysis. Today we will keep things fairly straight forward. Run the following command to generate the core gene alignment and associated pan genome output files (&lt;strong&gt;Note&lt;/strong&gt;:&lt;em&gt;This takes about 20 minutes&lt;/em&gt; to finish):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;time roary -i 90 -e --mafft -p 3 *.gff
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;While this is running, begin answering the thought questions, or begin setting up your R Studio environment for the next step.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Once your Pan Genome analysis is completed, check out the statistics:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less summary_statistics.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Q to exit less window&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The main file we want to investigate for our comparative analysis is in the &lt;code class=&quot;highlighter-rouge&quot;&gt;gene_presence_absence.csv&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;Have a look:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less gene_presence_absence.csv
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;As you can see, the data is easy to interpret here. Let’s analyze the data in R and make a plot.&lt;/p&gt;
+
+&lt;h2 id=&quot;visualizing-in-r&quot;&gt;Visualizing in R&lt;/h2&gt;
+
+&lt;p&gt;We will use R Studio to analyze the data. &lt;strong&gt;The objective is to create a simple Venn Diagram&lt;/strong&gt; that shows the number of unique genes in the virulent strain of &lt;em&gt;E. coli&lt;/em&gt;, the number of unique genes in the avirulent strain of &lt;em&gt;E. coli&lt;/em&gt;, and the number of shared genes between them (the Core genome between the two).&lt;/p&gt;
+
+&lt;h3 id=&quot;getting-started&quot;&gt;Getting Started&lt;/h3&gt;
+&lt;p&gt;First, Launch R Studio, then create a new R project (essentially an entire directory dedicated to a single R analysis project):&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;(File -&amp;gt; New Project -&amp;gt; New Directory -&amp;gt; Empty Project -&amp;gt; &lt;em&gt;Name your directory something like R_roary&lt;/em&gt;)&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now, we need to get the file from the HPC server onto our local computers. Launch &lt;strong&gt;File Zilla&lt;/strong&gt;, connect to farm as you have done in the past, and transfer the &lt;code class=&quot;highlighter-rouge&quot;&gt;gene_presence_absence.csv&lt;/code&gt; file to the folder on your workstation’s hard-drive that corresponds to the &lt;strong&gt;R project directory&lt;/strong&gt; you just created. Once this file is transferred, it should be visible in the R Studio window’s file browser:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/lab9-R-1.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Create a New Rscript (.R), and save the file with a descriptive name - this file is where you will save all of your work:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;(File -&amp;gt; New File -&amp;gt; R Script)&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: &lt;em&gt;Recall that commands are run from the R script editor by holding the &lt;strong&gt;control&lt;/strong&gt; key and pressing &lt;strong&gt;enter&lt;/strong&gt; on a given line or highlighted text&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The R package we will use to make the Venn Diagram is called, &lt;a href=&quot;https://rstudio-pubs-static.s3.amazonaws.com/13301_6641d73cfac741a59c0a851feb99e98b.html&quot; target=&quot;_blank&quot;&gt;VennDiagram&lt;/a&gt;. We will also use the &lt;strong&gt;dplyr&lt;/strong&gt; package to filter our dataset.&lt;/p&gt;
+
+&lt;p&gt;Load the necessary R Package libraries:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;library(dplyr)
+install.packages('VennDiagram')
+library(VennDiagram)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To begin, read in the &lt;em&gt;csv&lt;/em&gt; file as a dataframe, treating the first line as a header and filling in all blank cells with an “NA”:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;roary_data &amp;lt;- read.csv(&quot;./gene_presence_absence.csv&quot;, header = T, na.strings=c(&quot;&quot;,&quot;NA&quot;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Recall that you may view the dataframe using the &lt;code class=&quot;highlighter-rouge&quot;&gt;View()&lt;/code&gt; command or by clicking the table icon of the &lt;code class=&quot;highlighter-rouge&quot;&gt;R Environment&lt;/code&gt; pane of the R Studio session.&lt;/p&gt;
+
+&lt;h3 id=&quot;filter-the-data&quot;&gt;Filter the Data&lt;/h3&gt;
+&lt;p&gt;The next step is to identify the number of Accessory Genome genes that correspond to either &lt;em&gt;E. coli&lt;/em&gt; O104:H4 strain TY-2482, or the reference strain that is avirulent. To do this, the apporach will be to implement a series of filtering steps in order to produce three new dataframes that represent subsets of the entire roary pan genome dataset that we generated.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Subset the Accessory genome:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;accessory_genome &amp;lt;- roary_data %&amp;gt;% filter(No..isolates == 1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Subset the TY-2482 Accessory genome:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;TY2482_only &amp;lt;- accessory_genome %&amp;gt;% select(Gene, Annotation, E.coli_TY.2842) # This selects data from only the designated 3 columns
+
+TY2482_only &amp;lt;- TY2482_only[complete.cases(TY2482_only), ] # This removes rows with NA values
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Subset the Accessory genome of the Reference genome:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;reference_only &amp;lt;- accessory_genome %&amp;gt;% select(Gene, Annotation, E.coli_ref)
+
+reference_only &amp;lt;- reference_only[complete.cases(reference_only), ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Subset the **Core genome**:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;core &amp;lt;- roary_data %&amp;gt;% filter(No..isolates == 2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;making-the-venn-diagram&quot;&gt;Making the Venn Diagram&lt;/h3&gt;
+
+&lt;p&gt;Each row in the subsetted datasets represents an annotated gene. Thus, we can count the row numbers of each genome subset, store the values in R-type objects and call on these R environment objects to make our plot:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Count the number of rows in each Pan genome subset:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;core_size &amp;lt;- nrow(core)
+TY_2482_accessory_size &amp;lt;- nrow(TY_2482_only)
+ref_accessory_size &amp;lt;- nrow(reference_only)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Make the diagram:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grid.newpage()
+draw.pairwise.venn(area1 = TY2482_accessory_size + core_size, area2 = ref_accessory_size + core_size, cross.area = core_size, category = c(&quot;Virulent&quot;, &quot;Avirulent&quot;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here we are visualizing the Pan-genome in a simplistic fashion, but this opens the door to further exploration of each isolate’s contribution to the accessory genome of the comparison.&lt;/p&gt;
+
+&lt;h3 id=&quot;thought-questions-2&quot;&gt;Thought Questions&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Describe a strategy you could take to investigate the Accessory genome of these two isolates in an attempt to identify causative genes involved in the virulence outbreak.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;lab-9-assignment&quot;&gt;Lab 9 Assignment&lt;/h2&gt;
+
+&lt;p&gt;For the assignment, create a markdown document that addresses the following and submit the document to canvas in &lt;strong&gt;html&lt;/strong&gt; format:&lt;/p&gt;
+
+&lt;h3 id=&quot;part-1-thought-questions&quot;&gt;Part 1: Thought Questions&lt;/h3&gt;
+
+&lt;p&gt;Provide a response to each of the three &lt;strong&gt;&lt;em&gt;Thought Questions&lt;/em&gt;&lt;/strong&gt; that are presented at the end of major sections in this lab.&lt;/p&gt;
+
+&lt;h3 id=&quot;part-2-rast-annotation&quot;&gt;Part 2: RAST Annotation&lt;/h3&gt;
+
+&lt;p&gt;A very widely used web-based tool for microbial genome annotation is &lt;strong&gt;RAST&lt;/strong&gt;. Use this tool to generate an annotation for the assembly you annotated in lab with PROKKA. Compare and contrast the number of genome features identified between the Prokka annotation and the RAST annotation.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Create a RAST account by starting from the homepage: &lt;a href=&quot;http://rast.nmpdr.org/&quot;&gt;RAST&lt;/a&gt;&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;em&gt;Do this before you leave lab today&lt;/em&gt;
+&lt;img src=&quot;/BIT150_website/images/rast-1.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Upload your Genome assembly to RAST for annotation&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/rast-2.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Download the annotation in gff format&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Click the &lt;em&gt;View Details&lt;/em&gt; button when the job is finished
+&lt;img src=&quot;/BIT150_website/images/rast-3.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Select GFF3 file format and download to your local hard drive.
+&lt;img src=&quot;/BIT150_website/images/rast-4.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Create a Pan Genome with Roary using the RAST annotation GFF file and the reference genome GFF file you used in lab&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Compare the summary_statistics of the Pan genome from lab and the RAST-annotated PAn Genome&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Make a new Venn Diagram using with the RAST annotation data and compare it to the one you made in lab&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;a href=&quot;project-3.md&quot;&gt;Project 3&lt;/a&gt;&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Overview</summary></entry><entry><title type="html">Lab 8 - Genome Assembly</title><link href="http://localhost:4000/BIT150_website/2017/11/16/lab-08/" rel="alternate" type="text/html" title="Lab 8 - Genome Assembly" /><published>2017-11-16T00:00:00-08:00</published><updated>2017-11-16T00:00:00-08:00</updated><id>http://localhost:4000/BIT150_website/2017/11/16/lab-08</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/11/16/lab-08/">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;#getting-setup&quot;&gt;Getting Setup&lt;/a&gt;&lt;/li&gt;
@@ -37,8 +403,8 @@
 
 &lt;p&gt;Next, let’s create a &lt;code class=&quot;highlighter-rouge&quot;&gt;symbolic link&lt;/code&gt; to each of the data files that we will be working with today from the &lt;code class=&quot;highlighter-rouge&quot;&gt;/groups/BIT150/Lab_8&lt;/code&gt; folder. These two files contain the raw nucleotide reads for the Escherichia coli O104:H4 str. TY-2482 genome. To do this, we need to move into the &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_8&lt;/code&gt; directory and then type the command to create symbolic links.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd lab_8
-ln -s /group/Lab_8/*.fastq.gz .
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd Lab_8
+ln -s /group/BIT150/Lab_8/*.fastq.gz .
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -78,13 +444,13 @@ lrwxrwxrwx 1 smhigdon smhigdon 40 Nov 15 22:11 SRR292770_2.fastq.gz -&amp;gt; /g
 
 &lt;p&gt;Now that we have an idea of what a fastq file should look like, lets take a look at our files to make sure they meet the criteria for the fastq format:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less SRR292770_1.fastq.gz
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gunzip -c SRR292770_1.fastq.gz | less
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;(use the spacebar to scroll down, and type ‘q’ to exit ‘less’)&lt;/strong&gt;&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;less SRR292770_2.fastq.gz
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gunzip -c SRR292770_2.fastq.gz | less
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -360,7 +726,7 @@ quast.py &lt;span class=&quot;nv&quot;&gt;$MEGAHIT_FOLDER&lt;/span&gt;/final.con
 &lt;p&gt;Choose one of these programs and learn how it works by reading the documentation. Your task is to write an sbatch script that will assemble the same set of paired end reads you used in lab today using an assembler of your choice. Then, use &lt;strong&gt;QUAST&lt;/strong&gt; to assess the assembly metrics of your new assembly.&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Compare and contrast the outcome of your new assembly to the results of an assembly that was generated by running MEGAhit on the &lt;em&gt;E. coli&lt;/em&gt; strain TY-2482 paired end reads with the default parameters. This data can be found on farm at the following path: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_8/megahit_output&lt;/code&gt;. Speculate as to why differences may or may not have occurred for each of the relevant assembly statistics.&lt;/strong&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Compare and contrast the outcome of your new assembly to the results of an assembly that was generated by running MEGAhit on the &lt;em&gt;E. coli&lt;/em&gt; strain TY-2482 paired end reads with the default parameters. This data can be found on farm at the following path: &lt;code class=&quot;highlighter-rouge&quot;&gt;/group/BIT150/Lab_8/megahit_results&lt;/code&gt;. Speculate as to why differences may or may not have occurred for each of the relevant assembly statistics.&lt;/strong&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;&lt;strong&gt;&lt;em&gt;Be sure to include the code for your script in the markdown document.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
@@ -1363,6 +1729,8 @@ and ask if multiple of the interacting genes have similar roles.&lt;/li&gt;
 
 &lt;p&gt;Going forward, consider analyses like this for Project 2 itself!&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Intro</summary></entry><entry><title type="html">Project 2 - building a genetic model of a trait</title><link href="http://localhost:4000/BIT150_website/2017/10/17/project-2/" rel="alternate" type="text/html" title="Project 2 - building a genetic model of a trait" /><published>2017-10-17T00:00:00-07:00</published><updated>2017-10-17T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/17/project-2</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/17/project-2/">&lt;h2 id=&quot;project-2---building-a-genetic-model-of-a-trait&quot;&gt;Project 2 - building a genetic model of a trait&lt;/h2&gt;
 
+&lt;p&gt;&lt;strong&gt;Define model&lt;/strong&gt;&lt;/p&gt;
+
 &lt;p&gt;The objective of this project is to draw together multiple sources of information to build a model, or hypothesis, about the cause of a disease or other trait. I want you to go beyond the explanations for why a particular gene causes a trait that you find in databases like &lt;strong&gt;OMIM&lt;/strong&gt;, or &lt;strong&gt;GeneCards&lt;/strong&gt;. Consider the following hypotheses:&lt;/p&gt;
 
 &lt;ol&gt;
@@ -1373,7 +1741,7 @@ and ask if multiple of the interacting genes have similar roles.&lt;/li&gt;
 
 &lt;p&gt;I want you to explore these hypotheses with respect to a specific trait or disease. Can you find evidence that supports each of these hypotheses? If so, can you use these ideas to guide your genetic model? If not, why not? What does that suggest about your trait?&lt;/p&gt;
 
-&lt;p&gt;For this project, you can work in teams of 2.&lt;/p&gt;
+&lt;p&gt;For this project, please work in teams of 2.&lt;/p&gt;
 
 &lt;p&gt;First, choose a gene associated with a trait. You can use the same trait you used in Project 1 if you’d like. Again, you will have the most success if you choose a trait in a model system (Human, mouse, or Arabidopsis).&lt;/p&gt;
 
@@ -2209,58 +2577,4 @@ cat new_file.txt
   &lt;li&gt;On the right is a file explorer for Farm’s file system. Create a directory called &lt;code class=&quot;highlighter-rouge&quot;&gt;Lab_2&lt;/code&gt;. You can also do this in the terminal (&lt;code class=&quot;highlighter-rouge&quot;&gt;mkdir Lab_2&lt;/code&gt;).&lt;/li&gt;
   &lt;li&gt;Find the file: &lt;code class=&quot;highlighter-rouge&quot;&gt;brac1.fasta&lt;/code&gt;, and drag it onto Farm.&lt;/li&gt;
   &lt;li&gt;In the terminal, enter the command: &lt;code class=&quot;highlighter-rouge&quot;&gt;echo Some Text &amp;gt; new_file.txt&lt;/code&gt;. In &lt;code class=&quot;highlighter-rouge&quot;&gt;FileZilla&lt;/code&gt;, refresh the Farm file explorer. The file &lt;code class=&quot;highlighter-rouge&quot;&gt;new_file.txt&lt;/code&gt; should appear. Double-click, or drag it to your computer.&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Outline: Automation in Unix Intro to using a computer cluster</summary></entry><entry><title type="html">Working on your PC</title><link href="http://localhost:4000/BIT150_website/2017/10/02/unix-on-windows/" rel="alternate" type="text/html" title="Working on your PC" /><published>2017-10-02T00:00:00-07:00</published><updated>2017-10-02T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2017/10/02/unix-on-windows</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2017/10/02/unix-on-windows/">&lt;h1 id=&quot;bash-on-windows-10&quot;&gt;BASH on Windows 10&lt;/h1&gt;
-
-&lt;p&gt;If your personal computer (PC) operates using Windows 10, you should be able to install a windows application onto your system that allows the user to access and navigate the file system using an Ubuntu flavor of &lt;a href=&quot;https://en.wikipedia.org/wiki/Bash_(Unix_shell)&quot; target=&quot;_blank&quot;&gt;BASH&lt;/a&gt;. The procedure for outfitting your Windows 10 computer to operate with Ubuntu BASH terminal windows has been well documented in the following tutorial: &lt;a href=&quot;https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/&quot; target=&quot;_blank&quot;&gt;Install BASH for WINDOWS 10&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;git-bash&quot;&gt;Git BASH&lt;/h1&gt;
-
-&lt;p&gt;Because the Ubuntu Bash on Windows 10 is in its early &lt;strong&gt;beta&lt;/strong&gt; release version, we will not be using this tool in the labs this year. During the lab sections of the course we will be using &lt;strong&gt;Git BASH&lt;/strong&gt;. If you would like to have consistency across the computer you use in lab and your personal computer, download and install &lt;em&gt;Git for Windows&lt;/em&gt;, available at &lt;a href=&quot;https://git-for-windows.github.io/&quot; target=&quot;_blank&quot;&gt;https://git-for-windows.github.io/&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;macintosh-users&quot;&gt;Macintosh Users&lt;/h3&gt;
-
-&lt;p&gt;If you use a macintosh computer, the operating system is built on top of a unix frame. Mac OS X has a terminal application pre-installed. If you have never used the temrinal application on your macintsosh computer before, you can find it using &lt;strong&gt;spotlight&lt;/strong&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;command + spacebar&lt;/code&gt; and type in ‘terminal’. Alternatively, you can navigate to launching the application using &lt;strong&gt;FINDER&lt;/strong&gt; (Applications &amp;gt; Utilities &amp;gt; Terminal):&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/terminal.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;other-useful-programs-for-mac&quot;&gt;Other Useful Programs for Mac&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;If customization is your thing, try out an alternative terminal emulator: &lt;a href=&quot;https://www.iterm2.com/downloads.html&quot; target=&quot;_blank&quot;&gt;iterm2&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Popular Text Editors for Mac OS X:
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.sublimetext.com/3&quot; target=&quot;_blank&quot;&gt;Sublime&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.barebones.com/products/textwrangler/download.html&quot; target=&quot;_blank&quot;&gt;TextWrangler/BBEdit&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://atom.io/&quot; target=&quot;_blank&quot;&gt;Atom&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;using-bash-with-caution&quot;&gt;Using BASH with Caution&lt;/h2&gt;
-
-&lt;p&gt;If you have never used a unix-based operating system, or have limited experience, there are certain precautions that should be taken when navigating and manipulating files at the BASH command-line. Most importantly, &lt;strong&gt;when a file is removed&lt;/strong&gt; from the system using the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command, the &lt;strong&gt;file is gone forever!&lt;/strong&gt; It does not go to a &lt;strong&gt;“Recycle Bin”&lt;/strong&gt; or &lt;strong&gt;“Trash”&lt;/strong&gt; Directory/Folder.&lt;/p&gt;
-
-&lt;p&gt;Because of this, removing files within the BASH shell should be done with certainty. We recommend reading over &lt;a href=&quot;https://www.howtogeek.com/125157/8-deadly-commands-you-should-never-run-on-linux/&quot; target=&quot;_blank&quot;&gt;8 Deadly Commands You Should Never Run on Linux&lt;/a&gt; in order to familiarize yourself with hazardous commands that will likely prove to be detrimental to your file system, should you run them.&lt;/p&gt;
-
-&lt;p&gt;Perhaps the most significant stress point regarding using BASH with caution is to be careful when using the wildcard character, &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;, in conjunction with commands - namely the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command.&lt;/p&gt;
-
-&lt;p&gt;For example, you should never run: &lt;code class=&quot;highlighter-rouge&quot;&gt;rm /*&lt;/code&gt; if you have Administrative access on the file system, commonly referred to as &lt;a href=&quot;https://en.wikipedia.org/wiki/Sudo&quot;&gt;SUDO&lt;/a&gt; permission in the unix world.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/BIT150_website/images/sudo.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;small&gt;&lt;a href=&quot;https://www.pinterest.com/pin/370421138070787705/&quot; target=&quot;_blank&quot;&gt;photo credit&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;bash-safeguard-for-the-rm-command&quot;&gt;BASH Safeguard for the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command&lt;/h3&gt;
-
-&lt;p&gt;One safeguard when removing files at the command line is to add the &lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; option when calling on the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command like so:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ rm -i &amp;lt;file to remove&amp;gt;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;This will prompt the interpreter to display a &lt;strong&gt;warning&lt;/strong&gt; message in response to your call of removing the targeted file(s):&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;smhigdon$ rm -i foo.txt
-remove foo.txt?
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;In response to this interactive prompt by the system, you may then respond by simply typing &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; for yes or no respectively, followed by the return key. If you types &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt;, the file will not be deleted, whereas typing &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt; deletes the file. You may think that this is a bit tedious, typing &lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; every time you want to safeguard deleting a file by mistake - it is! Luckily, there is a way to make the &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command safe by default, by embedding an &lt;code class=&quot;highlighter-rouge&quot;&gt;alias&lt;/code&gt; into your &lt;code class=&quot;highlighter-rouge&quot;&gt;.bash_profile&lt;/code&gt;. &lt;a href=&quot;/BIT150_website/2017/10/05/bash_profile/&quot; target=&quot;_blank&quot;&gt;See the lab page on the .bash_profile&lt;/a&gt;.&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">BASH on Windows 10</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Outline: Automation in Unix Intro to using a computer cluster</summary></entry></feed>
