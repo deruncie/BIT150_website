@@ -152,9 +152,8 @@
       <li><a href="#prokka">PROKKA</a></li>
     </ul>
   </li>
-  <li><a href="#downstream-analysis">Downstream Analysis</a>
+  <li><a href="#pan-genome-analysis-with-roary">Pan-genome analysis</a>
     <ul>
-      <li><a href="#pan-genome-analysis-with-roary">Pan-genome analysis</a></li>
       <li><a href="#visualizing-in-r">Analysis in R</a></li>
     </ul>
   </li>
@@ -164,7 +163,7 @@
 <h1 id="laboratory-objectives">Laboratory Objectives</h1>
 
 <ul>
-  <li>Familiarize concepts and principles related to genome annotation</li>
+  <li>Learn concepts and principles related to genome annotation</li>
   <li>Explore strategies for downstream analysis of genome annotations</li>
   <li>Develop shell scripts to automate the annotation of multiple assemblies</li>
   <li>As part of the assignment, responses to all <strong>Thought Questions</strong> will be required</li>
@@ -172,7 +171,7 @@
 
 <h1 id="getting-setup">Getting Setup</h1>
 
-<p>Last week, we assembled the genome of <em>E. coli</em> O104:H4 strain TY-2482. This bacterium was identified as a virulent human pathogen that lead to a foodbourne disease outbreak in Europe. Today we will continue working with this organism by annotating its genome at the command line using programs on the <strong>farm cluster</strong>.</p>
+<p>Last week, we assembled the genome of <em>E. coli</em> O104:H4 strain TY-2482. This bacterium was identified as a virulent human pathogen that lead to a food-bourne disease outbreak in Europe. Today we will continue working with this organism by annotating its genome at the command line using programs on the <strong>farm cluster</strong>.</p>
 
 <p>To begin:</p>
 
@@ -196,9 +195,9 @@
   <li>Non-coding RNAs (ncRNAs)</li>
 </ul>
 
-<p>Each of these DNA feature types can be modeled based on the tetranucleotide patterns and frequencies associated their occurrence in nature. Consequently, there are several Bioinformatics programs that have been developed to <em>annotate</em> the stretches of genomic DNA that encode a given feature type. Today we will learn how to use the program <strong>PROKKA</strong>, which calls upon several other bioinformatics programs in an integrated fashion to comprehensively annotate a prokaryotic genome.</p>
+<p>Each of these DNA feature types can be modeled based on the tetranucleotide patterns and frequencies associated their occurrence in nature. Consequently, there are several Bioinformatics programs that have been developed to <em>annotate</em> the stretches of genomic DNA and identify specific feature types. Today we will learn how to use the program <strong>Prokka</strong> to annotate our <em>E. coli</em> assembly. Prokka integrates a suite of genome annotation programs to comprehensively annotate a prokaryotic genome.</p>
 
-<h2 id="thought-questions">Thought Questions</h2>
+<h2 id="exercise">Exercise</h2>
 
 <blockquote>
   <ul>
@@ -248,16 +247,19 @@
 <p>First, create a folder in your home directory to work in for today’s lab:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>mkdir Lab_9
+cd Lab_9
 </code></pre>
 </div>
 
 <p>Similar to last week, <strong>link-in</strong> the data from the data storage directory for the class:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ln -s /group/BIT150/lab_8/megahit_results/final.contigs.fa ./ecoli_TY2482.contigs.fa
+<div class="highlighter-rouge"><pre class="highlight"><code>ln -s /group/BIT150/Lab_8/megahit_results/final.contigs.fa ./ecoli_TY2482.contigs.fa
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>time prokka --outdir prokka_annotation --prefix E.coli_TY-2482 --cpus 3 megahit_results/final.contigs.fa
+<p>We re-name the file to <code class="highlighter-rouge">ecoli_TY2482.contigs.fa</code> because later we’ll load assemblies of other bacteria, and we want to keep organized.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>time prokka --outdir prokka_annotation --prefix E.coli_TY-2482 --cpus 3 ecoli_TY2482.contigs.fa
 </code></pre>
 </div>
 <p><strong><em>Note: Adding the time command before any command will print the compute time when the task is completed.</em></strong></p>
@@ -270,19 +272,13 @@
 
 <p>While many of the output formats serve the purpose of submitting data to <strong>NCBI</strong>, some useful formats for further analysis are the <em>FASTA amino acid</em> (<strong>.faa</strong>) and <em>GFF3 - General Feature Format 3</em> (<strong>.gff</strong>). Let’s do something with the GFF3 file we just created!</p>
 
-<h2 id="thought-questions-1">Thought questions</h2>
+<h2 id="exercise-1">Exercise</h2>
 
 <blockquote>
   <ul>
-    <li>Describe key differences that are likely to exist among the rules used to define the transition state models underpinning the algorithms used by the various programs that PROKKA uses for comprehensive <em>Ab initio</em> gene prediction.</li>
+    <li><strong>PROKKA</strong> annotates protein coding sequences using <strong>BLAST</strong>. What modifications to the <code class="highlighter-rouge">prokka</code> command would you have to make in order to increase the specificity of annotation assignments in your <em>E. coli</em> O104:H4 strain TY-2482 genome assembly?</li>
   </ul>
 </blockquote>
-
-<h1 id="downstream-analysis">Downstream Analysis</h1>
-
-<p>Because prokaryotes have relatively small genomes compared to the majority of eukaryotes, a common practice in microbiology is to generate a large number of microbial isolates, extract their DNA and sequence their genomes. This has lead to the generation of thousands of microbial genome sequences, all of which may be compared to one another in countless ways. Today we will explore comparative microbial genomics by providing an introduction to the concept of the <strong>bacterial Pan Genome</strong>. The <strong>Pan Genome is the union</strong> of all genes that are identified among a clade of organisms. The clade may be defined at various levels, however it is commonly defined at the species level for Pan Genome analysis. In its most simplistic breakdown, a Pan Genome may then be categorized into a <strong>Core Genome</strong> and <strong>Accessory Genome</strong>. The Core Genome is comprised by all genes that are present within the majority of the taxa being compared at a designated threshold value (intersection of the union of all genes from all taxa in the comparison), while the Accessory Genome (also referred to as the complement of the intersection) consists of the genes that are not common to all taxa being compared.</p>
-
-<p>Today we will use <strong>Roary</strong> to compare the genome features of the virulent <em>E. coli</em> O104:H4 strain TY-2482 to those of a closely related <em>E. coli</em> isolate that is avirulent.</p>
 
 <h2 id="pan-genome-analysis-with-roary">Pan Genome Analysis with Roary</h2>
 
@@ -291,7 +287,11 @@
   <li><a href="https://academic.oup.com/bioinformatics/article/31/22/3691/240757">Roary - iSCB Bioinformatics Article</a></li>
 </ul>
 
-<p>Roary is a fantastic program for comparing the annotation files for multiple prokaryotic genomes because it achieves a core genome alignment in a relatively short time when using minimal compute requirements (see the paper for more info)! Roary is designed to compare high numbers of microbial genomes, but we will only compare two prokaryotic genomes today.</p>
+<p>Now that we have annotated the genome of our virulent strain, and identified genes, we need a way to discover which genes might be the source of virulence. One way to do this is to compare the genes we found with genes in a closely related avirulent species.</p>
+
+<p><strong>Roary</strong> compares the annotation files of multiple prokaryotic genomes to identify a <strong>Pan Genome</strong>, which is the union of all genes identified among all the genomes. This is useful for identifying a set of <strong>Core genes</strong> present in all genomes, and a set of <strong>Accessory Genes</strong> which are present in some, but not all genomes.</p>
+
+<p>We’ve included the <strong>GFF3</strong> file for the <em>avirulent reference</em> strain of <em>E. coli O104:H4</em>, which is closely related to TY-2482 in the <code class="highlighter-rouge">/group/BIT150/Lab_9</code> folder.</p>
 
 <p>To begin the Pan Genome analysis, let’s make a new sub-directory inside the <code class="highlighter-rouge">Lab_9</code> directory and move into it:</p>
 
@@ -303,7 +303,7 @@ cd roary
 <p>Now, <strong>link-in</strong> the <strong>GFF3</strong> file for the <em>avirulent reference</em> strain of <em>E. coli O104:H4</em> from the <code class="highlighter-rouge">/group/BIT150/Lab_9</code> folder, and the <strong>GFF3</strong> file from your <strong>prokka_annotation</strong> folder to your present working directory (roary):</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>ln -s /group/BIT150/Lab_9/E.coli_O104-H4.gff .
-ln -s ../prokka_annotation/E.ecoli_TY2482.gff .
+ln -s ../prokka_annotation/E.coli_TY-2482.gff .
 </code></pre>
 </div>
 
@@ -321,7 +321,7 @@ ln -s ../prokka_annotation/E.ecoli_TY2482.gff .
 </code></pre>
 </div>
 
-<p>As you can see, roary has many executable program options for customizing your pan-genome analysis. Today we will keep things fairly straight forward. Run the following command to generate the core gene alignment and associated pan genome output files (<strong>Note</strong>:<em>This takes about 20 minutes</em> to finish):</p>
+<p>As you can see, roary has many options for customizing your pan-genome analysis. Today we will keep things fairly straight forward. Run the following command to generate the core gene alignment and associated pan genome output files (<strong>Note</strong>:<em>This takes about 20 minutes</em> to finish):</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>time roary -i 90 -e --mafft -p 3 *.gff
 </code></pre>
@@ -336,7 +336,7 @@ ln -s ../prokka_annotation/E.ecoli_TY2482.gff .
 <div class="highlighter-rouge"><pre class="highlight"><code>less summary_statistics.txt
 </code></pre>
 </div>
-<p><strong>Q to exit less window</strong></p>
+<p><strong>q to exit less window</strong></p>
 
 <p>The main file we want to investigate for our comparative analysis is in the <code class="highlighter-rouge">gene_presence_absence.csv</code> file.</p>
 
@@ -390,10 +390,18 @@ library(VennDiagram)
 <p>Recall that you may view the dataframe using the <code class="highlighter-rouge">View()</code> command or by clicking the table icon of the <code class="highlighter-rouge">R Environment</code> pane of the R Studio session.</p>
 
 <h3 id="filter-the-data">Filter the Data</h3>
-<p>The next step is to identify the number of Accessory Genome genes that correspond to either <em>E. coli</em> O104:H4 strain TY-2482, or the reference strain that is avirulent. To do this, the apporach will be to implement a series of filtering steps in order to produce three new dataframes that represent subsets of the entire roary pan genome dataset that we generated.</p>
+<p>The next step is to identify the number of Accessory Genome genes that correspond to either <em>E. coli</em> O104:H4 strain TY-2482, or the reference strain that is avirulent. To do this, we will use a series of filtering steps in order to produce three new dataframes that represent subsets of the entire roary pan genome dataset that we generated.</p>
 
 <ul>
-  <li><strong>Subset the Accessory genome:</strong></li>
+  <li><strong>Subset the Core genome:</strong> Filter by genes that are found in both genotypes (<code class="highlighter-rouge">No..isolates</code> column == 2)</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>core &lt;- roary_data %&gt;% filter(No..isolates == 2)
+</code></pre>
+</div>
+
+<ul>
+  <li><strong>Subset the Accessory genome:</strong> Filter by genes that are found in only 1 of the 2 genotypes (<code class="highlighter-rouge">No..isolates</code> column == 1)</li>
 </ul>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>accessory_genome &lt;- roary_data %&gt;% filter(No..isolates == 1)
@@ -401,30 +409,18 @@ library(VennDiagram)
 </div>
 
 <ul>
-  <li><strong>Subset the TY-2482 Accessory genome:</strong></li>
+  <li><strong>Subset the TY-2482 Accessory genome:</strong> Filter by genes that are not <code class="highlighter-rouge">NA</code> in the <code class="highlighter-rouge">E.coli_TY.2842</code> column</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>TY2482_only &lt;- accessory_genome %&gt;% select(Gene, Annotation, E.coli_TY.2842) # This selects data from only the designated 3 columns
-
-TY2482_only &lt;- TY2482_only[complete.cases(TY2482_only), ] # This removes rows with NA values
+<div class="highlighter-rouge"><pre class="highlight"><code>TY2482_only &lt;- accessory_genome %&gt;% filter(!is.na(E.coli_TY.2842))
 </code></pre>
 </div>
 
 <ul>
-  <li><strong>Subset the Accessory genome of the Reference genome:</strong></li>
+  <li><strong>Subset the Accessory genome of the Reference genome:</strong> Filter by genes that are not <code class="highlighter-rouge">NA</code> in the <code class="highlighter-rouge">E.coli_ref </code> column</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>reference_only &lt;- accessory_genome %&gt;% select(Gene, Annotation, E.coli_ref)
-
-reference_only &lt;- reference_only[complete.cases(reference_only), ]
-</code></pre>
-</div>
-
-<ul>
-  <li><strong>Subset the **Core genome**:</strong></li>
-</ul>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>core &lt;- roary_data %&gt;% filter(No..isolates == 2)
+<div class="highlighter-rouge"><pre class="highlight"><code>reference_only &lt;- accessory_genome %&gt;% filter(!is.na(E.coli_ref))
 </code></pre>
 </div>
 
@@ -447,65 +443,39 @@ ref_accessory_size &lt;- nrow(reference_only)
 </ul>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>grid.newpage()
-draw.pairwise.venn(area1 = TY2482_accessory_size + core_size, area2 = ref_accessory_size + core_size, cross.area = core_size, category = c("Virulent", "Avirulent"))
+draw.pairwise.venn(
+  area1 = TY_2482_accessory_size + core_size, # count # genes in TY2482
+  area2 = ref_accessory_size + core_size, # count # genes in Ecoli_ref
+  cross.area = core_size, # count number of genes in both
+  category = c("Virulent", "Avirulent"),
+  fill = c("blue", "red")
+  )
 </code></pre>
 </div>
 
 <p>Here we are visualizing the Pan-genome in a simplistic fashion, but this opens the door to further exploration of each isolate’s contribution to the accessory genome of the comparison.</p>
 
-<h3 id="thought-questions-2">Thought Questions</h3>
+<h3 id="exercise-2">Exercise</h3>
 
 <blockquote>
-  <ul>
-    <li>Describe a strategy you could take to investigate the Accessory genome of these two isolates in an attempt to identify causative genes involved in the virulence outbreak.</li>
-  </ul>
+  <p>Find a gene or two that you think might be relevant to the virulence of the organism. Explain your reasoning.</p>
 </blockquote>
 
 <h2 id="lab-9-assignment">Lab 9 Assignment</h2>
 
 <p>For the assignment, create a markdown document that addresses the following and submit the document to canvas in <strong>html</strong> format:</p>
 
-<h3 id="part-1-thought-questions">Part 1: Thought Questions</h3>
+<h3 id="part-1-exercise-questions">Part 1: Exercise Questions</h3>
 
-<p>Provide a response to each of the three <strong><em>Thought Questions</em></strong> that are presented at the end of major sections in this lab.</p>
+<p>Provide a response to each of the three <strong><em>Exercise Questions</em></strong> that are presented at the end of major sections in this lab.</p>
 
 <h3 id="part-2-rast-annotation">Part 2: RAST Annotation</h3>
 
-<p>A very widely used web-based tool for microbial genome annotation is <strong>RAST</strong>. Use this tool to generate an annotation for the assembly you annotated in lab with PROKKA. Compare and contrast the number of genome features identified between the Prokka annotation and the RAST annotation.</p>
+<p>A very widely used web-based tool for microbial genome annotation is <strong>RAST</strong>. Your task is to figure out how to use this program (which is similar to Prokka), use it to re-annotate the <code class="highlighter-rouge">E.coli_TY.2842</code> assembly, and then use <code class="highlighter-rouge">roary</code> again to identify <em>Core</em> and genome-specific genes for the two bacteria. Present a Venn diagramm of the results of the RAST annotation.</p>
 
-<ul>
-  <li><strong>Create a RAST account by starting from the homepage: <a href="http://rast.nmpdr.org/">RAST</a></strong>
-    <ul>
-      <li><em>Do this before you leave lab today</em>
-<img src="/BIT150_website/images/rast-1.png" alt="" target="_blank" /></li>
-    </ul>
-  </li>
-  <li><strong>Upload your Genome assembly to RAST for annotation</strong></li>
-</ul>
+<p>The RAST program is available here: <a href="http://rast.nmpdr.org/">RAST</a></p>
 
-<p><img src="/BIT150_website/images/rast-2.png" alt="" target="_blank" /></p>
-
-<ul>
-  <li><strong>Download the annotation in gff format</strong></li>
-</ul>
-
-<p>Click the <em>View Details</em> button when the job is finished
-<img src="/BIT150_website/images/rast-3.png" alt="" target="_blank" /></p>
-
-<p>Select GFF3 file format and download to your local hard drive.
-<img src="/BIT150_website/images/rast-4.png" alt="" target="_blank" /></p>
-
-<ul>
-  <li>
-    <p><strong>Create a Pan Genome with Roary using the RAST annotation GFF file and the reference genome GFF file you used in lab</strong></p>
-  </li>
-  <li>
-    <p><strong>Compare the summary_statistics of the Pan genome from lab and the RAST-annotated PAn Genome</strong></p>
-  </li>
-  <li>
-    <p><strong>Make a new Venn Diagram using with the RAST annotation data and compare it to the one you made in lab</strong></p>
-  </li>
-</ul>
+<p><strong>Note:</strong> You have to register for an account to use RAST. Please register today (it might take a day to get accepted!)</p>
 
 <hr />
 
