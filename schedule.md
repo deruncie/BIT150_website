@@ -38,6 +38,6 @@ Schedule is subject to change
 | T   | 10:00 - 10:50   | 28-Nov   | Protein Structure Prediction |
 | TR  |  10:00 - 10:50  | 30-Nov   | Comparative Genomics |
 | TR  |  3:10 - 5:00    | 30-Nov   | Genome Annotation | <!-- [Lab_09](){:target="_blank"} -->
-| T   | 10:00 - 10:50   | 5-Dec   | Functional Data |
-| TR  |  10:00 - 10:50  | 7-Dec   | Project 3 Presentations |
-| TR  |  3:10 - 5:00    | 7-Dec   | Project 3 Presentations |
+| T   | 10:00 - 10:50   | 5-Dec   | Bioinformatics Stats |
+| TR  |  10:00 - 10:50  | 7-Dec   | Bioinformatics Stats |
+| TR  |  3:10 - 5:00    | 7-Dec   | Project 3 |
