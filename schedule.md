@@ -28,16 +28,16 @@ Schedule is subject to change
 | TR  |  3:10 - 5:00    | 2-Nov   | Genome Tracks | [Lab_06](/BIT150_website/2017/11/02/lab-06/){:target="_blank"}
 | T   | 10:00 - 10:50   | 7-Nov   | Genomic Variation |
 | TR  |  10:00 - 10:50  | 9-Nov   | GWAS |
-| TR  |  3:10 - 5:00    | 9-Nov   | Population Genetics Data | <!-- [Lab_07](){:target="_blank"} -->
+| TR  |  3:10 - 5:00    | 9-Nov   | Population Genetics Data | [Lab_07](/BIT150_website/2017/11/09/lab-07/){:target="_blank"}
 | T   | 10:00 - 10:50   | 14-Nov   | Project 2 Presentations |
 | TR  |  10:00 - 10:50  | 16-Nov   | Microbial Genomics |
-| TR  |  3:10 - 5:00    | 16-Nov   | Genome Assembly | <!-- [Lab_08](){:target="_blank"} -->
+| TR  |  3:10 - 5:00    | 16-Nov   | Genome Assembly | [Lab_08](/BIT150_website/2017/11/16/lab-08/){:target="_blank"}
 | T   | 10:00 - 10:50   | 21-Nov   | Gene Prediction Algorithms |
 | TR  |  10:00 - 10:50  | 23-Nov   | HOLIDAY |
 | TR  |  3:10 - 5:00    | 23-Nov   | HOLIDAY |
 | T   | 10:00 - 10:50   | 28-Nov   | Protein Structure Prediction |
 | TR  |  10:00 - 10:50  | 30-Nov   | Comparative Genomics |
-| TR  |  3:10 - 5:00    | 30-Nov   | Genome Annotation | <!-- [Lab_09](){:target="_blank"} -->
+| TR  |  3:10 - 5:00    | 30-Nov   | Genome Annotation | [Lab_09](/BIT150_website/2017/11/30/lab-09/){:target="_blank"}
 | T   | 10:00 - 10:50   | 5-Dec   | Bioinformatics Stats |
 | TR  |  10:00 - 10:50  | 7-Dec   | Bioinformatics Stats |
 | TR  |  3:10 - 5:00    | 7-Dec   | Project 3 |
