@@ -3,7 +3,7 @@ layout: page
 title: Schedule
 ---
 
-## Fall Quarter 2017
+## Fall Quarter 2018
 
 Schedule is subject to change
 
