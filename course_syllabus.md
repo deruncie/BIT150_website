@@ -1,13 +1,13 @@
 ---
 layout: page
-title: BIT 150 Syllabus - Fall 2017
+title: BIT 150 Syllabus - Fall 2018
 ---
 
 **Applied Bioinformatics**
 
 Fall Quarter 2017
 
-**Lectures:** Hoagland 113, Labs: PES 1137
+**Lectures:** Wickson 1038, Labs: PES 1137
 
 **Lectures:** T/Th 10:00-10:50, Labs: Th 3:10-5:00
 
@@ -19,9 +19,9 @@ Fall Quarter 2017
 
 
 
-**TA:** Shawn Higdon, <smhigdon@ucdavis.edu>
+**TA:** Saghi Nojoomi, <sgnojoomi@ucdavis.edu>
 
-**Office Hours:** Tuesdays 3-5pm PES 1137
+**Office Hours:** TBD
 
 
 
