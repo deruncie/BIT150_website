@@ -51,10 +51,10 @@ By the end of this course, students will:
 - Search databases using online and terminal-based tools for data relevant to biological questions
 - Troubleshoot bioinformatics analyses using product manuals and online resources.
 - Work collaboratively in groups to solve complex problems that require bioinformatics tools and to communicate results
-- Understand how data on genome architecture is stored and searched
-- Understand how data on molecular structures is stored and searched
-- Understand how data on molecular activities is stored and searched
-- Understand how data on genetic variation is stored and searched
+- Understand how data on genome architecture are stored and searched
+- Understand how data on molecular structures are stored and searched
+- Understand how data on molecular activities are stored and searched
+- Understand how data on genetic variation are stored and searched
 
 
 
