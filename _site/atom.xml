@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2018-09-11T16:21:32-07:00</updated>
+ <updated>2018-09-11T16:27:21-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -1182,7 +1182,7 @@ Use Markdown to compose your page. You can use the &lt;a href=&quot;https://hack
 &lt;p&gt;Here are some rules:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;You can use either a &lt;strong&gt;Primary&lt;/strong&gt; or &lt;strong&gt;Secondary&lt;/strong&gt; database, but limit to databases&lt;/li&gt;
+  &lt;li&gt;You can use either a &lt;strong&gt;Primary&lt;/strong&gt; or &lt;strong&gt;Secondary&lt;/strong&gt; database, but limit to databases. See &lt;a href=&quot;https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;Every student must choose a different database. There are 1000s of databases available. Usefull lists
 can be found &lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;here&lt;/a&gt;. When you choose a database, enter it in the google doc &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing&quot;&gt;here&lt;/a&gt;.
 Before you choose your database, ensure that someone else hasn’t chosen that one first!&lt;/li&gt;

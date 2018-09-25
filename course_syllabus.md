@@ -5,11 +5,11 @@ title: BIT 150 Syllabus - Fall 2018
 
 **Applied Bioinformatics**
 
-Fall Quarter 2017
+Fall Quarter 2018
 
-**Lectures:** Wickson 1038, Labs: PES 1137
+**Lectures:** Wickson 1038, **Labs:** PES 1137
 
-**Lectures:** T/Th 10:00-10:50, Labs: Th 3:10-5:00
+**Lectures:** T/Th 10:00-10:50, **Labs:** Th 3:10-5:00
 
 
 
@@ -82,18 +82,18 @@ There is no required text. Specific readings will be assigned based on available
 |                       |  |
 |----------------------------|-----|
 | Attendance / participation | 10% |
-| Homework / Quizzes         | 10% |
+| Homework / Quizzes         | 20% |
 | Lab Reports                | 20% |
-| Project 1                  | 10% |
-| Project 2                  | 25% |
-| Project 3                  | 25% |
+| Project 1                  | 15% |
+| Project 2                  | 15% |
+| Project 3                  | 20% |
 
 Homeworks will be assigned periodically after lab periods and will be due the following week. Quizzes will be assigned on Canvas based on readings and will be due before lecture. Projects will involve both a written report and presentation. Attendance and participation involves active involvement in group discussions and projects.
 
 
 
 ## Academic Integrity
-Each student in this course is expected to abide by the UC Davis Code of Academic Conduct.  Any work submitted by a student in this course for academic credit will be the student's own work. [Optional: For this course, collaboration is allowed in the following instances: list instances.]
+Each student in this course is expected to abide by the UC Davis Code of Academic Conduct.  Any work submitted by a student in this course for academic credit will be the student's own work. 
 
 You are encouraged to study together and to discuss information and concepts covered in lecture and the sections with other students. You can give "consulting" help to or receive "consulting" help from such students. However, this permissible cooperation should never involve one student simply copying the work of another.
 
@@ -134,4 +134,4 @@ keep confidential discussions that the community has of a personal (or professio
 | Week 7  | Genomic Variation            |
 | Week 8  | Genome assembly              |
 | Week 9  | Genome Annotation            |
-| Week 10 | Functional data              |
+| Week 10 | Statistics              		 |
