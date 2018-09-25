@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2018-09-11T16:27:21-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">cheat-sheet of all the commands we saw in Lab 1</title><link href="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/" rel="alternate" type="text/html" title="cheat-sheet of all the commands we saw in Lab 1" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/unix_commands</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/">&lt;table&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2018-09-24T17:07:26-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">cheat-sheet of all the commands we saw in Lab 1</title><link href="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/" rel="alternate" type="text/html" title="cheat-sheet of all the commands we saw in Lab 1" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/unix_commands</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/">&lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt; &lt;/th&gt;
@@ -1063,15 +1063,80 @@ the name of each file. The trailing &lt;code class=&quot;highlighter-rouge&quot;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;Open pdfs from the command line, automate something you don’t really need to automate.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Lessons modified from: Data Carpentry Intro to Shell</summary></entry><entry><title type="html">Project 1 - Mining bioinformatics databases</title><link href="http://localhost:4000/BIT150_website/2018/09/27/project-1/" rel="alternate" type="text/html" title="Project 1 - Mining bioinformatics databases" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/project-1</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/project-1/">&lt;p&gt;The goal of this project is to explore online public databases.
-You will use databases to mine for information on a gene of interest and its role in a disease or other trait you choose.
-At the end, you should produce a report on the structure and utility of your chosen database,
-and a description of the types of information it contains.&lt;/p&gt;
+&lt;/ul&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Lessons modified from: Data Carpentry Intro to Shell</summary></entry><entry><title type="html">Project 1 - Mining bioinformatics databases</title><link href="http://localhost:4000/BIT150_website/2018/09/27/project-1/" rel="alternate" type="text/html" title="Project 1 - Mining bioinformatics databases" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/project-1</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/project-1/">&lt;p&gt;[TOC]&lt;/p&gt;
 
-&lt;p&gt;First choose a trait. Human diseases work well because there have been studied so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.&lt;/p&gt;
+&lt;p&gt;The goal of this project is to explore online public databases.
+You will use databases to mine for information on a gene of interest, with the goal of generating hypotheses about its role in a disease or other trait you choose.&lt;/p&gt;
 
-&lt;p&gt;Once you have chosen your trait, you need to find a gene that has been linked to that trait.
-A useful place to start for Human traits is the &lt;a href=&quot;https://www.omim.org&quot;&gt;Online Mendelian Inheritance in Man&lt;/a&gt; databases. &lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;, or just &lt;a href=&quot;https://www.google.com&quot;&gt;Google&lt;/a&gt; also work.&lt;/p&gt;
+&lt;h2 id=&quot;objectives&quot;&gt;Objectives&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Choose a gene of interest&lt;/li&gt;
+  &lt;li&gt;Find two databases that contain information on your gene
+    &lt;ul&gt;
+      &lt;li&gt;One database should have “Primary” characteristics&lt;/li&gt;
+      &lt;li&gt;One database should have “Secondary” characteristics&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Produce a report describing and comparing the two databases and how they can be used to collect information on your gene&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;outcomes&quot;&gt;Outcomes&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;Your report should be submitted as a Markdown document that can be compiled into an HTML webpage. I recommend composing the document in &lt;a href=&quot;https://hackmd.io/&quot;&gt;HackMD&lt;/a&gt;. We will compile the pages into a book for the class.
+    &lt;ul&gt;
+      &lt;li&gt;include a table of contents to help organization: include &lt;code class=&quot;highlighter-rouge&quot;&gt;[TOC]&lt;/code&gt; at the top of your document. The table of contents will index all the headers in your file (lines that begin with #, ##, or ###)&lt;/li&gt;
+      &lt;li&gt;include images if possible to make your page visually appealing.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Your report should have sections to describe each database succinctly, and a section comparing the databases. As a guideline, I expect ~2 pages worth of text&lt;/li&gt;
+  &lt;li&gt;You will be graded on the content of your report as well as the quality of the presentation.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;specific-questions&quot;&gt;Specific questions&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Introduce and describe the structure and utility of each database, considering the following questions:
+    &lt;ul&gt;
+      &lt;li&gt;What type of data does the database hold? What types of biological questions could use this database to address?&lt;/li&gt;
+      &lt;li&gt;Does this database have primary and/or secondary characteristics? See here: &lt;a href=&quot;https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases&quot;&gt;Primary and secondary databases&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;Where does the data come from? Who collects it, currates it, and publishes it?&lt;/li&gt;
+      &lt;li&gt;How are the data stored? In what format?&lt;/li&gt;
+      &lt;li&gt;What tools are available for accessing the data? Can the data be accessed computationally? Can it be directly downloaded?&lt;/li&gt;
+      &lt;li&gt;Are there restrictions placed on how you are allowed to use the data? What is it’s license? What does this mean?&lt;/li&gt;
+      &lt;li&gt;Find a paper that cites the database. Hint: use &lt;a href=&quot;https://scholar.google.com/&quot;&gt;Google scholar&lt;/a&gt;. What was the study and why did they use this database?&lt;/li&gt;
+      &lt;li&gt;How many entries are there for your gene / mutation / disease? Describe one entry. Provide a direct link to this entry. What did you learn about your gene?&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Consider each of the above database characteristics. Among the characteristics that differ between your two databases, choose the two that you think are most important and explain why.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;rules&quot;&gt;Rules&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Do not simply copy text from webpages - that is plagarism. Images should include a caption listing the source.  For example:&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  ![](https://i.imgur.com/p59kPwO.png =50x)
+	
+  *source: https://www.nlm.nih.gov/about/logos_and_images.html 
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+
+    &lt;p&gt;produces an image with a width of 50 pixels:&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/p59kPwO.png =50x&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+    &lt;p&gt;*source: https://www.nlm.nih.gov/about/logos_and_images.html&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Every student must choose different databases. There are 1000s of databases available. Usefull lists
+can be found &lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;here&lt;/a&gt;. When you choose a database, enter it in the google doc &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1xXXIRu793bdW8tQHkrdPnp79ikkt6zpC_YpE7ZqZeGg/edit?usp=sharing&quot;&gt;here&lt;/a&gt;.
+Before you choose your database, ensure that someone else hasn’t chosen that one first!&lt;/li&gt;
+  &lt;li&gt;The only limitation on the database is that it contains information on your groups gene or disease. Find a database
+that looks interesting!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;hints&quot;&gt;Hints&lt;/h2&gt;
+
+&lt;p&gt;A useful place to start for Human traits is the &lt;a href=&quot;https://www.omim.org&quot;&gt;Online Mendelian Inheritance in Man&lt;/a&gt; databases. &lt;a href=&quot;https://www.wikipedia.org/&quot;&gt;Wikipedia&lt;/a&gt;, or just &lt;a href=&quot;https://www.google.com&quot;&gt;Google&lt;/a&gt; also work.&lt;/p&gt;
 
 &lt;p&gt;Here are some trait - gene pairs as examples:&lt;/p&gt;
 
@@ -1122,45 +1187,13 @@ A useful place to start for Human traits is the &lt;a href=&quot;https://www.omi
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;You’re goal in &lt;strong&gt;Projects 1 and 2&lt;/strong&gt; is to build a model for why mutations in this gene are associated with your trait.&lt;/p&gt;
-
-&lt;p&gt;For &lt;strong&gt;Project 1&lt;/strong&gt;, as a class I want you to explore as many different databases as possible to build a catalog of types of bioinformatics information available for different classes of genes. I want each of you to choose one database and prepare a Wiki page documenting the database. 
-Use Markdown to compose your page. You can use the &lt;a href=&quot;https://hackmd.io/&quot;&gt;HackMD&lt;/a&gt; tool. The better organized and more interactive your page is, the better. You will be graded on both the content (your specific answers to the project’s questions), and your presentation (quality of your page). We will collect these into a class Wiki site at the end.&lt;/p&gt;
-
-&lt;p&gt;In your research, aim to address as many of the following questions as you can:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;What type of data does the database hold? What types of biological questions could use this database to address?&lt;/li&gt;
-  &lt;li&gt;Where does the data come from? Who collects it, currates it, and publishes it?&lt;/li&gt;
-  &lt;li&gt;How are the data stored? In what format?&lt;/li&gt;
-  &lt;li&gt;What tools are available for accessing the data?&lt;/li&gt;
-  &lt;li&gt;Are there restrictions placed on how you are allowed to use the data? What is it’s license? What does this mean?&lt;/li&gt;
-  &lt;li&gt;Find a paper that cites the database. Hint: use &lt;a href=&quot;https://scholar.google.com/&quot;&gt;Google scholar&lt;/a&gt;. What was the study and why did they use this database?&lt;/li&gt;
-  &lt;li&gt;How many entries are there for your gene / mutation / disease?&lt;/li&gt;
-  &lt;li&gt;Describe one entry. Provide a direct link to this entry. What did you learn about your gene?&lt;/li&gt;
-  &lt;li&gt;Describe some types of biological questions that you could use this database to address.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Here are some rules:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;You can use either a &lt;strong&gt;Primary&lt;/strong&gt; or &lt;strong&gt;Secondary&lt;/strong&gt; database, but limit to databases. See &lt;a href=&quot;https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
-  &lt;li&gt;Every student must choose a different database. There are 1000s of databases available. Usefull lists
-can be found &lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;here&lt;/a&gt;. When you choose a database, enter it in the google doc &lt;a href=&quot;https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing&quot;&gt;here&lt;/a&gt;.
-Before you choose your database, ensure that someone else hasn’t chosen that one first!&lt;/li&gt;
-  &lt;li&gt;The only limitation on the database is that it contains information on your groups gene or disease. Find a database
-that looks interesting!&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For &lt;strong&gt;Project 2&lt;/strong&gt;, you can refer back to this class resource to identify types of data that you can integrate to build a model for your gene.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Note: If you find a databases that you want to explore that indexes something other than genes, ask&lt;/strong&gt;&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">The goal of this project is to explore online public databases. You will use databases to mine for information on a gene of interest and its role in a disease or other trait you choose. At the end, you should produce a report on the structure and utility of your chosen database, and a description of the types of information it contains.</summary></entry><entry><title type="html">Lab 1 - Intro to Bioinformatics Databases</title><link href="http://localhost:4000/BIT150_website/2018/09/27/lab-01/" rel="alternate" type="text/html" title="Lab 1 - Intro to Bioinformatics Databases" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/lab-01</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/lab-01/">&lt;h2 id=&quot;1-lab-intro&quot;&gt;1. Lab intro&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Note: If you find a databases that you want to explore that indexes something other than genes, ask&lt;/strong&gt;&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">[TOC]</summary></entry><entry><title type="html">Lab 1 - Intro to Bioinformatics Databases</title><link href="http://localhost:4000/BIT150_website/2018/09/27/lab-01/" rel="alternate" type="text/html" title="Lab 1 - Intro to Bioinformatics Databases" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/lab-01</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/lab-01/">&lt;h2 id=&quot;1-lab-intro&quot;&gt;1. Lab intro&lt;/h2&gt;
 
 &lt;h2 id=&quot;2-answer-questions-about-human-hemoglobin---subunit-beta&quot;&gt;2. Answer questions about Human Hemoglobin - subunit beta&lt;/h2&gt;
 
 &lt;h3 id=&quot;what-chromosome-is-hbb-on&quot;&gt;What chromosome is HBB on?&lt;/h3&gt;
 &lt;h3 id=&quot;how-many-exons-does-this-gene-have&quot;&gt;How many exons does this gene have?&lt;/h3&gt;
-&lt;h3 id=&quot;briefly-describe-how-the-gene-works&quot;&gt;Briefly describe how the gene works?&lt;/h3&gt;
+&lt;h3 id=&quot;briefly-describe-how-the-gene-works&quot;&gt;Briefly describe how the gene works.&lt;/h3&gt;
 &lt;h3 id=&quot;what-diseases-are-caused-by-mutations-in-the-gene&quot;&gt;What diseases are caused by mutations in the gene?&lt;/h3&gt;
 &lt;h3 id=&quot;find-a-paper-that-describes-an-aspect-of-hbbs-function&quot;&gt;Find a paper that describes an aspect of HBB’s function&lt;/h3&gt;
 
@@ -1193,7 +1226,7 @@ that looks interesting!&lt;/li&gt;
 
 &lt;p&gt;&lt;a href=&quot;/BIT150_website/2018/09/27/unix_commands/&quot;&gt;Unix commands cheatsheat&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;/BIT150_website/2018/09/27/command-line/&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">1. Lab intro</summary></entry><entry><title type="html">Welcome BIT150 class of 2017!</title><link href="http://localhost:4000/BIT150_website/2018/09/25/welcome/" rel="alternate" type="text/html" title="Welcome BIT150 class of 2017!" /><published>2018-09-25T00:00:00-07:00</published><updated>2018-09-25T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/25/welcome</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/25/welcome/">&lt;p&gt;Welcome to BIT150.&lt;/p&gt;
+&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;/BIT150_website/2018/09/27/command-line/&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">1. Lab intro</summary></entry><entry><title type="html">Welcome BIT150 class of 2018!</title><link href="http://localhost:4000/BIT150_website/2018/09/25/welcome/" rel="alternate" type="text/html" title="Welcome BIT150 class of 2018!" /><published>2018-09-25T00:00:00-07:00</published><updated>2018-09-25T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/25/welcome</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/25/welcome/">&lt;p&gt;Welcome to BIT150.&lt;/p&gt;
 
 &lt;p&gt;The first lecture will be on Thursday 9/27 at 10:00 in Wickson 1038.&lt;/p&gt;
 

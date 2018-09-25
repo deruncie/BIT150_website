@@ -143,15 +143,80 @@
   <h1 class="post-title">Project 1 - Mining bioinformatics databases</h1>
   <span class="post-date">27 Sep 2018</span>
   <div class="project">
-  <p>The goal of this project is to explore online public databases.
-You will use databases to mine for information on a gene of interest and its role in a disease or other trait you choose.
-At the end, you should produce a report on the structure and utility of your chosen database,
-and a description of the types of information it contains.</p>
+  <p>[TOC]</p>
 
-<p>First choose a trait. Human diseases work well because there have been studied so intensely, but other characteristics of humans, animals, plants, or even bacteria can work. I recommend sticking to model systems (human, mouse, Arabidopsis) - there is much more information about these organisms in most databases.</p>
+<p>The goal of this project is to explore online public databases.
+You will use databases to mine for information on a gene of interest, with the goal of generating hypotheses about its role in a disease or other trait you choose.</p>
 
-<p>Once you have chosen your trait, you need to find a gene that has been linked to that trait.
-A useful place to start for Human traits is the <a href="https://www.omim.org">Online Mendelian Inheritance in Man</a> databases. <a href="https://www.wikipedia.org/">Wikipedia</a>, or just <a href="https://www.google.com">Google</a> also work.</p>
+<h2 id="objectives">Objectives</h2>
+<ol>
+  <li>Choose a gene of interest</li>
+  <li>Find two databases that contain information on your gene
+    <ul>
+      <li>One database should have “Primary” characteristics</li>
+      <li>One database should have “Secondary” characteristics</li>
+    </ul>
+  </li>
+  <li>Produce a report describing and comparing the two databases and how they can be used to collect information on your gene</li>
+</ol>
+
+<h2 id="outcomes">Outcomes</h2>
+<ol>
+  <li>Your report should be submitted as a Markdown document that can be compiled into an HTML webpage. I recommend composing the document in <a href="https://hackmd.io/">HackMD</a>. We will compile the pages into a book for the class.
+    <ul>
+      <li>include a table of contents to help organization: include <code class="highlighter-rouge">[TOC]</code> at the top of your document. The table of contents will index all the headers in your file (lines that begin with #, ##, or ###)</li>
+      <li>include images if possible to make your page visually appealing.</li>
+    </ul>
+  </li>
+  <li>Your report should have sections to describe each database succinctly, and a section comparing the databases. As a guideline, I expect ~2 pages worth of text</li>
+  <li>You will be graded on the content of your report as well as the quality of the presentation.</li>
+</ol>
+
+<h2 id="specific-questions">Specific questions</h2>
+
+<ul>
+  <li>Introduce and describe the structure and utility of each database, considering the following questions:
+    <ul>
+      <li>What type of data does the database hold? What types of biological questions could use this database to address?</li>
+      <li>Does this database have primary and/or secondary characteristics? See here: <a href="https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases">Primary and secondary databases</a></li>
+      <li>Where does the data come from? Who collects it, currates it, and publishes it?</li>
+      <li>How are the data stored? In what format?</li>
+      <li>What tools are available for accessing the data? Can the data be accessed computationally? Can it be directly downloaded?</li>
+      <li>Are there restrictions placed on how you are allowed to use the data? What is it’s license? What does this mean?</li>
+      <li>Find a paper that cites the database. Hint: use <a href="https://scholar.google.com/">Google scholar</a>. What was the study and why did they use this database?</li>
+      <li>How many entries are there for your gene / mutation / disease? Describe one entry. Provide a direct link to this entry. What did you learn about your gene?</li>
+    </ul>
+  </li>
+  <li>Consider each of the above database characteristics. Among the characteristics that differ between your two databases, choose the two that you think are most important and explain why.</li>
+</ul>
+
+<h2 id="rules">Rules</h2>
+<ul>
+  <li>
+    <p>Do not simply copy text from webpages - that is plagarism. Images should include a caption listing the source.  For example:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>  ![](https://i.imgur.com/p59kPwO.png =50x)
+	
+  *source: https://www.nlm.nih.gov/about/logos_and_images.html 
+</code></pre>
+    </div>
+
+    <p>produces an image with a width of 50 pixels:</p>
+
+    <p><img src="https://i.imgur.com/p59kPwO.png =50x" alt="" /></p>
+
+    <p>*source: https://www.nlm.nih.gov/about/logos_and_images.html</p>
+  </li>
+  <li>Every student must choose different databases. There are 1000s of databases available. Usefull lists
+can be found <a href="https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database">here</a> and <a href="https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases">here</a>. When you choose a database, enter it in the google doc <a href="https://docs.google.com/spreadsheets/d/1xXXIRu793bdW8tQHkrdPnp79ikkt6zpC_YpE7ZqZeGg/edit?usp=sharing">here</a>.
+Before you choose your database, ensure that someone else hasn’t chosen that one first!</li>
+  <li>The only limitation on the database is that it contains information on your groups gene or disease. Find a database
+that looks interesting!</li>
+</ul>
+
+<h2 id="hints">Hints</h2>
+
+<p>A useful place to start for Human traits is the <a href="https://www.omim.org">Online Mendelian Inheritance in Man</a> databases. <a href="https://www.wikipedia.org/">Wikipedia</a>, or just <a href="https://www.google.com">Google</a> also work.</p>
 
 <p>Here are some trait - gene pairs as examples:</p>
 
@@ -201,38 +266,6 @@ A useful place to start for Human traits is the <a href="https://www.omim.org">O
     </tr>
   </tbody>
 </table>
-
-<p>You’re goal in <strong>Projects 1 and 2</strong> is to build a model for why mutations in this gene are associated with your trait.</p>
-
-<p>For <strong>Project 1</strong>, as a class I want you to explore as many different databases as possible to build a catalog of types of bioinformatics information available for different classes of genes. I want each of you to choose one database and prepare a Wiki page documenting the database. 
-Use Markdown to compose your page. You can use the <a href="https://hackmd.io/">HackMD</a> tool. The better organized and more interactive your page is, the better. You will be graded on both the content (your specific answers to the project’s questions), and your presentation (quality of your page). We will collect these into a class Wiki site at the end.</p>
-
-<p>In your research, aim to address as many of the following questions as you can:</p>
-
-<ul>
-  <li>What type of data does the database hold? What types of biological questions could use this database to address?</li>
-  <li>Where does the data come from? Who collects it, currates it, and publishes it?</li>
-  <li>How are the data stored? In what format?</li>
-  <li>What tools are available for accessing the data?</li>
-  <li>Are there restrictions placed on how you are allowed to use the data? What is it’s license? What does this mean?</li>
-  <li>Find a paper that cites the database. Hint: use <a href="https://scholar.google.com/">Google scholar</a>. What was the study and why did they use this database?</li>
-  <li>How many entries are there for your gene / mutation / disease?</li>
-  <li>Describe one entry. Provide a direct link to this entry. What did you learn about your gene?</li>
-  <li>Describe some types of biological questions that you could use this database to address.</li>
-</ul>
-
-<p>Here are some rules:</p>
-
-<ul>
-  <li>You can use either a <strong>Primary</strong> or <strong>Secondary</strong> database, but limit to databases. See <a href="https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases">here</a>.</li>
-  <li>Every student must choose a different database. There are 1000s of databases available. Usefull lists
-can be found <a href="https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database">here</a> and <a href="https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases">here</a>. When you choose a database, enter it in the google doc <a href="https://docs.google.com/spreadsheets/d/1gpUUcnm7zhglA4vG8o2KivsalVzhVJmwRXBPyTFdBoE/edit?usp=sharing">here</a>.
-Before you choose your database, ensure that someone else hasn’t chosen that one first!</li>
-  <li>The only limitation on the database is that it contains information on your groups gene or disease. Find a database
-that looks interesting!</li>
-</ul>
-
-<p>For <strong>Project 2</strong>, you can refer back to this class resource to identify types of data that you can integrate to build a model for your gene.</p>
 
 <p><strong>Note: If you find a databases that you want to explore that indexes something other than genes, ask</strong></p>
 
