@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2018-09-27T09:00:01-07:00</updated>
+ <updated>2018-09-27T14:37:46-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -1316,6 +1316,12 @@ to tackle a wide range of scientific questions and computational challenges.&lt;
 &lt;h3 id=&quot;a-toy-example-of-a-bioinformatics-project-on-the-command-line&quot;&gt;A toy example of a bioinformatics project on the command line&lt;/h3&gt;
 
 &lt;p&gt;We’ll practice using the command line for bioinformatics with a toy example: a marine biologist named Nelle Nemo.&lt;/p&gt;
+
+&lt;p&gt;Download this file:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/BIT150_website/files/data-shell.zip&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;to your desktop and unzip it. In lab, you can also access the folder in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Class/BIT150/Lab_1&lt;/code&gt; directory&lt;/p&gt;
 
 &lt;p&gt;She just returned from a six-month survey of the
 &lt;a href=&quot;http://en.wikipedia.org/wiki/North_Pacific_Gyre&quot;&gt;North Pacific Gyre&lt;/a&gt;,
