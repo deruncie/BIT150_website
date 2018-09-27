@@ -4,7 +4,7 @@
  <title>BIT150</title>
  <link href="http://localhost:4000/BIT150_website/atom.xml" rel="self"/>
  <link href="http://localhost:4000/BIT150_website/"/>
- <updated>2018-09-24T17:07:26-07:00</updated>
+ <updated>2018-09-27T09:00:01-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dan Runcie and Shawn Higdon</name>
@@ -1113,6 +1113,7 @@ You will use databases to mine for information on a gene of interest, with the g
     &lt;ul&gt;
       &lt;li&gt;One database should have “Primary” characteristics&lt;/li&gt;
       &lt;li&gt;One database should have “Secondary” characteristics&lt;/li&gt;
+      &lt;li&gt;See here: &lt;a href=&quot;https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases&quot;&gt;Primary and secondary databases&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;Produce a report describing and comparing the two databases and how they can be used to collect information on your gene&lt;/li&gt;
@@ -1136,8 +1137,7 @@ You will use databases to mine for information on a gene of interest, with the g
   &lt;li&gt;Introduce and describe the structure and utility of each database, considering the following questions:
     &lt;ul&gt;
       &lt;li&gt;What type of data does the database hold? What types of biological questions could use this database to address?&lt;/li&gt;
-      &lt;li&gt;Does this database have primary and/or secondary characteristics? See here: &lt;a href=&quot;https://www.ebi.ac.uk/training/online/course/bioinformatics-terrified-2018/primary-and-secondary-databases&quot;&gt;Primary and secondary databases&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;Where does the data come from? Who collects it, currates it, and publishes it?&lt;/li&gt;
+      &lt;li&gt;Does this database have primary and/or secondary characteristics? 	- Where does the data come from? Who collects it, currates it, and publishes it?&lt;/li&gt;
       &lt;li&gt;How are the data stored? In what format?&lt;/li&gt;
       &lt;li&gt;What tools are available for accessing the data? Can the data be accessed computationally? Can it be directly downloaded?&lt;/li&gt;
       &lt;li&gt;Are there restrictions placed on how you are allowed to use the data? What is it’s license? What does this mean?&lt;/li&gt;
@@ -1242,6 +1242,7 @@ that looks interesting!&lt;/li&gt;
 &lt;h3 id=&quot;how-many-exons-does-this-gene-have&quot;&gt;How many exons does this gene have?&lt;/h3&gt;
 &lt;h3 id=&quot;briefly-describe-how-the-gene-works&quot;&gt;Briefly describe how the gene works.&lt;/h3&gt;
 &lt;h3 id=&quot;what-diseases-are-caused-by-mutations-in-the-gene&quot;&gt;What diseases are caused by mutations in the gene?&lt;/h3&gt;
+&lt;h3 id=&quot;where-did-you-find-this-information&quot;&gt;Where did you find this information?&lt;/h3&gt;
 &lt;h3 id=&quot;find-a-paper-that-describes-an-aspect-of-hbbs-function&quot;&gt;Find a paper that describes an aspect of HBB’s function&lt;/h3&gt;
 
 &lt;ol&gt;
@@ -1262,18 +1263,92 @@ that looks interesting!&lt;/li&gt;
 &lt;p&gt;Lists of databases:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636/The-24th-annual-Nucleic-Acids-Research-database&quot;&gt;Nucleic Acids Research&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636&quot;&gt;Nucleic Acids Research&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;Wikipedia&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://omictools.com/&quot;&gt;OmicsTools&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;5-intro-to-the-unix-shell&quot;&gt;5. Intro to the Unix Shell&lt;/h2&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://deruncie.github.io/shell-novice/&quot;&gt;Tutorial&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;At a high level, computers do four things:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;run programs&lt;/li&gt;
+  &lt;li&gt;store data&lt;/li&gt;
+  &lt;li&gt;communicate with each other, and&lt;/li&gt;
+  &lt;li&gt;interact with us&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Most people are familar interacting with a computer through windows, icons and pointers, collectively a &lt;em&gt;graphical user interphase&lt;/em&gt;, or &lt;em&gt;GUI&lt;/em&gt;. However, pretty much anything you can do in your favorite GUI (Windows or Mac), you can also do through a
+&lt;strong&gt;command-line interface&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The heart of a CLI is a &lt;strong&gt;read-evaluate-print loop&lt;/strong&gt;, or REPL:
+when the user types a command and then presses the Enter (or Return) key,
+the computer reads it,
+executes it,
+and prints its output.
+The user then types another command,
+and so on until the user logs off.&lt;/p&gt;
+
+&lt;p&gt;The program that you directly interact with on the command-line is called a &lt;strong&gt;command shell&lt;/strong&gt;. A shell is a program like any other.
+What’s special about it is that its job is to run other programs
+rather than to do calculations itself.
+The most popular Unix shell is Bash,
+the Bourne Again SHell
+(so-called because it’s derived from a shell written by Stephen Bourne).
+Bash is the default shell on most modern implementations of Unix
+and in most packages that provide Unix-like tools for Windows.&lt;/p&gt;
+
+&lt;h3 id=&quot;why-bother&quot;&gt;Why bother?&lt;/h3&gt;
+&lt;p&gt;Using Bash or any other shell
+sometimes feels more like programming than like using a mouse.
+However, with only a few keystrokes, the shell allows us to combine existing tools into 
+powerful pipelines and handle large volumes of data automatically. This automation
+not only makes us more productive but also improves the reproducibility of our workflows by 
+allowing us to repeat them with a few simple commands.
+In addition, the command line is often the easiest way to interact with remote machines and supercomputers.
+Familiarity with the shell is near essential to run a variety of specialized tools and resources
+including high-performance computing systems.&lt;/p&gt;
+
+&lt;p&gt;We can build on the command-line skills covered here
+to tackle a wide range of scientific questions and computational challenges.&lt;/p&gt;
+
+&lt;h3 id=&quot;a-toy-example-of-a-bioinformatics-project-on-the-command-line&quot;&gt;A toy example of a bioinformatics project on the command line&lt;/h3&gt;
+
+&lt;p&gt;We’ll practice using the command line for bioinformatics with a toy example: a marine biologist named Nelle Nemo.&lt;/p&gt;
+
+&lt;p&gt;She just returned from a six-month survey of the
+&lt;a href=&quot;http://en.wikipedia.org/wiki/North_Pacific_Gyre&quot;&gt;North Pacific Gyre&lt;/a&gt;,
+where she has been sampling gelatinous marine life in the
+&lt;a href=&quot;http://en.wikipedia.org/wiki/Great_Pacific_Garbage_Patch&quot;&gt;Great Pacific Garbage Patch&lt;/a&gt;.
+She has 1520 samples in all and now needs to:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Run each sample through an assay machine
+that will measure the relative abundance of 300 different proteins.
+The machine’s output for a single sample is
+a file with one line for each protein.&lt;/li&gt;
+  &lt;li&gt;Calculate statistics for each of the proteins separately
+using a program her supervisor wrote called &lt;code class=&quot;highlighter-rouge&quot;&gt;goostats&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Compare the statistics for each protein
+with corresponding statistics for each other protein
+using a program one of the other graduate students wrote called &lt;code class=&quot;highlighter-rouge&quot;&gt;goodiff&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The bad news is that if she has to run &lt;code class=&quot;highlighter-rouge&quot;&gt;goostats&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;goodiff&lt;/code&gt; by hand,
+she’ll have to enter filenames and click “OK” 46,370 times
+(1520 runs of &lt;code class=&quot;highlighter-rouge&quot;&gt;goostats&lt;/code&gt;, plus 300*299/2 (half of 300 times 299) runs of &lt;code class=&quot;highlighter-rouge&quot;&gt;goodiff&lt;/code&gt;).
+At 30 seconds each, that will take more than two weeks and the chances of her typing all of those commands right are practically zero.&lt;/p&gt;
+
+&lt;p&gt;We will see how using a command shell, this work can be automated. As a bonus,
+once she has put a processing pipeline together,
+she will be able to use it again whenever she collects more data.&lt;/p&gt;
+
+&lt;p&gt;To continue, we’ll follow lessons 2 and 3 here: &lt;a href=&quot;https://deruncie.github.io/shell-novice/02-filedir/&quot;&gt;Tutorial&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;/BIT150_website/2018/09/27/unix_commands/&quot;&gt;Unix commands cheatsheat&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-a-supplemental-lesson-here&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through a supplemental lesson &lt;a href=&quot;/BIT150_website/2018/09/27/command-line/&quot;&gt;here&lt;/a&gt;.&lt;/h3&gt;
+&lt;h3 id=&quot;if-you-want-extra-practice-after-completing-the-in-class-tutorial-try-working-through-the-rest-of-the-lessons-on-the-tutorial-site&quot;&gt;If you want extra practice after completing the in-class tutorial, try working through the rest of the lessons on the Tutorial site.&lt;/h3&gt;
 </content>
  </entry>
  
