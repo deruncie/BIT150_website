@@ -1,4 +1,291 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2018-09-27T14:37:46-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">cheat-sheet of all the commands we saw in Lab 1</title><link href="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/" rel="alternate" type="text/html" title="cheat-sheet of all the commands we saw in Lab 1" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/unix_commands</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/">&lt;table&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/BIT150_website/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/BIT150_website/" rel="alternate" type="text/html" /><updated>2018-10-03T20:03:57-07:00</updated><id>http://localhost:4000/BIT150_website/</id><title type="html">BIT150</title><subtitle>The UC Davis - CAES course for the development of fundamental skills in Bioinformatics</subtitle><author><name>Dan Runcie and Shawn Higdon</name></author><entry><title type="html">Lab 2 - Bash automation</title><link href="http://localhost:4000/BIT150_website/2018/10/04/lab-02/" rel="alternate" type="text/html" title="Lab 2 - Bash automation" /><published>2018-10-04T00:00:00-07:00</published><updated>2018-10-04T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/10/04/lab-02</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/10/04/lab-02/">&lt;h1 id=&quot;outline&quot;&gt;Outline:&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Automation in Unix&lt;/li&gt;
+  &lt;li&gt;Intro to using a computer cluster&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;projects&quot;&gt;Projects&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;After the tutorials today, there will hopefully be time to work on your database projects. The projects are due next Thursday in Lecture. In lecture, you will each be expected to give a short (3-5 minute) presentation of your database to your group. We’ll then collect and summarize the range of databases you explore as a class.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;unix-tutorial&quot;&gt;Unix tutorial&lt;/h1&gt;
+
+&lt;p&gt;In Lab 1, we covered commands to move around the Unix file system. These included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt;: List the current working directory&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt;: Change to a new directory&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;: list files, folders, and programs&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt;: view the help page for a program&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We also covered the basic structure of a unix command:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command -argument input_file &amp;gt; output_file&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;These commands are summarized in the file: &lt;a href=&quot;/BIT150_website/2018/09/27/unix_commands/&quot;&gt;Unix commands cheatsheat&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Today, we will continue this tutorial. We will focus on how to automate actions in Unix. This includes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;wild cards&lt;/li&gt;
+  &lt;li&gt;scripts&lt;/li&gt;
+  &lt;li&gt;for loops&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will also cover some other useful commands including:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tail&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;wc&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;refresher-activity&quot;&gt;Refresher activity&lt;/h2&gt;
+
+&lt;p&gt;Open the data-shell directory in &lt;code class=&quot;highlighter-rouge&quot;&gt;Git BASH&lt;/code&gt;. Type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -F
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There is a folder called &lt;code class=&quot;highlighter-rouge&quot;&gt;Desktop&lt;/code&gt;. Inside it is a folder called &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden&lt;/code&gt;. Somewhere inside that folder is a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;youfoundit.txt&lt;/code&gt;. Find the file. Once you’ve found it, enter the command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat youfoundit.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The command &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; takes as input a file name, and simply reads the file and prints its output to the screen.&lt;/p&gt;
+
+&lt;h2 id=&quot;automation-1&quot;&gt;Automation-1&lt;/h2&gt;
+
+&lt;p&gt;Now, we’ll return to processing Nelle’s data files using the &lt;code class=&quot;highlighter-rouge&quot;&gt;goostats&lt;/code&gt; program.&lt;/p&gt;
+
+&lt;p&gt;Return to the &lt;code class=&quot;highlighter-rouge&quot;&gt;data_shell&lt;/code&gt; directory, and then go to the &lt;code class=&quot;highlighter-rouge&quot;&gt;north-pacific-gyre/2012-07-03&lt;/code&gt; folder.&lt;/p&gt;
+
+&lt;p&gt;Remember, the command to process a file looks like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;programs/goostat NENE01729A.txt &amp;gt; output_NENE01729A.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Process the first three files: &lt;code class=&quot;highlighter-rouge&quot;&gt;NENE01729A.txt&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;NENE01729B.txt&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;NENE02040A.txt&lt;/code&gt;. Use the &lt;code class=&quot;highlighter-rouge&quot;&gt;up-arrow&lt;/code&gt; to repeat the previous command, and then the arrow keys to modify it. You can open the folder in Windows File-Explorer to see the output files. Or type &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -F&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;cleaning-up-our-mess&quot;&gt;Cleaning up our mess&lt;/h3&gt;
+
+&lt;p&gt;Note that with these output files, our data directory is getting messy. It would be nicer to have the raw data files in one folder and the output files in another folder.&lt;/p&gt;
+
+&lt;p&gt;Let’s make an output folder, and move our output files there. On Windows, you could create a new directory. In BASH, type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir output
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;On Windows, you could select each file and drag it to the folder. In BASH, type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv output_NENE01729A.txt output/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can also re-name files with the &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv output/output_NENE01729B.txt output/renamed_file.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: We didn’t have to move to the &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt; directory to do this renaming. We just gave the relative path to the file.&lt;/p&gt;
+
+&lt;h4 id=&quot;wildcards&quot;&gt;Wildcards&lt;/h4&gt;
+
+&lt;p&gt;Remember, BASH is all about automation. We don’t have to type the &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command for each file separately. We can use a wild-card to select all the output files at once:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mv output* output/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; character matches any set of character. Before running the &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt; command, BASH first expands &lt;code class=&quot;highlighter-rouge&quot;&gt;output*&lt;/code&gt; to all files that start with &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt;, and then contain 0 or more additional characters. It then passes them all to mv command.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hint&lt;/strong&gt; There’s no &lt;code class=&quot;highlighter-rouge&quot;&gt;UNDO&lt;/code&gt; in BASH! It’s always a good idea to test out a BASH command like this before you run it. Before running a command, you can use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt; to print out exactly what BASH is going to do:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo &quot;mv output* output/&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Be sure to put the command in quotes.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt; is similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, except for commands instead of files. &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; prints the contents of the file to the screen. &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt; prints the command itself to the screen.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo &quot;Some text&quot;
+echo &quot;output*&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You don’t always need the quotes, but it’s a good habid.&lt;/p&gt;
+
+&lt;p&gt;Wildcards work with many commands. Try it with &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -F NENE*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;activity&quot;&gt;Activity:&lt;/h3&gt;
+&lt;p&gt;Find all files that have the character &lt;code class=&quot;highlighter-rouge&quot;&gt;A&lt;/code&gt; in them. How many are there?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Before continuing, all output files should be in the output folder.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;automation-2&quot;&gt;Automation-2&lt;/h2&gt;
+
+&lt;p&gt;Wildcards are one way to automate. Scripts are another.&lt;/p&gt;
+
+&lt;p&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;goostat&lt;/code&gt; again, but this time write directly into the &lt;code class=&quot;highlighter-rouge&quot;&gt;output&lt;/code&gt; folder.&lt;/p&gt;
+
+&lt;p&gt;Remember the command? You can find it by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Open &lt;code class=&quot;highlighter-rouge&quot;&gt;Notepad++&lt;/code&gt;. Copy the comand, paste it there&lt;/li&gt;
+  &lt;li&gt;Paste it several times&lt;/li&gt;
+  &lt;li&gt;Replace the file name with the others in the directory.&lt;/li&gt;
+  &lt;li&gt;Copy it all, paste it in terminal.&lt;/li&gt;
+  &lt;li&gt;Is this easier? No. &lt;strong&gt;But it’s documented!&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Alternatively, save it as &lt;code class=&quot;highlighter-rouge&quot;&gt;process_goostats.sh&lt;/code&gt;. &lt;strong&gt;Be sure to change character encoding to Unix&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Run with &lt;code class=&quot;highlighter-rouge&quot;&gt;bash process_goostats.sh&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;for-loops&quot;&gt;For-loops&lt;/h3&gt;
+
+&lt;p&gt;But, we can tell Bash to automate the creation of each of these lines.&lt;/p&gt;
+
+&lt;p&gt;Computers are great a repetitive tasks like this. They do it faster, with fewer mistakes.&lt;/p&gt;
+
+&lt;p&gt;A &lt;strong&gt;for loop&lt;/strong&gt; is a tool for repeating the same action several times with a different input each time.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for file in *.txt
+do
+  programs/goostat $file &amp;gt; output/output_$file
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The loop has several parts:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;for file in *.txt&lt;/code&gt;: This declares the loop and the input for each iteration.
+    &lt;ol&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*.txt&lt;/code&gt; gives a list of files. We can view the list with &lt;code class=&quot;highlighter-rouge&quot;&gt;echo *.txt&lt;/code&gt;. Lists in Bash are separate by spaces&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt; is a &lt;strong&gt;variable&lt;/strong&gt;. What the loop will do is it will take the name of the first file from the list, and assign it to the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt;. It will then run the lines between &lt;code class=&quot;highlighter-rouge&quot;&gt;do&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;done&lt;/code&gt;. Once those lines are done, it will assign the next file name to the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;do/done&lt;/code&gt; block, we can refer to the actual file name by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;$file&lt;/code&gt;, or better &lt;code class=&quot;highlighter-rouge&quot;&gt;${file}&lt;/code&gt;. When bash sees &lt;code class=&quot;highlighter-rouge&quot;&gt;$file&lt;/code&gt;, it replaces it with the file name stored in the variable.&lt;/li&gt;
+      &lt;li&gt;Do: &lt;code class=&quot;highlighter-rouge&quot;&gt;file=NENE01729A.txt&lt;/code&gt;, and then &lt;code class=&quot;highlighter-rouge&quot;&gt;echo $file&lt;/code&gt;. Try &lt;code class=&quot;highlighter-rouge&quot;&gt;echo file&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;Now, do: &lt;code class=&quot;highlighter-rouge&quot;&gt;file=some_other_file.txt&lt;/code&gt;, and then &lt;code class=&quot;highlighter-rouge&quot;&gt;echo $file&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Before we run the script, let’s test it. Replace the line &lt;code class=&quot;highlighter-rouge&quot;&gt;program...&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;echo &quot;program...&quot;&lt;/code&gt;. Then copy the lines and paste into the terminal.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;This just wrote out exactly what we were trying to do by hand!&lt;/strong&gt; We could copy these lines. We could copy these lines into a new script, and then run it with &lt;code class=&quot;highlighter-rouge&quot;&gt;bash process_all.sh&lt;/code&gt;. But, instead, if we just remove the &lt;code class=&quot;highlighter-rouge&quot;&gt;echo&lt;/code&gt;, and run the loop, it will send these lines directly to the Bash engine and execute them!&lt;/p&gt;
+
+&lt;p&gt;Do this, then run the script with &lt;code class=&quot;highlighter-rouge&quot;&gt;bash process_goostats.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;make-a-nicer-script&quot;&gt;Make a nicer script.&lt;/h3&gt;
+
+&lt;p&gt;Scripts are both a tool for automation, and also a tool for documentation. If you write your scripts well, they both save you time now, and also help when you come back later and want to do the same or similar actions again, or when you have to write up your methods.&lt;/p&gt;
+
+&lt;p&gt;We can do several things to make this script nicer.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Add comments. You can write lines in your script that begin with the hash character &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;. Bash will ignore these lines:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# echo some text
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;We can add a line that tells us what the computer is currently doing:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo &quot;Currently processing file $file&quot;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;activity-1&quot;&gt;Activity:&lt;/h3&gt;
+
+&lt;p&gt;Write a script to process all pairs of files using the program &lt;code class=&quot;highlighter-rouge&quot;&gt;goodiff&lt;/code&gt;. Concatenate the output into one file that looks like:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;file1&lt;/td&gt;
+      &lt;td&gt;file2&lt;/td&gt;
+      &lt;td&gt;score&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;file1&lt;/td&gt;
+      &lt;td&gt;file3&lt;/td&gt;
+      &lt;td&gt;score&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;file2&lt;/td&gt;
+      &lt;td&gt;file3&lt;/td&gt;
+      &lt;td&gt;score&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Hints:&lt;/p&gt;
+
+&lt;p&gt;Everything that shows up on the screen can be written instead to a file. Try and compare these lines:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# using echo
+echo &quot;my text&quot;
+echo &quot;my text&quot; &amp;gt; my_file.txt
+
+# using cat
+cat my_file.txt
+cat my_file.txt &amp;gt; new_file.txt
+cat new_file.txt
+cat my_file.txt &amp;gt;&amp;gt; new_file.txt
+cat new_file.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A single “&amp;gt;” says: “create a new file with this name and capture the output into this file”.&lt;/li&gt;
+  &lt;li&gt;Two “»” says: “append the output to the end of the existing file (and create a new file if needed)”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;things-to-remember&quot;&gt;Things to remember:&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Bash identifies separate arguments to commands by spaces. This means that spaces in file names cause problems
+    &lt;ul&gt;
+      &lt;li&gt;This is why you should enclose commands in quotation marks &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;&lt;/code&gt;. Things in quotation marks are interpreted as being part of the same argument&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;In Notepad++, create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;My File.txt&lt;/code&gt;. Put some text in it.&lt;/li&gt;
+  &lt;li&gt;In Bash, type: &lt;code class=&quot;highlighter-rouge&quot;&gt;cat My File.txt&lt;/code&gt;. You get an error&lt;/li&gt;
+  &lt;li&gt;Try: &lt;code class=&quot;highlighter-rouge&quot;&gt;cat &quot;My File.txt&quot;&lt;/code&gt;. It works!&lt;/li&gt;
+  &lt;li&gt;Try: &lt;code class=&quot;highlighter-rouge&quot;&gt;file=&quot;My File.txt&quot;&lt;/code&gt;, and then &lt;code class=&quot;highlighter-rouge&quot;&gt;cat $file&lt;/code&gt;. You get an error.&lt;/li&gt;
+  &lt;li&gt;Try &lt;code class=&quot;highlighter-rouge&quot;&gt;cat &quot;$file&quot;&lt;/code&gt;. It works!&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Other helpful commands:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;wc file&lt;/code&gt; Counts the number of lines, words, and characters in a file&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;head file&lt;/code&gt; Prints the first 10 lines of a file. You can change the number with the &lt;code class=&quot;highlighter-rouge&quot;&gt;-n 3&lt;/code&gt; option (replacing 3 with the number you want.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tail file&lt;/code&gt; Prints the last 10 lines of a file.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;less file&lt;/code&gt; Gives an interactive view of the file. You can page-down using space or the arrow keys. To exit, type &lt;code class=&quot;highlighter-rouge&quot;&gt;q&lt;/code&gt;. The &lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; command uses &lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; to show the help file for each command.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">Outline: Automation in Unix Intro to using a computer cluster</summary></entry><entry><title type="html">cheat-sheet of all the commands we saw in Lab 1</title><link href="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/" rel="alternate" type="text/html" title="cheat-sheet of all the commands we saw in Lab 1" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/unix_commands</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/unix_commands/">&lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt; &lt;/th&gt;
@@ -1187,6 +1474,14 @@ that looks interesting!&lt;/li&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
+&lt;p&gt;Here are some lists of bioinformatic databases:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://academic.oup.com/nar/article/45/D1/D1/2770636&quot;&gt;Nucleic Acids Research&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_biological_databases#DNA_Databases&quot;&gt;Wikipedia&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://omictools.com/&quot;&gt;OmicsTools&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;p&gt;&lt;strong&gt;Note: If you find a databases that you want to explore that indexes something other than genes, ask&lt;/strong&gt;&lt;/p&gt;</content><author><name>Dan Runcie and Shawn Higdon</name></author><summary type="html">[TOC]</summary></entry><entry><title type="html">Lab 1 - Intro to Bioinformatics Databases</title><link href="http://localhost:4000/BIT150_website/2018/09/27/lab-01/" rel="alternate" type="text/html" title="Lab 1 - Intro to Bioinformatics Databases" /><published>2018-09-27T00:00:00-07:00</published><updated>2018-09-27T00:00:00-07:00</updated><id>http://localhost:4000/BIT150_website/2018/09/27/lab-01</id><content type="html" xml:base="http://localhost:4000/BIT150_website/2018/09/27/lab-01/">&lt;h2 id=&quot;1-lab-intro&quot;&gt;1. Lab intro&lt;/h2&gt;
 
 &lt;h2 id=&quot;2-answer-questions-about-human-hemoglobin---subunit-beta&quot;&gt;2. Answer questions about Human Hemoglobin - subunit beta&lt;/h2&gt;
@@ -1276,7 +1571,7 @@ to tackle a wide range of scientific questions and computational challenges.&lt;
 
 &lt;p&gt;to your desktop and unzip it. In lab, you can also access the folder in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Class/BIT150/Lab_1&lt;/code&gt; directory&lt;/p&gt;
 
-&lt;p&gt;She just returned from a six-month survey of the
+&lt;p&gt;Nelle just returned from a six-month survey of the
 &lt;a href=&quot;http://en.wikipedia.org/wiki/North_Pacific_Gyre&quot;&gt;North Pacific Gyre&lt;/a&gt;,
 where she has been sampling gelatinous marine life in the
 &lt;a href=&quot;http://en.wikipedia.org/wiki/Great_Pacific_Garbage_Patch&quot;&gt;Great Pacific Garbage Patch&lt;/a&gt;.
