@@ -1,13 +1,13 @@
 ---
 layout: page
-title: BIT 150 Syllabus - Fall 2018
+title: BIT 150 Syllabus - Fall 2019
 ---
 
 **Applied Bioinformatics**
 
-Fall Quarter 2018
+Fall Quarter 2019
 
-**Lectures:** Wickson 1038, **Labs:** PES 1137
+**Lectures:** Olson 163, **Labs:** PES 1137
 
 **Lectures:** T/Th 10:00-10:50, **Labs:** Th 3:10-5:00
 
