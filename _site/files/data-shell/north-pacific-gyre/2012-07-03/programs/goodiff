@@ -1,8 +1,0 @@
-# difference of two input files
-# demo version, just return a random number or "files are identical"
-if [ "$1" == "$2" ]
-then
-    echo $1 $2 "files are identical"
-else
-    echo $1 $2 0.$RANDOM
-fi
