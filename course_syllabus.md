@@ -27,6 +27,9 @@ Fall Quarter 2019
 
 **Grading:**   A-F
 
+## Resources
+[Resources for UC Davis students ](https://ebeler.faculty.ucdavis.edu/resources/faq-student-resources/) including Academic Support, Health & Wellness, Career & Internships and Campus Community
+
 
 
 ## Rationale:
@@ -126,12 +129,12 @@ keep confidential discussions that the community has of a personal (or professio
 |                       |  |
 |---------|------------------------------|
 | Week 1  | Databases, Unix              |
-| Week 2  | Databases, HPC, BLAST        |
-| Week 3  | Data integration, R          |
-| Week 4  | Tables, Biomart              |
+| Week 2  | Databases, Unix              |
+| Week 3  | HPC, BLAST 			           |
+| Week 4  | Tables, Biomart, R           |
 | Week 5  | Gene ontologies and Networks |
 | Week 6  | Genome Browsers              |
 | Week 7  | Genomic Variation            |
 | Week 8  | Genome assembly              |
 | Week 9  | Genome Annotation            |
-| Week 10 | Functional data              |
+| Week 10 | Statistics                   |
