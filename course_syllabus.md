@@ -1,6 +1,6 @@
 ---
 layout: page
-title: BIT 150 Syllabus - Fall 2019
+title: Syllabus
 ---
 
 **Applied Bioinformatics**
